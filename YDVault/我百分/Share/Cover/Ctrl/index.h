@@ -1,0 +1,6 @@
+#include "JahCoverColorListBox.h"
+#include "JahCoverHyperlink.h"
+#include "JahCoverListCtrl.h"
+#include "JahCoverToolTipXye.h"
+#include "JahCoverXPButton.h"
+#include "SortListCtrl.h"

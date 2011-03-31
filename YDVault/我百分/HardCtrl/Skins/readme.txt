@@ -1,0 +1,9 @@
+Devior
+futuraIII
+Kromo
+KromoBlue
+Tusk
+xpblue
+xpgrean
+xplus
+xpsteel
