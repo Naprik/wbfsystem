@@ -1,0 +1,20 @@
+<CFG>
+	<DATABASESERVER>
+		<DATABASE_TYPE>
+			2
+		</DATABASE_TYPE>
+		<CONNECTION_MODE>
+			0
+		</CONNECTION_MODE>
+		<CONNECTIONPARAM>
+			<PARAM Name="database_server" value=""/>
+			<PARAM Name="database_name" value=""/>
+			<PARAM Name="dbfile_name" value="C:\Users\Administrator\Desktop\ydvaultLI.mdb"/>
+			<PARAM Name="database_user" value="ELFBAK" encrypt="TRUE"/>
+			<PARAM Name="database_user_pwd" value="ELFBAK" encrypt="TRUE"/>
+			<PARAM Name="database_provider" value=""/>
+			<PARAM Name="database_connection_timeout" value="60"/>
+			<PARAM Name="database_long_connection" value=""/>
+		</CONNECTIONPARAM>
+	</DATABASESERVER>
+</CFG>
