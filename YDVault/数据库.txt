@@ -1,0 +1,11 @@
+oracle：全局数据库名：orcl
+数据库口令：sa
+账户：SYS,SYSTEM,SYSMAN,DBSNMP
+
+
+access:密码：sys
+
+我自己机器的ORACLE：
+system/sys
+sysman/sa
+sys/sys
