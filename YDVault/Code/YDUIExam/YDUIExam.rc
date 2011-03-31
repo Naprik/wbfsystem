@@ -1,0 +1,248 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#ifndef APSTUDIO_INVOKED
+#include "targetver.h"
+#endif
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#ifndef APSTUDIO_INVOKED\r\n"
+    "#include ""targetver.h""\r\n"
+    "#endif\r\n"
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(936)\r\n"
+    "#include ""res\\YDUIExam.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""     // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_UPDATE_DOWN         BITMAP                  "res\\update_bn_down.bmp"
+IDB_UPDATE              BITMAP                  "res\\update_bn.bmp"
+IDB_STATIC_DOWN         BITMAP                  "res\\static_bn_down.bmp"
+IDB_STATIC              BITMAP                  "res\\static_bn.bmp"
+IDB_SAVE_DOWN           BITMAP                  "res\\save_bn_down.bmp"
+IDB_SAVE                BITMAP                  "res\\save_bn.bmp"
+IDB_REPORT_DOWN         BITMAP                  "res\\report_bn_down.bmp"
+IDB_REPORT              BITMAP                  "res\\report_bn.bmp"
+IDB_QUERY_DOWN2         BITMAP                  "res\\query_down.bmp"
+IDB_QUERY_DOWN1         BITMAP                  "res\\query_bn1_down.bmp"
+IDB_QUERY_DOWN          BITMAP                  "res\\query_bn_down.bmp"
+IDB_QUERY2              BITMAP                  "res\\query.bmp"
+IDB_QUERY1              BITMAP                  "res\\query_bn1.bmp"
+IDB_QUERY               BITMAP                  "res\\query_bn.bmp"
+IDB_PRINTCHART_DOWN     BITMAP                  "res\\printchart_bn_down.bmp"
+IDB_PRINTCHART          BITMAP                  "res\\printchart_bn.bmp"
+IDB_PRINT_DOWN          BITMAP                  "res\\print_bn_down.bmp"
+IDB_PRINT               BITMAP                  "res\\print_bn.bmp"
+IDB_MIAN2               BITMAP                  "res\\11.bmp"
+IDB_MENU2               BITMAP                  "res\\menu2.bmp"
+IDB_MENU1               BITMAP                  "res\\menu1.bmp"
+IDB_MENU                BITMAP                  "res\\menu.bmp"
+IDB_MASK                BITMAP                  "res\\bn_mask.bmp"
+IDB_LOGIN_DOWN1         BITMAP                  "res\\login_bn_down1.bmp"
+IDB_LOGIN_DOWN          BITMAP                  "res\\login_bn_down.bmp"
+IDB_LOGIN1              BITMAP                  "res\\login_bn1.bmp"
+IDB_LOGIN               BITMAP                  "res\\login_bn.bmp"
+IDB_LOG_IN_OVER         BITMAP                  "res\\login_btn_login_over.bmp"
+IDB_LOG_IN              BITMAP                  "res\\login_btn_login.bmp"
+IDB_EXPORT_CHART_DOWN   BITMAP                  "res\\exportchart_bn_down.bmp"
+IDB_EXPORT_CHART        BITMAP                  "res\\exportchart_bn.bmp"
+IDB_EXIT_OVER           BITMAP                  "res\\login_btn_exit.bmp"
+IDB_EXIT_LOG_BN_DOWN    BITMAP                  "res\\exit_log_bn_down.bmp"
+IDB_EXIT_LOG_BN         BITMAP                  "res\\exit_log_bn.bmp"
+IDB_EXIT_DOWN2          BITMAP                  "res\\exit_down.bmp"
+IDB_EXIT_DOWN1          BITMAP                  "res\\exit_bn_down1.bmp"
+IDB_EXIT_DOWN           BITMAP                  "res\\exit_bn_down.bmp"
+IDB_EXIT_BN             BITMAP                  "res\\exit_bn.bmp"
+IDB_EXIT2               BITMAP                  "res\\exit.bmp"
+IDB_EXIT1               BITMAP                  "res\\exit_bn1.bmp"
+IDB_EXIT                BITMAP                  "res\\login_btn_exit_over.bmp"
+IDB_EXAM_DOWN2          BITMAP                  "res\\exam_down.bmp"
+IDB_EXAM_DOWN           BITMAP                  "res\\exam_bn_down.bmp"
+IDB_EXAM2               BITMAP                  "res\\exam.bmp"
+IDB_EXAM                BITMAP                  "res\\exam_bn.bmp"
+IDB_DELETE_DOWN         BITMAP                  "res\\delete_bn_down.bmp"
+IDB_DELETE              BITMAP                  "res\\delete_bn.bmp"
+IDB_DATE_DOWN           BITMAP                  "res\\date_bn_down.bmp"
+IDB_DATE                BITMAP                  "res\\date_bn.bmp"
+IDB_DATA_DOWN2          BITMAP                  "res\\data_down.bmp"
+IDB_DATA2               BITMAP                  "res\\data.bmp"
+IDB_BN_BACK             BITMAP                  "res\\bn_back.bmp"
+IDB_BITMAP_LIST         BITMAP                  "res\\bitmap_l.bmp"
+IDB_ADDANSWER_DOWN      BITMAP                  "res\\addanswer_bn_down.bmp"
+IDB_ADDANSWER           BITMAP                  "res\\addanswer_bn.bmp"
+IDB_ADD_DOWN            BITMAP                  "res\\add_bn_down.bmp"
+IDB_ADD                 BITMAP                  "res\\add_bn.bmp"
+IDB_17                  BITMAP                  "res\\17.bmp"
+IDB_1280_800            BITMAP                  "res\\1280-800副本1.bmp"
+BMP_BACK                BITMAP                  "res\\bmp_back.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_YDUIEXAM_DLG_STUINFO DIALOGEX 0, 0, 327, 265
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "学生信息设置"
+FONT 9, "宋体", 0, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_DM_STU_NUM,66,12,117,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DM_STU_NAME,66,38,117,14,ES_AUTOHSCROLL
+    COMBOBOX        IDC_DM_STU_GENDER,66,64,117,50,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_DM_STU_AGE,66,88,117,14,ES_AUTOHSCROLL
+    COMBOBOX        IDC_DM_STU_DEPARTMENT,66,114,117,55,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_DM_STU_CLASS,66,138,117,55,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_DM_STU_TEL,66,162,117,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DM_STU_EMIAL,66,188,117,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DM_STU_BLUETEETH,66,214,117,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BTN_DM_STU_SELPIC,243,155,19,13,BS_CENTER | BS_VCENTER
+    DEFPUSHBUTTON   "确定",IDOK,210,241,50,16
+    PUSHBUTTON      "取消",IDCANCEL,267,241,50,16
+    LTEXT           "学号*",IDC_STATIC,13,14,26,8,SS_CENTERIMAGE
+    LTEXT           "姓名*",IDC_STATIC,13,39,26,8,SS_CENTERIMAGE
+    LTEXT           "性别*",IDC_STATIC,13,64,26,8,SS_CENTERIMAGE
+    LTEXT           "院系*",IDC_STATIC,13,114,26,10,SS_CENTERIMAGE
+    LTEXT           "班级*",IDC_STATIC,13,141,26,10,SS_CENTERIMAGE
+    LTEXT           "电话",IDC_STATIC,13,168,26,8,SS_CENTERIMAGE
+    LTEXT           "EMIAL",IDC_STATIC,13,193,26,8,SS_CENTERIMAGE
+    LTEXT           "设备蓝牙地址",IDC_STATIC,13,218,50,8,SS_CENTERIMAGE
+    CTEXT           "添加照片",IDC_STATIC,198,157,40,8,SS_CENTERIMAGE
+    LTEXT           "年龄",IDC_STATIC,13,89,26,8,SS_CENTERIMAGE
+    LTEXT           "照片格式为BMP，大小不超过200K",IDC_STATIC,198,179,121,14
+    GROUPBOX        "照片",IDC_STATIC,200,8,111,142
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_YDUIEXAM_DLG_STUINFO, DIALOG
+    BEGIN
+        RIGHTMARGIN, 326
+        BOTTOMMARGIN, 261
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "CompanyName", "TODO: <Company name>"
+            VALUE "FileDescription", "TODO: <File description>"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "YDUIExam.dll"
+            VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
+            VALUE "OriginalFilename", "YDUIExam.dll"
+            VALUE "ProductName", "TODO: <Product name>"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE 9, 1
+#pragma code_page(936)
+#include "res\YDUIExam.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"     // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

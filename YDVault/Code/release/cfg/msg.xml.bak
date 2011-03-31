@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="gb2312"?>
+
+<!-- YDVault system error code and message map here   -->
+<!-- 图文档开发小组					-->
+<!-- 版权属于CAXA					-->
+<!--							-->
+<!-- ************** 编辑时请参照如下说明 *************	-->
+<!--	                                 	      	-->
+<!--	code 错误码                                     -->
+<!--	tip  错误对应的信息 注意：tip中不能包含字符< >  -->
+<!--	注意：该文件大小不能超过64K                     -->
+<!-- *************************************************	-->
+
+<PDEM_MESSAGE>
+	<MSG code="0x81000001"  tip="文件夹不存在！">
+	</MSG>
+
+	<MSG code="0x81000002"  tip="FTP连不上!">
+	</MSG>
+	<MSG code="0x81000003"   tip="向教师机和该学生机建链失败！\n该学生可能电池电量不足或关机！">
+	</MSG>
+	<MSG code="0x81000004"   tip="ResetSYS出错!">
+	</MSG>
+	<MSG code="0x81000005"  tip="Resetmac出错！">
+	</MSG>
+	<MSG code="0x81000006"   tip="GetTeacherdev出错!">
+	</MSG>
+	<MSG code="0x81000007"   tip="GetStusingledev出错！">
+	</MSG>
+	<MSG code="0x81000008"   tip="Reset出错!">
+	</MSG>
+	<MSG code="0x81000009"   tip="Initsearch出错!">
+	</MSG>
+	<MSG code="0x81000010"   tip="GetStudev出错!">
+	</MSG>
+	<MSG code="0x81000011"   tip="Sendvalidmac出错!">
+	</MSG>
+	<MSG code="0x81000012"   tip="SendFirstMac出错!">
+	</MSG>
+	<MSG code="0x81000013"   tip="UpdateStudev出错!">
+	</MSG>
+	<MSG code="0x81000014"   tip="Addmac出错!">
+	</MSG>
+	<MSG code="0x81000015"  tip="Sendexaminfo出错!">
+	</MSG>
+	<MSG code="0x81000016"  tip="Sendexaminfo_new出错!">
+	</MSG>
+	<MSG code="0x81000017"  tip="Sendoffexaminfo出错!">
+	</MSG>
+	<MSG code="0x81000018"	 tip="Sendsingleinfo出错!">
+	</MSG>
+	<MSG code="0x81000019"	 tip="Sendstepexaminfo出错!">
+	</MSG>
+	<MSG code="0x81000020"  tip="Updatestat出错!">
+	</MSG>
+	<MSG code="0x81000021"   tip="IsRolldone出错!">
+	</MSG>
+	<MSG code="0x81000022"   tip="IsRollingdone出错!">
+	</MSG>
+	<MSG code="0x81000023"   tip="Rolling出错!">
+	</MSG>
+	<MSG code="0x81000024"   tip="Linksuccess出错!">
+	</MSG>
+	<MSG code="0x81000025"   tip="PreRolling出错!">
+	</MSG>
+	<MSG code="0x81000026"   tip="SingleRolling出错!">
+	</MSG>
+	<MSG code="0x81000027"   tip="OpenFM出错!">
+	</MSG>
+	<MSG code="0x81000028"   tip="SearchFM出错!">
+	</MSG>
+	<MSG code="0x81000029"   tip="CloseFM出错!">
+	</MSG>
+	<MSG code="0x81000030"   tip="UpFM出错!">
+	</MSG>
+	<MSG code="0x81000031"   tip="DownFM出错!">
+	</MSG>
+	<MSG code="0x81000032"   tip="SetFM出错!">
+	</MSG>
+	<MSG code="0x81000033"   tip="没有接收到答案!">
+	</MSG>
+	<MSG code="0x81000034"   tip="Getoffanswer出错!">
+	</MSG>
+	<MSG code="0x81000035"   tip="FetchAnswer出错!">
+	</MSG>
+	<MSG code="0x81000036"   tip="Getrelationmap出错!">
+	</MSG>
+	<MSG code="0x81000037"   tip="Opencom出错!">
+	</MSG>
+	<MSG code="0x81000038"   tip="请先选择一个教师机，才可以继续进行操作!">
+	</MSG>
+	<MSG code="0x81000039"   tip="当前学生机不在已点名列表中，不能续考!">
+	</MSG>
+</PDEM_MESSAGE>

@@ -1,0 +1,6 @@
+; ObjRef.def : Declares the module parameters for the DLL.
+
+LIBRARY      "ObjRef"
+
+EXPORTS
+    ; Explicit exports can go here

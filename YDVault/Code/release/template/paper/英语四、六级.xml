@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--      配置时间的试题顺序                    -->
+<!--      ID=1 表示作文  				                -->
+<!--      ID=2 表示阅读理解			                -->
+<!--      ID=3 表示短文听力			                -->
+<!--      ID=4 表示完形填空 		                -->
+<!--      ID=5 表示翻译题				                -->
+<!--      ID=6 表示词汇与语法		                -->
+<!--      ID=7 表示快速阅读			                -->
+<!--      ID=8 表示阅读选词填空                 -->
+<!--      ID=9 表示听力填空			                -->
+<!--      ID=10 表示短句听力			              -->
+<!--      ID=11 表示长句听力			              -->
+<!--      ID=12 表示改错  				              -->
+<!-- *******************************************-->
+<YDVAULT>
+	<PAPER>
+    <QUESTION id ="1">
+       <DIRECTION></DIRECTION>
+    </QUESTION>
+    <QUESTION id ="7">
+      <DIRECTION></DIRECTION>
+    </QUESTION>
+    <QUESTION id ="10">
+      <DIRECTION></DIRECTION>
+    </QUESTION>
+    <QUESTION id ="11">
+      <DIRECTION></DIRECTION>
+    </QUESTION>
+    <QUESTION id ="3">
+      <DIRECTION></DIRECTION>
+    </QUESTION>
+    <QUESTION id ="9">
+      <DIRECTION></DIRECTION>
+    </QUESTION>
+    <QUESTION id ="2">
+      <DIRECTION></DIRECTION>
+    </QUESTION>
+    <QUESTION id ="4">
+      <DIRECTION></DIRECTION>
+    </QUESTION>
+    <QUESTION id ="12">
+      <DIRECTION></DIRECTION>
+    </QUESTION>
+    <QUESTION id ="5">
+      <DIRECTION></DIRECTION>
+    </QUESTION>
+	</PAPER>
+</YDVAULT>

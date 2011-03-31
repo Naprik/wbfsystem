@@ -1,0 +1,6 @@
+; Base.def : Declares the module parameters for the DLL.
+
+LIBRARY      "Base"
+
+EXPORTS
+    ; Explicit exports can go here

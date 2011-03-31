@@ -1,0 +1,13 @@
+<YDVAULT>
+	<FTPESERVER>
+		<SERVER_TYPE>
+			1
+		</SERVER_TYPE>
+		<SERVERPARAM>
+			<PARAM Name="ServerAddr" value="D:"/>
+			<PARAM Name="ServerPort" value="21"/>
+			<PARAM Name="ServerUser" value="ERHIHZDA" encrypt="TRUE"/>
+			<PARAM Name="ServerPwd" value="ERHIHZDA" encrypt="TRUE"/>
+		</SERVERPARAM>
+	</FTPESERVER>
+</YDVAULT>

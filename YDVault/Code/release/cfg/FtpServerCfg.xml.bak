@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<YDVAULT>
+	<FTPESERVER> 
+		<SERVER_TYPE>1</SERVER_TYPE>
+		<SERVERPARAM>
+			<PARAM name="ServerAddr" value="ydsubversion.gicp.net"></PARAM>
+			<PARAM name="ServerPort" value="21"></PARAM>
+			<PARAM name="ServerUser" value="yodo" encrypt="FALSE"></PARAM>
+			<PARAM name="ServerPwd" value="yodo" encrypt="FALSE"></PARAM>
+		</SERVERPARAM>
+	</FTPESERVER>
+</YDVAULT>

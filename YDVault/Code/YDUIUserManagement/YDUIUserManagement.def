@@ -1,0 +1,6 @@
+; YDUIUserManagement.def : Declares the module parameters for the DLL.
+
+LIBRARY      "YDUIUserManagement"
+
+EXPORTS
+    ; Explicit exports can go here

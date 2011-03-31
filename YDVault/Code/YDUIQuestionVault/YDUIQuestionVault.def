@@ -1,0 +1,6 @@
+; YDUIQuestionVault.def : Declares the module parameters for the DLL.
+
+LIBRARY      "YDUIQuestionVault"
+
+EXPORTS
+    ; Explicit exports can go here

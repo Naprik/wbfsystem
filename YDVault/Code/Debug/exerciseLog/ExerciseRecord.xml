@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="gb2312"?>
+<!--      配置时间的试题顺序                    -->
+<!--      TYPE=1 表示作文  				                -->
+<!--      TYPE=2 表示阅读理解			                -->
+<!--      TYPE=3 表示短文听力			                -->
+<!--      TYPE=4 表示完形填空 		                -->
+<!--      TYPE=5 表示翻译题				                -->
+<!--      TYPE=6 表示词汇与语法		                -->
+<!--      TYPE=7 表示快速阅读			                -->
+<!--      TYPE=8 表示阅读选词填空                 -->
+<!--      TYPE=9 表示听力填空			                -->
+<!--      TYPE=10 表示短句听力			              -->
+<!--      TYPE=11 表示长句听力			              -->
+<!--      TYPE=12 表示改错  				              -->
+<!-- *******************************************-->
+<!-- <EXERCISE> -->
+<!--   <PAPER> -->
+<!--     <QUESTION no="1" type="1" objid="1" mark="1"> 题号，题型，OBJID，分数-->
+<!--       <userAnswer></usrAnswer> 用户答案-->
+<!--       <stdAnswer></stdAnswer> 标准答案-->
+<!--       <description></description> 评论-->
+<!--     </QUESTION> -->
+<!--   </PAPER> -->
+<!--   <MARK curno="1" /> 答题标记，标记当前答题位置-->
+<!-- </EXERCISE> -->
+
+<EXERCISE>
+  <PAPER>
+    <QUESTION no="1" type="1" objid="1" mark="1">
+      <userAnswer></userAnswer>
+      <stdAnswer></stdAnswer>
+      <description></description>
+    </QUESTION>
+  </PAPER>
+  <MARK curno="1" />
+</EXERCISE>

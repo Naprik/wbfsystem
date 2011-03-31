@@ -1,0 +1,6 @@
+; MainUIBase.def : Declares the module parameters for the DLL.
+
+LIBRARY      "MainUIBase"
+
+EXPORTS
+    ; Explicit exports can go here
