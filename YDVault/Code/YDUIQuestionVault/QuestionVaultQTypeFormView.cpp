@@ -12,6 +12,7 @@
 #include "../ObjRef/YDQuestionType.h"
 #include "../DBBase/DBTransactionRef.h"
 #include "../Base/DataHandler.h"
+#include "YDVaultFactorInfoConfig.h"
 
 
 // CQuestionVaultQTypeFormView
@@ -40,6 +41,7 @@ void CQuestionVaultQTypeFormView::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CQuestionVaultQTypeFormView, CYdFormView)
 	ON_BN_CLICKED(IDC_BUTTON_ADD, &CQuestionVaultQTypeFormView::OnBnClickedButtonAdd)
 	ON_BN_CLICKED(IDC_BUTTON_REMOVE, &CQuestionVaultQTypeFormView::OnBnClickedButtonRemove)
+	ON_BN_CLICKED(IDC_BUTTON_FACTORINFO_CONIFG, &CQuestionVaultQTypeFormView::OnBnClickedButtonFactorinfoConifg)
 END_MESSAGE_MAP()
 
 
@@ -441,4 +443,18 @@ BOOL CQuestionVaultQTypeFormView::Create(LPCTSTR lpszClassName, LPCTSTR lpszWind
 		pParentWnd,
 		nID,
 		pContext);
+}
+
+void CQuestionVaultQTypeFormView::OnBnClickedButtonFactorinfoConifg()
+{
+	// TODO: Add your control notification handler code here
+	//题型指标配置
+	CYdObjWrapper* pParentWrapper = m_pSheet->GetCurObjWrapper();
+	ASSERT(pParentWrapper);
+	CYDQuestionVault* pQV = (CYDQuestionVault*)pParentWrapper->m_pObjRef;
+	ASSERT(pQV);
+
+	CYDVaultFactorInfoConfig dlg;
+	dlg.m_pVault = pQV;
+	dlg.DoModal();
 }

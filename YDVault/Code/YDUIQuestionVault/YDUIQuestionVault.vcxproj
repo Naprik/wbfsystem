@@ -148,6 +148,7 @@
     <ClCompile Include="YDReadQuestionDlg.cpp" />
     <ClCompile Include="YDTranslationQuestionDlg.cpp" />
     <ClCompile Include="YDUIQuestionVault.cpp" />
+    <ClCompile Include="YDVaultFactorInfoConfig.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="YDUIQuestionVault.def" />
@@ -179,6 +180,7 @@
     <ClInclude Include="YDCompositionQuestionDlg.h" />
     <ClInclude Include="YDReadQuestionDlg.h" />
     <ClInclude Include="YDTranslationQuestionDlg.h" />
+    <ClInclude Include="YDVaultFactorInfoConfig.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="YDUIQuestionVault.rc" />
@@ -195,6 +197,9 @@
     <ProjectReference Include="..\FtpBase\FtpBase.vcxproj">
       <Project>{bc30e534-f286-4a52-993e-fcc790ed7598}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\ObjHelper\ObjHelper.vcxproj">
+      <Project>{42b2fd78-452e-445a-b317-b08b404d4c51}</Project>
     </ProjectReference>
     <ProjectReference Include="..\ObjRef\ObjRef.vcxproj">
       <Project>{b2626375-aac2-4696-b222-da3177257cf0}</Project>

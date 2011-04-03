@@ -47,5 +47,6 @@ using namespace ADODB;
 #include <BCGCBProInc.h>
 extern TCHAR	 _ModulePath[MAX_PATH] ;
 #include "../include\extdllstate.h"
+#include <afxcontrolbars.h>
 
 

@@ -18,6 +18,7 @@
 #include "../\ObjRef\YDUserRef.h"
 #include "../ObjRef\YDQuestionVault.h"
 #include "../YDExamObjRef\YDStuMark.h"
+#include "../ObjRef/YdFactorInfoItemObjRef.h"
 
 CStaticObjHelper::CStaticObjHelper(void)
 {
@@ -262,6 +263,12 @@ HRESULT CStaticObjHelper::CreateObjRefByDBName(CString _strDBName,
 		//题库
 		_pRef = new CYDStuMark(pDB);
 	}
+	else if(_strDBName.CompareNoCase(DB_YDFACTORINFOITEM) == 0)
+	{
+		//预留字段”与指标的映射关系
+		_pRef = new CYdFactorInfoItemObjRef(pDB);
+	}
+	
 	else
 	{
 		ASSERT(FALSE);

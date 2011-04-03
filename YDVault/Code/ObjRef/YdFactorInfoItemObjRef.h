@@ -1,7 +1,7 @@
 #pragma once
 #include "YDObjectRef.h"
 
-class CYdFactorInfoItemObjRef :
+class BASE_DLL_API CYdFactorInfoItemObjRef :
 	public CYDObjectRef
 {
 public:

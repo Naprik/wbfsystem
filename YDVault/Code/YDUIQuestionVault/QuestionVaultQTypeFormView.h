@@ -45,6 +45,8 @@ private:
 	HRESULT InsertExistQType(CYDLinkRef* _pLinkRef);
 	HRESULT InsertAllQType(CYDObjectRef* _pObjRef);
 	HRESULT RepalceQType(CYDLinkRef* _pLinkRef,std::list<CYDQuestionType*> _lstAllQType);
+public:
+	afx_msg void OnBnClickedButtonFactorinfoConifg();
 };
 
 

@@ -28,6 +28,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YDFormUIBase", "YDFormUIBase\YDFormUIBase.vcxproj", "{E882242E-143D-4D1C-B462-3D55399FDBD5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YDUIQuestionVault", "YDUIQuestionVault\YDUIQuestionVault.vcxproj", "{156334BC-28F3-48CC-BF9B-1AC914D7C24D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{42B2FD78-452E-445A-B317-B08B404D4C51} = {42B2FD78-452E-445A-B317-B08B404D4C51}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YDUIExamOperate", "YDUIExamOperate\YDUIExamOperate.vcxproj", "{CD338049-3D5F-4050-BC68-0ECB16181A91}"
 EndProject
