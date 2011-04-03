@@ -130,6 +130,16 @@ public:
 
 #define YD_NOT_FILL_ANSWER                      _T("未填写")
 
+//预留字段”与指标的映射关系
+#define DB_YDFACTORINFOITEM                     _T("FIELD2FACTOR")
+#define FIELD_YDFACTORINFOITEM_VAULTID          _T("VAULTID")  //VaultID,题库的ID
+#define FIELD_YDFACTORINFOITEM_QTYPEID          _T("QTYPEID")  //题型ID
+#define FIELD_YDFACTORINFOITEM_FACTORNAME       _T("FACTORNAME")  //指标名称
+#define FIELD_YDFACTORINFOITEM_FIELDNAME        _T("FIELDNAME")  //预留字段名称
+#define FIELD_YDFACTORINFOITEM_MIN				_T("MIN")        //数值型下界
+#define FIELD_YDFACTORINFOITEM_MAX              _T("MAX")  //数值型上界
+#define FIELD_YDFACTORINFOITEM_DESCRIPTION      _T("DESCRIPTION")  //描述
+
 
 enum QTYPE
 {
