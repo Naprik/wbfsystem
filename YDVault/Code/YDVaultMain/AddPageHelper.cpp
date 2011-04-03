@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "StdAfx.h"  
 #include "AddPageHelper.h"
 #include "../YDFormUIBase\ObjPropertySheet.h"
 #include "../YDFormUIBase\ObjPropShow.h"
