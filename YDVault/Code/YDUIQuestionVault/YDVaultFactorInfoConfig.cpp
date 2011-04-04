@@ -12,6 +12,7 @@
 #include "../ObjHelper/StaticObjHelper.h"
 #include "../ObjRef/YDObjectRef.h"
 #include "../ObjRef/PropQueryContidition.h"
+#include "../ObjRef/YdFactorInfoItemObjRef.h"
 
 
 
@@ -46,6 +47,8 @@ void CYDVaultFactorInfoConfig::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CYDVaultFactorInfoConfig, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CYDVaultFactorInfoConfig::OnBnClickedOk)
+	ON_BN_CLICKED(IDC_BUTTON_ADD, &CYDVaultFactorInfoConfig::OnBnClickedButtonAdd)
+	ON_BN_CLICKED(IDC_BUTTON_DEL, &CYDVaultFactorInfoConfig::OnBnClickedButtonDel)
 END_MESSAGE_MAP()
 
 
@@ -55,9 +58,127 @@ END_MESSAGE_MAP()
 void CYDVaultFactorInfoConfig::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
+	HRESULT hr = E_FAIL;
+	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
+	ASSERT(pDB);
+
+	hr = DelOldItem();
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+		return ;
+	}
+	//将列表中的对象插入到数据库中
+	for(int i = 0; i < m_Grid.GetRowCount();++i)
+	{
+		CBCGPGridRow* pRow = m_Grid.GetRow(i);
+		ASSERT(pRow);
+		CBCGPGridRow* pParentRow = pRow->GetParent();
+		if(pParentRow )
+		{
+			continue;
+		}
+		hr = InsertItemByRowType(pRow,pDB);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+			return ;
+		}	
+	}
 	CDialogEx::OnOK();
 }
 
+HRESULT CYDVaultFactorInfoConfig::InsertItemByRowType(CBCGPGridRow* _pRowType,CDatabaseEx* pDb)
+{
+	HRESULT hr = E_FAIL;
+	ASSERT(_pRowType);
+	CYDQuestionType* pType = (CYDQuestionType*)_pRowType->GetData();
+	ASSERT(pType);
+	OBJID idType = 0;
+	hr = pType->GetID(&idType);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	CComVariant valIDType(idType);
+	ASSERT(m_pVault);
+	OBJID idVault = 0;
+	hr = m_pVault->GetID(&idVault);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	CComVariant valIDVault(idVault);
+	//插入记录
+	for(int i = 0 ; i < _pRowType->GetSubItemsCount();++i)
+	{
+		CBCGPGridRow *pSubRow = _pRowType->GetSubItem(i);
+		ASSERT(pSubRow);
+		CYDObjectRef* pFactorInfoItem = new CYdFactorInfoItemObjRef(pDb);
+		m_lstOldFactorInfoItem.push_back(pFactorInfoItem);
+		hr = pFactorInfoItem->SetPropVal(FIELD_YDFACTORINFOITEM_QTYPEID,&valIDType);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		hr = pFactorInfoItem->SetPropVal(FIELD_YDFACTORINFOITEM_VAULTID,&valIDVault);
+		if(FAILED(hr))
+		{
+			return hr;
+		} 
+		CComVariant valFactorName = pSubRow->GetItem(cColFactorName)->GetValue();
+		hr = pFactorInfoItem->SetPropVal(FIELD_YDFACTORINFOITEM_FACTORNAME,&valFactorName);
+		if(FAILED(hr))
+		{
+			return hr;
+		} 
+		CComVariant valFieldName = pSubRow->GetItem(cColFieldName)->GetValue();
+		hr = pFactorInfoItem->SetPropVal(FIELD_YDFACTORINFOITEM_FIELDNAME,&valFieldName);
+		if(FAILED(hr))
+		{
+			return hr;
+		} 
+		CComVariant valMin = pSubRow->GetItem(cColMin)->GetValue();
+		hr = pFactorInfoItem->SetPropVal(FIELD_YDFACTORINFOITEM_MIN,&valMin);
+		if(FAILED(hr))
+		{
+			return hr;
+		} 
+		CComVariant valMax = pSubRow->GetItem(cColMax)->GetValue();
+		hr = pFactorInfoItem->SetPropVal(FIELD_YDFACTORINFOITEM_MAX,&valMax);
+		if(FAILED(hr))
+		{
+			return hr;
+		} 
+		CComVariant valDes = pSubRow->GetItem(cColDes)->GetValue();
+		hr = pFactorInfoItem->SetPropVal(FIELD_YDFACTORINFOITEM_DESCRIPTION,&valDes);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		hr = pFactorInfoItem->Save();
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+	}
+	return S_OK;
+}
+HRESULT CYDVaultFactorInfoConfig::DelOldItem()
+{
+	HRESULT hr = E_FAIL;
+	for(std::list<CYDObjectRef*>::const_iterator itr =	m_lstOldFactorInfoItem.begin();
+		itr != m_lstOldFactorInfoItem.end();++itr)
+	{
+		hr = (*itr)->Remove();
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+	}
+	CListAutoClean<CYDObjectRef> clr(m_lstOldFactorInfoItem);
+	return S_OK;
+}
 
 BOOL CYDVaultFactorInfoConfig::OnInitDialog()
 {
@@ -191,6 +312,154 @@ HRESULT CYDVaultFactorInfoConfig::InsertByQuestionType(CYDQuestionType* _pQType)
 		itr != lstFactorInfoItem.end();++itr)
 	{
 		m_lstOldFactorInfoItem.push_back(*itr);
+		hr = InsertRowByFactorInfoItem(pRowQType,*itr);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
 	}
 	return S_OK;
+}
+
+HRESULT CYDVaultFactorInfoConfig::InsertRowByFactorInfoItem(CBCGPGridRow* _pParentRow,
+															CYDObjectRef* _pFactorInfoItem)
+{
+	HRESULT hr = E_FAIL;
+	ASSERT(_pParentRow);
+	CBCGPGridRow* pChildRow = NULL;
+	hr = CreateRowFactorInfoItem(_pParentRow,pChildRow);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	ASSERT(pChildRow);
+	ASSERT(_pFactorInfoItem);
+	CComVariant valFactorName;
+	hr = _pFactorInfoItem->GetPropVal(FIELD_YDFACTORINFOITEM_FACTORNAME,&valFactorName);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	pChildRow->GetItem(cColFactorName)->SetValue(valFactorName);
+
+	CComVariant valFieldName;
+	hr = _pFactorInfoItem->GetPropVal(FIELD_YDFACTORINFOITEM_FIELDNAME,&valFieldName);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	pChildRow->GetItem(cColFieldName)->SetValue(valFieldName);
+
+	CComVariant valMin;
+	hr = _pFactorInfoItem->GetPropVal(FIELD_YDFACTORINFOITEM_MIN,&valMin);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	pChildRow->GetItem(cColMin)->SetValue(valMin);
+
+	CComVariant valMax;
+	hr = _pFactorInfoItem->GetPropVal(FIELD_YDFACTORINFOITEM_MAX,&valMax);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	pChildRow->GetItem(cColMax)->SetValue(valMax);
+
+	CComVariant valDesc;
+	hr = _pFactorInfoItem->GetPropVal(FIELD_YDFACTORINFOITEM_DESCRIPTION,&valDesc);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	pChildRow->GetItem(cColDes)->SetValue(valDesc);
+	return S_OK;
+}
+
+HRESULT CYDVaultFactorInfoConfig::CreateRowFactorInfoItem(CBCGPGridRow* _pParentRow,
+														CBCGPGridRow* &_pChildRow)
+{
+	HRESULT hr = E_FAIL;
+	ASSERT(_pParentRow);
+	_pChildRow = m_Grid.CreateRow(m_Grid.GetColumnCount());
+	_pChildRow->GetItem(cColQTypeID)->Enable(FALSE);
+
+	_pChildRow->GetItem(cColFactorName)->Enable(TRUE);
+	CBCGPGridItem* pItem = new CBCGPGridItem("");
+	for(int i = 1; i <= 25;i++)
+	{
+		CString strName;
+		strName.Format(_T("C%d"),i);
+		pItem->AddOption(strName);
+	}
+	for(int i = 1; i <= 25;i++)
+	{
+		CString strName;
+		strName.Format(_T("N%d"),i);
+		pItem->AddOption(strName);
+	}
+	_pChildRow->ReplaceItem (cColFieldName, pItem);
+	_pChildRow->GetItem(cColFieldName)->Enable(TRUE);
+	_pChildRow->GetItem(cColMin)->Enable(TRUE);
+	_pChildRow->GetItem(cColMax)->Enable(TRUE);
+	_pChildRow->GetItem(cColDes)->Enable(TRUE);
+	_pChildRow->AllowSubItems();
+	_pParentRow->AddSubItem(_pChildRow);
+	return S_OK;
+}
+
+
+void CYDVaultFactorInfoConfig::OnBnClickedButtonAdd()
+{
+	// TODO: Add your control notification handler code here
+	CBCGPGridRow *pSelRow = 	m_Grid.GetCurSel();
+	if(pSelRow == NULL)
+	{
+		AfxMessageBox(_T("请至少选中一条要选中的记录！"));
+		return ;
+	}
+	CBCGPGridRow *pParentRow = pSelRow->GetParent();
+	if(pParentRow == NULL)
+	{
+		pParentRow = pSelRow;
+	}
+	HRESULT hr = E_FAIL;
+	CBCGPGridRow *pChildRow = NULL;
+	hr = CreateRowFactorInfoItem(pParentRow,pChildRow);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+		return ;
+	}
+}
+
+
+void CYDVaultFactorInfoConfig::OnBnClickedButtonDel()
+{
+	// TODO: Add your control notification handler code here
+	CBCGPGridRow *pSelRow = 	m_Grid.GetCurSel();
+	if(pSelRow == NULL)
+	{
+		AfxMessageBox(_T("请至少选中一条要选中的记录！"));
+		return ;
+	}
+	if(pSelRow->GetParent() == NULL)
+	{
+		AfxMessageBox(_T("题型不能删除!"));
+		return ;
+	}
+
+	if(AfxMessageBox(_T("你确定要删除选择的行吗？"),MB_YESNO) != IDYES)
+	{
+		return;
+	}
+	for(int i = 0 ; i <m_Grid.GetRowCount();i++)
+	{
+		CBCGPGridRow* pRow = m_Grid.GetRow(i);
+		if(pRow == pSelRow)
+		{
+			m_Grid.RemoveRow(i);
+			break;
+		}
+	}
 }
