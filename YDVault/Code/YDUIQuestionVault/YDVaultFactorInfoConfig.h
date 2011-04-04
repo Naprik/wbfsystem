@@ -39,6 +39,9 @@ private:
 									CBCGPGridRow* &_pChildRow);//创建一行，这一行是填入的配置关系的一些默认信息
 	HRESULT DelOldItem();//将原来的配置关系删除
 	HRESULT InsertItemByRowType(CBCGPGridRow* _pRowType,CDatabaseEx* pDb);
+	BOOL	ValidateData();
+	BOOL    ValidateDataByRowQType(CBCGPGridRow* _pRowQType);
+	CString	CreateInvalidateMsg(CYDQuestionType* _pQType,int _iRow,CString _strName);
 public:
 	afx_msg void OnBnClickedButtonAdd();
 	afx_msg void OnBnClickedButtonDel();

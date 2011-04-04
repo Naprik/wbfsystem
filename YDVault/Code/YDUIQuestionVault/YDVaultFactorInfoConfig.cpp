@@ -13,6 +13,7 @@
 #include "../ObjRef/YDObjectRef.h"
 #include "../ObjRef/PropQueryContidition.h"
 #include "../ObjRef/YdFactorInfoItemObjRef.h"
+#include "../Base/DataHandler.h"
 
 
 
@@ -59,6 +60,10 @@ void CYDVaultFactorInfoConfig::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
 	HRESULT hr = E_FAIL;
+	if(!ValidateData())
+	{
+		return;
+	}
 	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
 	ASSERT(pDB);
 
@@ -400,7 +405,9 @@ HRESULT CYDVaultFactorInfoConfig::CreateRowFactorInfoItem(CBCGPGridRow* _pParent
 	}
 	_pChildRow->ReplaceItem (cColFieldName, pItem);
 	_pChildRow->GetItem(cColFieldName)->Enable(TRUE);
+//	pItem->
 	_pChildRow->GetItem(cColMin)->Enable(TRUE);
+	//_pChildRow->GetItem(cColMin)->
 	_pChildRow->GetItem(cColMax)->Enable(TRUE);
 	_pChildRow->GetItem(cColDes)->Enable(TRUE);
 	_pChildRow->AllowSubItems();
@@ -462,4 +469,77 @@ void CYDVaultFactorInfoConfig::OnBnClickedButtonDel()
 			break;
 		}
 	}
+}
+
+BOOL CYDVaultFactorInfoConfig::ValidateData()
+{
+	for(int i = 0; i < m_Grid.GetRowCount();i++)
+	{
+		CBCGPGridRow* pRow = m_Grid.GetRow(i);
+		ASSERT(pRow);
+		CBCGPGridRow* pParentRow = pRow->GetParent();
+		if(pParentRow)
+		{
+			continue;
+		}
+		if(!ValidateDataByRowQType(pRow))
+		{
+			return FALSE;
+		}
+	}
+	return TRUE;
+}
+
+BOOL CYDVaultFactorInfoConfig::ValidateDataByRowQType(CBCGPGridRow* _pRowQType)
+{
+	ASSERT(_pRowQType);
+	CYDQuestionType* pQType = (CYDQuestionType*)_pRowQType->GetData();
+	ASSERT(pQType);
+	for(int i = 0; i < _pRowQType->GetSubItemsCount();i++)
+	{
+		CBCGPGridRow* pRow = _pRowQType->GetSubItem(i);
+		ASSERT(pRow);
+		CComVariant valFactorName = pRow->GetItem(cColFactorName)->GetValue();
+		CString strFactorName = CDataHandler::VariantToString(valFactorName);
+		if(strFactorName.IsEmpty())
+		{
+			CString strMsg = CreateInvalidateMsg(pQType,i+1,_T("指标名称"));
+			AfxMessageBox(strMsg);
+			return FALSE;
+		}
+		CComVariant valFieldName = pRow->GetItem(cColFieldName)->GetValue();
+		CString strFiledName = CDataHandler::VariantToString(valFieldName);
+		if(strFiledName.IsEmpty())
+		{
+			CString strMsg = CreateInvalidateMsg(pQType,i+1,_T("预留字段名称"));
+			AfxMessageBox(strMsg);
+			return FALSE;
+		}
+		CComVariant valMin = pRow->GetItem(cColMin)->GetValue();
+		CString strMin = CDataHandler::VariantToString(valMin);
+		if(strMin.IsEmpty())
+		{
+			CString strMsg = CreateInvalidateMsg(pQType,i+1,_T("最小值"));
+			AfxMessageBox(strMsg);
+			return FALSE;
+		}
+		CComVariant valMax = pRow->GetItem(cColMax)->GetValue();
+		CString strMax = CDataHandler::VariantToString(valMax);
+		if(strMax.IsEmpty())
+		{
+			CString strMsg = CreateInvalidateMsg(pQType,i+1,_T("最大值"));
+			AfxMessageBox(strMsg);
+			return FALSE;
+		}
+	}
+	return TRUE;
+}
+
+CString	CYDVaultFactorInfoConfig::CreateInvalidateMsg(CYDQuestionType* _pQType,int _iRow,CString _strName)
+{
+	CString strLabel;
+	_pQType->GetLabel(&strLabel);
+	CString strMsg;
+	strMsg.Format(_T("%s中第%d行%s不能为空！"),strLabel,_iRow,_strName);
+	return strMsg;
 }
