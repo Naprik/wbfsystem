@@ -2,6 +2,7 @@
 #include "YdFactorInfoItemObjRef.h"
 
 
+
 CYdFactorInfoItemObjRef::CYdFactorInfoItemObjRef(CDatabaseEx* pDb)
 	: CYDObjectRef(pDb)
 {
@@ -19,3 +20,4 @@ CYdFactorInfoItemObjRef::CYdFactorInfoItemObjRef(CDatabaseEx* pDb)
 CYdFactorInfoItemObjRef::~CYdFactorInfoItemObjRef(void)
 {
 }
+

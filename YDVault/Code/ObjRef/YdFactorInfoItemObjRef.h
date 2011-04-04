@@ -7,5 +7,7 @@ class BASE_DLL_API CYdFactorInfoItemObjRef :
 public:
 	CYdFactorInfoItemObjRef(CDatabaseEx* pDb);
 	~CYdFactorInfoItemObjRef(void);
+public:
+
 };
 

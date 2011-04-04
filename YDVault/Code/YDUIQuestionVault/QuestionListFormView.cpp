@@ -22,6 +22,7 @@
 #include "../ObjRef/PropQueryContidition.h"
 #include "QuestionViewDlg.h"
 #include "../UIBase\ListXlsoutput.h"
+#include "DlYDVaultQuestionFactorInfoConfig.h"
 // CQuestionListFormView
 
 
@@ -66,6 +67,7 @@ BEGIN_MESSAGE_MAP(CQuestionListFormView, CYdFormView)
 	ON_BN_CLICKED(IDC_BUTTON_QL_QUERY_END, &CQuestionListFormView::OnBnClickedButtonQlQueryEnd)
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST_QL_QUESTION, &CQuestionListFormView::OnNMDblclkListQlQuestion)
 	ON_BN_CLICKED(IDC_BUTTON_QL_OUTPUT, &CQuestionListFormView::OnBnClickedButtonQlOutput)
+	ON_BN_CLICKED(IDC_BUTTON_QL_CONFIG_FACTORINFO, &CQuestionListFormView::OnBnClickedButtonQlConfigFactorinfo)
 END_MESSAGE_MAP()
 
 
@@ -1017,4 +1019,41 @@ void CQuestionListFormView::OnBnClickedButtonQlOutput()
 		return ;
 	}
 	AfxMessageBox(_T("输出XLS成功！"));
+}
+
+
+void CQuestionListFormView::OnBnClickedButtonQlConfigFactorinfo()
+{
+	// TODO: Add your control notification handler code here
+	POSITION pos = m_lstQuestion.GetFirstSelectedItemPosition();
+	if (pos == NULL)
+	{
+		AfxMessageBox(_T("请选择要配置的题目！"));
+		return;
+	}
+	HRESULT hr = E_FAIL;
+	int nItem = m_lstQuestion.GetNextSelectedItem(pos);
+	CYdObjWrapper* pObjWrapper = (CYdObjWrapper*)m_lstQuestion.GetItemData(nItem);
+	ASSERT(pObjWrapper);
+	CYDQuestionVault* pQVault = NULL;
+	hr = GetQuestionVault(pQVault);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+		return;
+	}
+	ASSERT(pQVault);
+	CYDQuestionType* pQType = NULL;
+	hr = GetQuestionType(pQType);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+		return;
+	}
+	ASSERT(pQType);
+	CDlYDVaultQuestionFactorInfoConfig dlg;
+	dlg.m_pVault = pQVault;
+	dlg.m_pQType = pQType;
+	dlg.m_pQuestion = pObjWrapper->m_pObjRef;
+	dlg.DoModal();
 }

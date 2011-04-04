@@ -1,6 +1,10 @@
 #include "StdAfx.h"
 #include "BCGPKeyGridCtrl.h"
 
+
+#define  ITEM_TEXT_BK_COLOR RGB(110,180,200)
+#define  ITEM_TEXT_BK_COLOR_DEFAULT  RGB(255,255,255)
+
 CBCGPKeyGridCtrl::CBCGPKeyGridCtrl(void)
 {
 	m_bEnalbeKeyMove = TRUE;
@@ -137,4 +141,27 @@ BOOL CBCGPKeyGridCtrl::MoveItem(UINT _uDirection)
 	}
 	SetCurSel(pNextItem->GetGridItemID());
 	return TRUE;
+}
+
+void CBCGPKeyGridCtrl::SetSpaceRowColor(BOOL _bSpaceRowColor)
+{
+	for(int i = 0; i < GetRowCount();i++)
+	{
+		CBCGPGridRow* pRow = GetRow(i);
+		ASSERT(pRow);
+		COLORREF color  ;
+		if(_bSpaceRowColor && i %2 == 0)
+		{
+			color = ITEM_TEXT_BK_COLOR;
+		}
+		else
+		{
+			color = ITEM_TEXT_BK_COLOR_DEFAULT;
+		}
+		for(int j = 0 ; j < pRow->GetItemCount();j++)
+		{
+			pRow->GetItem(j)->SetBackgroundColor(color);
+		}
+
+	}
 }

@@ -17,6 +17,6 @@ private:
 	BOOL MoveItem(UINT _uDirection);
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
-
+	void SetSpaceRowColor(BOOL _bSpaceRowColor);
 };
 

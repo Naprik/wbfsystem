@@ -46,7 +46,6 @@
 #define IDC_BUTTON_ADD                  1017
 #define IDC_BUTTON_DEL                  1018
 #define IDC_BUTTON_REMOVE               1018
-#define IDC_BUTTON_ADD2                 1018
 #define IDC_COMBO_CQ_HARDLEVEL          1021
 #define IDC_EDIT_CQ_CODE                1022
 #define IDC_RICHEDIT_AC_ARTICLE         1024
@@ -89,6 +88,7 @@
 #define IDC_BUTTON_QL_QUERY_QUERY       1070
 #define IDC_BUTTON_QL_DEL2              1071
 #define IDC_BUTTON_QL_OUTPUT            1071
+#define IDC_BUTTON_QL_CONFIG_FACTORINFO 1072
 #define IDC_BUTTON_QL_QUERY_PREV        1075
 #define IDC_BUTTON_QL_QUERY_NEXT        1076
 #define IDC_BUTTON_QL_QUERY_END         1077
@@ -128,6 +128,8 @@
 #define IDC_EDIT_PAPERCREATEDATE        15002
 #define IDD_YDUIQUESTIONVAULT_DIALOG_FACTORINFO_CONFIG 15002
 #define IDC_EDIT_PAPERDESC              15003
+#define IDD_YDUIQUESTIONVAULT_DIALG_QUESTION_ 15003
+#define IDD_YDUIQUESTIONVAULT_DIALG_QUESTION_FACTORINFO_CONFIG 15003
 #define IDC_LIST1                       15004
 #define IDC_LIST_PAPERS                 15004
 #define IDC_BTN_OUTPUT                  15005
@@ -144,7 +146,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        15003
+#define _APS_NEXT_RESOURCE_VALUE        15004
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         15010
 #define _APS_NEXT_SYMED_VALUE           15000

@@ -20,6 +20,7 @@ CYDArticleQuestionRef::CYDArticleQuestionRef(CDatabaseEx* pDb)
 	AddPropDef(_T("CREATOR"),VT_BSTR);
 	AddPropDef(_T("CREATEDATE"),VT_DATE);
 	AddPropDef(_T("QNUM"), VT_I4, _T("1"));
+	CreateFactorInfoItem();
 
 	for (int i = 1; i < 101; ++i)
 	{

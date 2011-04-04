@@ -18,7 +18,7 @@ CYDChoiceQuestionRef::CYDChoiceQuestionRef(CDatabaseEx* pDb)
 	AddPropDef(_T("CREATOR"),VT_BSTR);
 	AddPropDef(_T("CREATEDATE"),VT_DATE);
 	AddPropDef(_T("ANSWERDESC"),VT_BSTR);
-	
+	CreateFactorInfoItem();
 
 	for (int i = int(L'A'); i <= int(L'Z'); ++i)
 	{

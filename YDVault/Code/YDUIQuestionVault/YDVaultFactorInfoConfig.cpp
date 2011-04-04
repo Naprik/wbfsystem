@@ -14,6 +14,8 @@
 #include "../ObjRef/PropQueryContidition.h"
 #include "../ObjRef/YdFactorInfoItemObjRef.h"
 #include "../Base/DataHandler.h"
+#include "FactorInfoHelper.h"
+#include "../DBBase/DBTransactionRef.h"
 
 
 
@@ -66,7 +68,8 @@ void CYDVaultFactorInfoConfig::OnBnClickedOk()
 	}
 	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
 	ASSERT(pDB);
-
+	CDBTransactionRef trans(pDB, TRUE);
+	trans.Begin();
 	hr = DelOldItem();
 	if(FAILED(hr))
 	{
@@ -89,6 +92,12 @@ void CYDVaultFactorInfoConfig::OnBnClickedOk()
 			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
 			return ;
 		}	
+	}
+	hr = trans.Commit();
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+		return ;
 	}
 	CDialogEx::OnOK();
 }
@@ -272,43 +281,12 @@ HRESULT CYDVaultFactorInfoConfig::InsertByQuestionType(CYDQuestionType* _pQType)
 	m_Grid.AddRow(pRowQType);
 
 	//得到原来的，在当前题库下题型为_pQType的所有的CYdFactorInfoItemObjRef
-	std::list<CPropQueryContidition*> lstQueryCon;
-	CListAutoClean<CPropQueryContidition> clr(lstQueryCon);
-	//当前题库
-	OBJID idVault = 0;
-	hr = m_pVault->GetID(&idVault);
-	if(FAILED(hr))
-	{
-		return hr;
-	}
-	CString strIDVault;
-	strIDVault.Format(_T("%d"),idVault);
-	CPropQueryContidition* pPropQueryContidition = new CPropQueryContidition();
-	pPropQueryContidition->m_uFieldType = VT_I4;
-	pPropQueryContidition->m_uOpType = Q_EQUAL;
-	pPropQueryContidition->m_strFiledName  = FIELD_YDFACTORINFOITEM_VAULTID;
-	pPropQueryContidition->m_strConVal = strIDVault;
-	lstQueryCon.push_back(pPropQueryContidition);
-	//_pQType
-	OBJID idType = 0;
-	hr = _pQType->GetID(&idType);
-	if(FAILED(hr))
-	{
-		return hr;
-	}
-	CString strIDType;
-	strIDType.Format(_T("%d"),idType);
-	pPropQueryContidition = new CPropQueryContidition();
-	pPropQueryContidition->m_uFieldType = VT_I4;
-	pPropQueryContidition->m_uOpType = Q_EQUAL;
-	pPropQueryContidition->m_strFiledName  = FIELD_YDFACTORINFOITEM_QTYPEID;
-	pPropQueryContidition->m_strConVal = strIDType;
-	lstQueryCon.push_back(pPropQueryContidition);
-
+	
 	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
 	ASSERT(pDB);
 	std::list<CYDObjectRef*> lstFactorInfoItem;
-	hr = CStaticObjHelper::GetObjRef(DB_YDFACTORINFOITEM,pDB,&lstFactorInfoItem,&lstQueryCon);
+	CFactorInfoHelper helper;
+	hr = helper.GetFactorInfoByVaultQType(pDB,m_pVault,_pQType,&lstFactorInfoItem);
 	if(FAILED(hr))
 	{
 		return hr;
@@ -400,7 +378,7 @@ HRESULT CYDVaultFactorInfoConfig::CreateRowFactorInfoItem(CBCGPGridRow* _pParent
 	for(int i = 1; i <= 25;i++)
 	{
 		CString strName;
-		strName.Format(_T("N%d"),i);
+		strName.Format(_T("D%d"),i);
 		pItem->AddOption(strName);
 	}
 	_pChildRow->ReplaceItem (cColFieldName, pItem);

@@ -31,6 +31,9 @@ public:
 	virtual HRESULT GetAnswerList(std::list<CString>* lst);
 
 	virtual HRESULT SetFtp(CFtpRef* ftp);
+
+protected:
+	virtual HRESULT CreateFactorInfoItem();
 public:
 	//题型的难度系数，以后从XML获取
 	static bool GetAllHardLevel(std::list<CString>* pList);

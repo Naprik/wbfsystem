@@ -82,6 +82,7 @@ private:
 public:
 	afx_msg void OnNMDblclkListQlQuestion(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnBnClickedButtonQlOutput();
+	afx_msg void OnBnClickedButtonQlConfigFactorinfo();
 };
 
 

@@ -328,6 +328,24 @@ HRESULT CYDQuestionRef::SetFtp(CFtpRef* ftp)
 	return S_OK;
 }
 
+HRESULT CYDQuestionRef::CreateFactorInfoItem()
+{
+	HRESULT hr = E_FAIL;
+	for(int i = 1; i <= 25;i++)
+	{
+		CString strPropName;
+		strPropName.Format(_T("C%d"),i);
+		AddPropDef(strPropName,VT_BSTR,_T(""));
+	}
+	for(int i = 1; i <= 25;i++)
+	{
+		CString strPropName;
+		strPropName.Format(_T("D%d"),i);
+		AddPropDef(strPropName,VT_I4);
+	}
+	return S_OK;
+}
+
 HRESULT CYDQuestionRef::GetStandardAnswer(CString &_str)
 {
 	HRESULT hr = E_FAIL;
