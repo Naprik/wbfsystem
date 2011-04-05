@@ -555,6 +555,17 @@ BOOL CDlgYDVaultFactorInfoConfig::ValidateDataByRowQType(CBCGPGridRow* _pRowQTyp
 			AfxMessageBox(strMsg);
 			return FALSE;
 		}
+		long lMin = CDataHandler::VariantToLong(valMin);
+		long lMax = CDataHandler::VariantToLong(valMax);
+		if(lMin > lMax)
+		{
+			CString strMsg;
+			CString strLabel;
+			pQType->GetLabel(&strLabel);
+			strMsg.Format(_T("%s中第%d行最小值%d不能大于最大值%d！"),strLabel,i+1,lMin,lMax);
+			AfxMessageBox(strMsg);
+			return FALSE;
+		}
 	}
 	return TRUE;
 }
