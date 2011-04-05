@@ -522,6 +522,23 @@ BOOL CDlgYDVaultFactorInfoConfig::ValidateDataByRowQType(CBCGPGridRow* _pRowQTyp
 			}
 		}
 		lstFieldName.push_back(strFiledName);
+		//要判断strFiledName是否为D1--D25,当时数值型的时候，要判断最小值和最大值
+		BOOL bNumber = FALSE;
+		for(int iNumber = 1; iNumber <= 25;iNumber++)
+		{
+			CString strNumber;
+			strNumber.Format(_T("D%d"),iNumber);
+			if(strFiledName.CompareNoCase(strNumber) == 0)
+			{
+				bNumber = TRUE;
+				break;
+			}
+		}
+		if(!bNumber)
+		{
+			//字符串型，不用校验最大最小值
+			continue;
+		}
 		CComVariant valMin = pRow->GetItem(cColMin)->GetValue();
 		CString strMin = CDataHandler::VariantToString(valMin);
 		if(strMin.IsEmpty())
