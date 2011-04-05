@@ -7,15 +7,15 @@ class CYDQuestionType;
 class CYDObjectRef;
 class CDatabaseEx;
 
-// CYDVaultFactorInfoConfig dialog
+// CDlgYDVaultFactorInfoConfig dialog
 
-class CYDVaultFactorInfoConfig : public CDialogEx
+class CDlgYDVaultFactorInfoConfig : public CDialogEx
 {
-	DECLARE_DYNAMIC(CYDVaultFactorInfoConfig)
+	DECLARE_DYNAMIC(CDlgYDVaultFactorInfoConfig)
 
 public:
-	CYDVaultFactorInfoConfig(CWnd* pParent = NULL);   // standard constructor
-	virtual ~CYDVaultFactorInfoConfig();
+	CDlgYDVaultFactorInfoConfig(CWnd* pParent = NULL);   // standard constructor
+	virtual ~CDlgYDVaultFactorInfoConfig();
 
 // Dialog Data
 	enum { IDD = IDD_YDUIQUESTIONVAULT_DIALOG_FACTORINFO_CONFIG };

@@ -22,7 +22,7 @@
 #include "../ObjRef/PropQueryContidition.h"
 #include "QuestionViewDlg.h"
 #include "../UIBase\ListXlsoutput.h"
-#include "DlYDVaultQuestionFactorInfoConfig.h"
+#include "DlgYDVaultQuestionFactorInfoConfig.h"
 // CQuestionListFormView
 
 
@@ -1051,7 +1051,7 @@ void CQuestionListFormView::OnBnClickedButtonQlConfigFactorinfo()
 		return;
 	}
 	ASSERT(pQType);
-	CDlYDVaultQuestionFactorInfoConfig dlg;
+	CDlgYDVaultQuestionFactorInfoConfig dlg;
 	dlg.m_pVault = pQVault;
 	dlg.m_pQType = pQType;
 	dlg.m_pQuestion = pObjWrapper->m_pObjRef;

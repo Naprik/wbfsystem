@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "DlYDVaultQuestionFactorInfoConfig.h"
+#include "DlgYDVaultQuestionFactorInfoConfig.h"
 #include "afxdialogex.h"
 #include "../Base/AutoClean.h"
 #include "../ObjRef/YDObjectRef.h"
@@ -12,40 +12,40 @@
 #include "../DBBase/DBTransactionRef.h"
 
 
-// CDlYDVaultQuestionFactorInfoConfig dialog
+// CDlgYDVaultQuestionFactorInfoConfig dialog
 const int cColPropName = 0;//属性名
 const int cColPropVal = 1;//属性值
 
-IMPLEMENT_DYNAMIC(CDlYDVaultQuestionFactorInfoConfig, CDialogEx)
+IMPLEMENT_DYNAMIC(CDlgYDVaultQuestionFactorInfoConfig, CDialogEx)
 
-CDlYDVaultQuestionFactorInfoConfig::CDlYDVaultQuestionFactorInfoConfig(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CDlYDVaultQuestionFactorInfoConfig::IDD, pParent)
+CDlgYDVaultQuestionFactorInfoConfig::CDlgYDVaultQuestionFactorInfoConfig(CWnd* pParent /*=NULL*/)
+	: CDialogEx(CDlgYDVaultQuestionFactorInfoConfig::IDD, pParent)
 {
 	m_pVault = NULL;
 	m_pQType = NULL;
 	m_pQuestion = NULL;
 }
 
-CDlYDVaultQuestionFactorInfoConfig::~CDlYDVaultQuestionFactorInfoConfig()
+CDlgYDVaultQuestionFactorInfoConfig::~CDlgYDVaultQuestionFactorInfoConfig()
 {
 	CListAutoClean<CYDObjectRef> clr(m_lstFactorInfoItem);
 }
 
-void CDlYDVaultQuestionFactorInfoConfig::DoDataExchange(CDataExchange* pDX)
+void CDlgYDVaultQuestionFactorInfoConfig::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 }
 
 
-BEGIN_MESSAGE_MAP(CDlYDVaultQuestionFactorInfoConfig, CDialogEx)
-	ON_BN_CLICKED(IDOK, &CDlYDVaultQuestionFactorInfoConfig::OnBnClickedOk)
+BEGIN_MESSAGE_MAP(CDlgYDVaultQuestionFactorInfoConfig, CDialogEx)
+	ON_BN_CLICKED(IDOK, &CDlgYDVaultQuestionFactorInfoConfig::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
-// CDlYDVaultQuestionFactorInfoConfig message handlers
+// CDlgYDVaultQuestionFactorInfoConfig message handlers
 
 
-BOOL CDlYDVaultQuestionFactorInfoConfig::OnInitDialog()
+BOOL CDlgYDVaultQuestionFactorInfoConfig::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
@@ -102,12 +102,35 @@ BOOL CDlYDVaultQuestionFactorInfoConfig::OnInitDialog()
 			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
 			return FALSE;
 		}
+		CYDPropDef* pPropDef = NULL;
+		hr = m_pQuestion->GetPropDef(CComBSTR(strFieldName),pPropDef);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+			return FALSE ;
+		}
 		CComVariant val;
 		hr = m_pQuestion->GetPropVal(CComBSTR(strFieldName),&val);
 		if(FAILED(hr))
 		{
 			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
 			return FALSE;
+		}
+		if(pPropDef->m_uDataType == VT_BSTR)
+		{
+			//字符串型，如果val为空，要将其修改为" ",中间加个空格，否则在Grid中不能输入值
+			CString strVal = CDataHandler::VariantToString(val);
+			if(strVal.IsEmpty())
+			{
+				strVal = _T(" ");
+				CDataHandler::StringToVariant(strVal,VT_BSTR,&val);
+			}
+		}
+		else if(pPropDef->m_uDataType == VT_I4)
+		{
+			//数值型，如果val为空，要将其修改为0,否则在Grid中不能输入值
+			long lVal = CDataHandler::VariantToLong(val);
+			val = lVal;
 		}
 		//插入记录
 		CBCGPGridRow* pRow = m_Grid.CreateRow(m_Grid.GetColumnCount());
@@ -124,7 +147,7 @@ BOOL CDlYDVaultQuestionFactorInfoConfig::OnInitDialog()
 }
 
 
-void CDlYDVaultQuestionFactorInfoConfig::OnBnClickedOk()
+void CDlgYDVaultQuestionFactorInfoConfig::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
 	UpdateData();
@@ -137,26 +160,55 @@ void CDlYDVaultQuestionFactorInfoConfig::OnBnClickedOk()
 		CComVariant valFactorName = pRow->GetItem(cColPropName)->GetValue();
 		CComVariant valPropVal = pRow->GetItem(cColPropVal)->GetValue();
 		CString strFactorName = CDataHandler::VariantToString(valFactorName);
-		CString strFieldName;
-		for(std::list<CYDObjectRef*>::const_iterator itr = m_lstFactorInfoItem.begin();
-			itr != m_lstFactorInfoItem.end();++itr)
+		CYDObjectRef* pFactorInfo = NULL;
+		hr = GetFactorInfoItemByFactorName(strFactorName,pFactorInfo);
+		if(FAILED(hr))
 		{
-			CString strItrFactorName;
-			hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FACTORNAME,strItrFactorName);
+			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+			return ;
+		}
+		ASSERT(pFactorInfo);
+		CString strFieldName;
+		hr = pFactorInfo->GetPropVal(FIELD_YDFACTORINFOITEM_FIELDNAME,strFieldName);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+			return ;
+		}
+		ASSERT(!strFieldName.IsEmpty());
+		//校验值
+		CYDPropDef* pPropDef = NULL;
+		hr = m_pQuestion->GetPropDef(CComBSTR(strFieldName),pPropDef);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+			return ;
+		}
+		ASSERT(pPropDef);
+		if(pPropDef->m_uDataType == VT_I4)
+		{
+			//要校验值在最大值和最小值之间
+			long lPropVal = CDataHandler::VariantToLong(valPropVal);
+			long lValMin  = 0;
+			hr = pFactorInfo->GetPropVal(FIELD_YDFACTORINFOITEM_MIN,&lValMin);
 			if(FAILED(hr))
 			{
 				DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
 				return ;
-			}
-			if(strItrFactorName.CompareNoCase(strFactorName) == 0)
+			} 
+			long lValMax  = 0;
+			hr = pFactorInfo->GetPropVal(FIELD_YDFACTORINFOITEM_MAX,&lValMax);
+			if(FAILED(hr))
 			{
-				hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FIELDNAME,strFieldName);
-				if(FAILED(hr))
-				{
-					DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
-					return ;
-				}
-				break;
+				DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+				return ;
+			} 
+			if(lPropVal < lValMin || lPropVal > lValMax)
+			{
+				CString strMsg;
+				strMsg.Format(_T("%s的值应该在%d到%d之间"),strFactorName,lValMin,lValMax);
+				AfxMessageBox(strMsg);
+				return;
 			}
 		}
 		hr = m_pQuestion->SetPropVal(CComBSTR(strFieldName),&valPropVal);
@@ -184,4 +236,25 @@ void CDlYDVaultQuestionFactorInfoConfig::OnBnClickedOk()
 		return ;
 	}
 	CDialogEx::OnOK();
+}
+
+HRESULT CDlgYDVaultQuestionFactorInfoConfig::GetFactorInfoItemByFactorName(CString _strFactorName,CYDObjectRef* &_pFactorInfo)
+{
+	HRESULT hr = E_FAIL;
+	for(std::list<CYDObjectRef*>::const_iterator itr = m_lstFactorInfoItem.begin();
+		itr != m_lstFactorInfoItem.end();++itr)
+	{
+		CString strItrFactorName;
+		hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FACTORNAME,strItrFactorName);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		if(strItrFactorName.CompareNoCase(_strFactorName) == 0)
+		{
+			_pFactorInfo = *itr;
+			break;
+		}
+	}
+	return S_OK;
 }

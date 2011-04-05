@@ -12,7 +12,7 @@
 #include "../ObjRef/YDQuestionType.h"
 #include "../DBBase/DBTransactionRef.h"
 #include "../Base/DataHandler.h"
-#include "YDVaultFactorInfoConfig.h"
+#include "DlgYDVaultFactorInfoConfig.h"
 
 
 // CQuestionVaultQTypeFormView
@@ -454,7 +454,7 @@ void CQuestionVaultQTypeFormView::OnBnClickedButtonFactorinfoConifg()
 	CYDQuestionVault* pQV = (CYDQuestionVault*)pParentWrapper->m_pObjRef;
 	ASSERT(pQV);
 
-	CYDVaultFactorInfoConfig dlg;
+	CDlgYDVaultFactorInfoConfig dlg;
 	dlg.m_pVault = pQV;
 	dlg.DoModal();
 }

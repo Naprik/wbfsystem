@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "YDVaultFactorInfoConfig.h"
+#include "DlgYDVaultFactorInfoConfig.h"
 #include "afxdialogex.h"
 #include <list>
 #include "../ObjRef/YDQuestionType.h"
@@ -19,7 +19,7 @@
 
 
 
-// CYDVaultFactorInfoConfig dialog
+// CDlgYDVaultFactorInfoConfig dialog
 const int cColQTypeID = 0;//题型ID
 const int cColFactorName = 1;//指标名称
 const int cColFieldName = 2;//预留字段名称
@@ -27,38 +27,38 @@ const int cColMin = 3;//数值型下界
 const int cColMax = 4;//数值型上界
 const int cColDes = 5;//描述
 
-IMPLEMENT_DYNAMIC(CYDVaultFactorInfoConfig, CDialogEx)
+IMPLEMENT_DYNAMIC(CDlgYDVaultFactorInfoConfig, CDialogEx)
 
-CYDVaultFactorInfoConfig::CYDVaultFactorInfoConfig(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CYDVaultFactorInfoConfig::IDD, pParent)
+CDlgYDVaultFactorInfoConfig::CDlgYDVaultFactorInfoConfig(CWnd* pParent /*=NULL*/)
+	: CDialogEx(CDlgYDVaultFactorInfoConfig::IDD, pParent)
 {
 	m_pVault = NULL;
 }
 
-CYDVaultFactorInfoConfig::~CYDVaultFactorInfoConfig()
+CDlgYDVaultFactorInfoConfig::~CDlgYDVaultFactorInfoConfig()
 {
 	m_pVault = NULL;
 	CListAutoClean<CYDQuestionType> clr(m_lstType);
 	CListAutoClean<CYDObjectRef> clr2(m_lstOldFactorInfoItem);
 }
 
-void CYDVaultFactorInfoConfig::DoDataExchange(CDataExchange* pDX)
+void CDlgYDVaultFactorInfoConfig::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 }
 
 
-BEGIN_MESSAGE_MAP(CYDVaultFactorInfoConfig, CDialogEx)
-	ON_BN_CLICKED(IDOK, &CYDVaultFactorInfoConfig::OnBnClickedOk)
-	ON_BN_CLICKED(IDC_BUTTON_ADD, &CYDVaultFactorInfoConfig::OnBnClickedButtonAdd)
-	ON_BN_CLICKED(IDC_BUTTON_DEL, &CYDVaultFactorInfoConfig::OnBnClickedButtonDel)
+BEGIN_MESSAGE_MAP(CDlgYDVaultFactorInfoConfig, CDialogEx)
+	ON_BN_CLICKED(IDOK, &CDlgYDVaultFactorInfoConfig::OnBnClickedOk)
+	ON_BN_CLICKED(IDC_BUTTON_ADD, &CDlgYDVaultFactorInfoConfig::OnBnClickedButtonAdd)
+	ON_BN_CLICKED(IDC_BUTTON_DEL, &CDlgYDVaultFactorInfoConfig::OnBnClickedButtonDel)
 END_MESSAGE_MAP()
 
 
-// CYDVaultFactorInfoConfig message handlers
+// CDlgYDVaultFactorInfoConfig message handlers
 
 
-void CYDVaultFactorInfoConfig::OnBnClickedOk()
+void CDlgYDVaultFactorInfoConfig::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
 	HRESULT hr = E_FAIL;
@@ -102,7 +102,7 @@ void CYDVaultFactorInfoConfig::OnBnClickedOk()
 	CDialogEx::OnOK();
 }
 
-HRESULT CYDVaultFactorInfoConfig::InsertItemByRowType(CBCGPGridRow* _pRowType,CDatabaseEx* pDb)
+HRESULT CDlgYDVaultFactorInfoConfig::InsertItemByRowType(CBCGPGridRow* _pRowType,CDatabaseEx* pDb)
 {
 	HRESULT hr = E_FAIL;
 	ASSERT(_pRowType);
@@ -178,7 +178,7 @@ HRESULT CYDVaultFactorInfoConfig::InsertItemByRowType(CBCGPGridRow* _pRowType,CD
 	}
 	return S_OK;
 }
-HRESULT CYDVaultFactorInfoConfig::DelOldItem()
+HRESULT CDlgYDVaultFactorInfoConfig::DelOldItem()
 {
 	HRESULT hr = E_FAIL;
 	for(std::list<CYDObjectRef*>::const_iterator itr =	m_lstOldFactorInfoItem.begin();
@@ -194,7 +194,7 @@ HRESULT CYDVaultFactorInfoConfig::DelOldItem()
 	return S_OK;
 }
 
-BOOL CYDVaultFactorInfoConfig::OnInitDialog()
+BOOL CDlgYDVaultFactorInfoConfig::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
@@ -250,7 +250,7 @@ BOOL CYDVaultFactorInfoConfig::OnInitDialog()
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-HRESULT CYDVaultFactorInfoConfig::InsertByQuestionType(CYDQuestionType* _pQType)
+HRESULT CDlgYDVaultFactorInfoConfig::InsertByQuestionType(CYDQuestionType* _pQType)
 {
 	HRESULT hr = E_FAIL;
 	ASSERT(_pQType);
@@ -304,7 +304,7 @@ HRESULT CYDVaultFactorInfoConfig::InsertByQuestionType(CYDQuestionType* _pQType)
 	return S_OK;
 }
 
-HRESULT CYDVaultFactorInfoConfig::InsertRowByFactorInfoItem(CBCGPGridRow* _pParentRow,
+HRESULT CDlgYDVaultFactorInfoConfig::InsertRowByFactorInfoItem(CBCGPGridRow* _pParentRow,
 															CYDObjectRef* _pFactorInfoItem)
 {
 	HRESULT hr = E_FAIL;
@@ -359,7 +359,7 @@ HRESULT CYDVaultFactorInfoConfig::InsertRowByFactorInfoItem(CBCGPGridRow* _pPare
 	return S_OK;
 }
 
-HRESULT CYDVaultFactorInfoConfig::CreateRowFactorInfoItem(CBCGPGridRow* _pParentRow,
+HRESULT CDlgYDVaultFactorInfoConfig::CreateRowFactorInfoItem(CBCGPGridRow* _pParentRow,
 														CBCGPGridRow* &_pChildRow)
 {
 	HRESULT hr = E_FAIL;
@@ -394,7 +394,7 @@ HRESULT CYDVaultFactorInfoConfig::CreateRowFactorInfoItem(CBCGPGridRow* _pParent
 }
 
 
-void CYDVaultFactorInfoConfig::OnBnClickedButtonAdd()
+void CDlgYDVaultFactorInfoConfig::OnBnClickedButtonAdd()
 {
 	// TODO: Add your control notification handler code here
 	CBCGPGridRow *pSelRow = 	m_Grid.GetCurSel();
@@ -419,7 +419,7 @@ void CYDVaultFactorInfoConfig::OnBnClickedButtonAdd()
 }
 
 
-void CYDVaultFactorInfoConfig::OnBnClickedButtonDel()
+void CDlgYDVaultFactorInfoConfig::OnBnClickedButtonDel()
 {
 	// TODO: Add your control notification handler code here
 	CBCGPGridRow *pSelRow = 	m_Grid.GetCurSel();
@@ -449,7 +449,7 @@ void CYDVaultFactorInfoConfig::OnBnClickedButtonDel()
 	}
 }
 
-BOOL CYDVaultFactorInfoConfig::ValidateData()
+BOOL CDlgYDVaultFactorInfoConfig::ValidateData()
 {
 	for(int i = 0; i < m_Grid.GetRowCount();i++)
 	{
@@ -468,11 +468,12 @@ BOOL CYDVaultFactorInfoConfig::ValidateData()
 	return TRUE;
 }
 
-BOOL CYDVaultFactorInfoConfig::ValidateDataByRowQType(CBCGPGridRow* _pRowQType)
+BOOL CDlgYDVaultFactorInfoConfig::ValidateDataByRowQType(CBCGPGridRow* _pRowQType)
 {
 	ASSERT(_pRowQType);
 	CYDQuestionType* pQType = (CYDQuestionType*)_pRowQType->GetData();
 	ASSERT(pQType);
+	std::list<CString> lstFactorName,lstFieldName;//用了校正指标名称和预留字段名称不能重复
 	for(int i = 0; i < _pRowQType->GetSubItemsCount();i++)
 	{
 		CBCGPGridRow* pRow = _pRowQType->GetSubItem(i);
@@ -485,6 +486,20 @@ BOOL CYDVaultFactorInfoConfig::ValidateDataByRowQType(CBCGPGridRow* _pRowQType)
 			AfxMessageBox(strMsg);
 			return FALSE;
 		}
+		for(std::list<CString>::const_iterator itr = lstFactorName.begin();
+			itr != lstFactorName.end();++itr)
+		{
+			if((*itr).CompareNoCase(strFactorName) == 0)
+			{
+				CString strLabel;
+				pQType->GetLabel(&strLabel);
+				CString strMsg;
+				strMsg.Format(_T("%s中第%d行指标名称%s不能重复！"),strLabel,i+1,strFactorName);
+				AfxMessageBox(strMsg);
+				return FALSE;
+			}
+		}
+		lstFactorName.push_back(strFactorName);
 		CComVariant valFieldName = pRow->GetItem(cColFieldName)->GetValue();
 		CString strFiledName = CDataHandler::VariantToString(valFieldName);
 		if(strFiledName.IsEmpty())
@@ -493,6 +508,20 @@ BOOL CYDVaultFactorInfoConfig::ValidateDataByRowQType(CBCGPGridRow* _pRowQType)
 			AfxMessageBox(strMsg);
 			return FALSE;
 		}
+		for(std::list<CString>::const_iterator itr = lstFieldName.begin();
+			itr != lstFieldName.end();++itr)
+		{
+			if((*itr).CompareNoCase(strFiledName) == 0)
+			{
+				CString strLabel;
+				pQType->GetLabel(&strLabel);
+				CString strMsg;
+				strMsg.Format(_T("%s中第%d行预留字段名称%s不能重复！"),strLabel,i+1,strFiledName);
+				AfxMessageBox(strMsg);
+				return FALSE;
+			}
+		}
+		lstFieldName.push_back(strFiledName);
 		CComVariant valMin = pRow->GetItem(cColMin)->GetValue();
 		CString strMin = CDataHandler::VariantToString(valMin);
 		if(strMin.IsEmpty())
@@ -513,7 +542,7 @@ BOOL CYDVaultFactorInfoConfig::ValidateDataByRowQType(CBCGPGridRow* _pRowQType)
 	return TRUE;
 }
 
-CString	CYDVaultFactorInfoConfig::CreateInvalidateMsg(CYDQuestionType* _pQType,int _iRow,CString _strName)
+CString	CDlgYDVaultFactorInfoConfig::CreateInvalidateMsg(CYDQuestionType* _pQType,int _iRow,CString _strName)
 {
 	CString strLabel;
 	_pQType->GetLabel(&strLabel);

@@ -3,15 +3,15 @@
 #include <list>
 
 class CYDObjectRef;
-// CDlYDVaultQuestionFactorInfoConfig dialog
+// CDlgYDVaultQuestionFactorInfoConfig dialog
 
-class CDlYDVaultQuestionFactorInfoConfig : public CDialogEx
+class CDlgYDVaultQuestionFactorInfoConfig : public CDialogEx
 {
-	DECLARE_DYNAMIC(CDlYDVaultQuestionFactorInfoConfig)
+	DECLARE_DYNAMIC(CDlgYDVaultQuestionFactorInfoConfig)
 
 public:
-	CDlYDVaultQuestionFactorInfoConfig(CWnd* pParent = NULL);   // standard constructor
-	virtual ~CDlYDVaultQuestionFactorInfoConfig();
+	CDlgYDVaultQuestionFactorInfoConfig(CWnd* pParent = NULL);   // standard constructor
+	virtual ~CDlgYDVaultQuestionFactorInfoConfig();
 
 // Dialog Data
 	enum { IDD = IDD_YDUIQUESTIONVAULT_DIALG_QUESTION_FACTORINFO_CONFIG };
@@ -30,4 +30,6 @@ public:
 	CYDObjectRef*		m_pQuestion;
 	std::list<CYDObjectRef*>		m_lstFactorInfoItem;
 	afx_msg void OnBnClickedOk();
+private:
+	HRESULT GetFactorInfoItemByFactorName(CString _strFactorName,CYDObjectRef* &_pFactorInfo);
 };
