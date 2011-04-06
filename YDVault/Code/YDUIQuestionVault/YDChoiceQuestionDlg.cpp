@@ -13,8 +13,12 @@
 #include "../YDFormUIBase/ListCtrlOperate.h"
 #include "../Base/AutoClean.h"
 #include "Resource.h"
+#include "FactorInfoHelper.h"
 
 // CYDChoiceQuestionDlg dialog
+
+const int cColPropName = 0;//属性名
+const int cColPropVal = 1;//属性值
 
 IMPLEMENT_DYNAMIC(CYDChoiceQuestionDlg, CYDQuestionDlg)
 
@@ -39,6 +43,7 @@ CYDChoiceQuestionDlg::~CYDChoiceQuestionDlg()
 	delete m_pCQ;
 	m_pCQ = NULL;
 	CListAutoClean<CYdObjWrapper> clean1(m_lstAddKPs);
+	CListAutoClean<CYDObjectRef> clr2(m_ListFactorInfo);
 }
 
 void CYDChoiceQuestionDlg::DoDataExchange(CDataExchange* pDX)
@@ -203,6 +208,10 @@ BOOL CYDChoiceQuestionDlg::VocabularyValid()
 	{
 		return FALSE;
 	}
+	if(!ValidateIndicator())
+	{
+		return FALSE;
+	}
 	return TRUE;
 }
 
@@ -229,6 +238,10 @@ BOOL CYDChoiceQuestionDlg::ValidOther()
 // 		AfxMessageBox(L"选项不能为空！", MB_OK, MB_ICONWARNING);
 // 		return FALSE;
 // 	}
+	if(!ValidateIndicator())
+	{
+		return FALSE;
+	}
 	return TRUE;
 }
 
@@ -401,7 +414,11 @@ HRESULT CYDChoiceQuestionDlg::UpdateQuestionRef(CYDChoiceQuestionRef* _pRef)
 	{
 		return hr;
 	}
-
+	hr = UpdateIndicator(_pRef);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
 	return S_OK;
 }
 
@@ -436,6 +453,29 @@ BOOL CYDChoiceQuestionDlg::OnInitDialog()
 	CBCGPGridColors colors;
 	colors.m_LeftOffsetColors.m_clrBackground = globalData.clrWindow;
 	m_gridOption.SetColorTheme (colors);
+
+		//指标
+	CRect rectBK;
+	GetDlgItem(IDC_STATIC_INDICATOR)->GetWindowRect(&rectBK);
+	// TODO:  Add extra initialization here
+	ScreenToClient(&rectBK);
+	rectBK.top += 30;
+	rectBK.left += 10;
+	rectBK.right -= 10;
+	rectBK.bottom -= 10;
+	if (!m_GridIndicator.Create(WS_CHILD | WS_TABSTOP | WS_VISIBLE, rectBK, this,
+		-1))
+	{
+		return FALSE;
+	}
+	m_GridIndicator.EnableDragHeaderItems(FALSE);
+	//m_Grid.EnableColumnAutoSize (TRUE);
+	m_GridIndicator.EnableGroupByBox (FALSE);
+	m_GridIndicator.SetWholeRowSel(FALSE);
+	m_GridIndicator.EnableHeader (TRUE, 0);
+
+	m_GridIndicator.InsertColumn(cColPropName, L"属性名", 100);
+	m_GridIndicator.InsertColumn(cColPropVal, L"属性值", 100);
 
 	//初始化表头
 	CString strName = L"序号";
@@ -487,9 +527,10 @@ BOOL CYDChoiceQuestionDlg::OnInitDialog()
 	//知识点初始化
 	QTYPE iQType;
 	GetQuestionType(&iQType);
+	HRESULT hr = E_FAIL;
 	if (iQType == QTYPE_VOCABULARY)//选择题
 	{
-		HRESULT hr = E_FAIL;
+		
 		CRect rectKP;
 		GetDlgItem(IDC_LIST_CQ_KPALL)->GetWindowRect(rectKP);
 		m_listCtrlKpAll.SetExtendedStyle(LVS_EX_FULLROWSELECT);
@@ -562,8 +603,173 @@ BOOL CYDChoiceQuestionDlg::OnInitDialog()
 		ASSERT(FALSE);
 	}
 	SetWindowText(strTitle);
+
+
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
+}
+
+HRESULT CYDChoiceQuestionDlg::CreateIndicator(CYDChoiceQuestionRef* _pRef)
+{
+	HRESULT hr = E_FAIL;
+	ASSERT(m_pQVault);
+	ASSERT(m_pQType);
+	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
+	ASSERT(pDB);
+	CFactorInfoHelper helper;
+	hr = helper.GetFactorInfoByVaultQType(pDB,(CYDObjectRef*)m_pQVault,m_pQType,&m_ListFactorInfo);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	for(std::list<CYDObjectRef*>::const_iterator itr = m_ListFactorInfo.begin();
+		itr != m_ListFactorInfo.end();++itr)
+	{
+		CString strFactorName;
+		hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FACTORNAME,strFactorName);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		CString strFieldName;
+		hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FIELDNAME,strFieldName);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		CString strVal;
+		hr = _pRef->GetPropVal(CComBSTR(strFieldName),strVal);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		CBCGPGridRow* pRow = m_GridIndicator.CreateRow(m_GridIndicator.GetColumnCount());
+		//题型
+		pRow->GetItem(cColPropName)->SetValue(CComVariant(strFactorName));
+		pRow->GetItem(cColPropName)->Enable(FALSE);
+		pRow->GetItem(cColPropName)->SetBackgroundColor( RGB(110,180,200));
+		pRow->GetItem(cColPropVal)->SetValue(CComVariant(strVal));
+
+		m_GridIndicator.AddRow(pRow);
+	}
+	return S_OK;
+}
+
+HRESULT CYDChoiceQuestionDlg::UpdateIndicator(CYDChoiceQuestionRef* _pRef)
+{
+	HRESULT hr = E_FAIL;
+	for(int i = 0; i < m_GridIndicator.GetRowCount();i++)
+	{
+		CBCGPGridRow* pRow = m_GridIndicator.GetRow(i);
+		ASSERT(pRow);
+		CComVariant valFactorName = pRow->GetItem(cColPropName)->GetValue();
+		CString strFactorName = CDataHandler::VariantToString(valFactorName);
+		for(std::list<CYDObjectRef*>::const_iterator itr = m_ListFactorInfo.begin();
+		itr != m_ListFactorInfo.end();++itr)
+		{
+			CString strItrFactorName;
+			hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FACTORNAME,strItrFactorName);
+			if(FAILED(hr))
+			{
+				return hr;
+			}
+			if(strItrFactorName.CompareNoCase(strFactorName) == 0)
+			{
+				CString strFieldName;
+				hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FIELDNAME,strFieldName);
+				if(FAILED(hr))
+				{
+					return hr;
+				}
+				CComVariant val  = pRow->GetItem(cColPropVal)->GetValue();
+				long lVal = CDataHandler::VariantToLong(val);
+				val = lVal;
+				hr = _pRef->SetPropVal(CComBSTR(strFieldName),&val);
+				if(FAILED(hr))
+				{
+					return hr;
+				}
+				break;
+			}
+		
+		}
+	}
+	return S_OK;
+}
+
+BOOL CYDChoiceQuestionDlg::ValidateIndicator()
+{
+	HRESULT hr = E_FAIL;
+	for(int i = 0; i < m_GridIndicator.GetRowCount();i++)
+	{
+		CBCGPGridRow* pRow = m_GridIndicator.GetRow(i);
+		ASSERT(pRow);
+		CComVariant valFactorName = pRow->GetItem(cColPropName)->GetValue();
+		CString strFactorName = CDataHandler::VariantToString(valFactorName);
+		for(std::list<CYDObjectRef*>::const_iterator itr = m_ListFactorInfo.begin();
+		itr != m_ListFactorInfo.end();++itr)
+		{
+			CString strItrFactorName;
+			hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FACTORNAME,strItrFactorName);
+			if(FAILED(hr))
+			{
+				DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+				return FALSE;
+			}
+			if(strItrFactorName.CompareNoCase(strFactorName) == 0)
+			{
+				CString strFieldName;
+				hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FIELDNAME,strFieldName);
+				if(FAILED(hr))
+				{
+					DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+					return FALSE;
+				}
+				BOOL bNum = FALSE;
+				for(int i = 1; i <= 25;i++)
+				{
+					CString strNumI;
+					strNumI.Format(_T("D%d"),i);
+					if(strNumI.CompareNoCase(strFieldName) == 0)
+					{
+						bNum = TRUE;
+						break;
+					}
+				}
+				if(bNum)
+				{
+					//要验证数值型在最大值和最小值之间
+					long lMin = 0;
+					hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_MIN,&lMin);
+					if(FAILED(hr))
+					{
+						DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+						return FALSE;
+					}
+					long lMax = 0;
+					hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_MAX,&lMax);
+					if(FAILED(hr))
+					{
+						DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+						return FALSE;
+					}
+					CComVariant val  = pRow->GetItem(cColPropVal)->GetValue();
+					long lVal = CDataHandler::VariantToLong(val);
+					if(lVal < lMin || lVal > lMax)
+					{
+						CString strMsg;
+						strMsg.Format(_T("%s的属性值应该在%d和%d之间!"),strItrFactorName,lMin,lMax);
+						AfxMessageBox(strMsg);
+						return FALSE;
+					}
+				}
+				break;
+			}
+		
+		}
+	}
+	return TRUE;
 }
 
 BOOL CYDChoiceQuestionDlg::EnableCtrl(QTYPE type)
@@ -621,6 +827,7 @@ HRESULT CYDChoiceQuestionDlg::EnableQuestionArea(BOOL bEnable)
 
 HRESULT CYDChoiceQuestionDlg::UpdateQuestionArea()
 {
+	HRESULT hr = E_FAIL;
 	if (m_uType == OP_NEW)
 	{
 		m_strTitle = L"";
@@ -639,13 +846,18 @@ HRESULT CYDChoiceQuestionDlg::UpdateQuestionArea()
 		m_strCreateDate = CDataHandler::VariantToString(varCreateDate);
 		m_strCreator = DEFAULT_CREATOR;
 		m_listCtrlKpRelated.DeleteAllItems();
+		hr = CreateIndicator(m_pCQ);
+		if (FAILED(hr))
+		{
+			return hr;
+		}
 	}
 	else
 	{
 		ASSERT(m_pObjWrapper->m_pObjRef->IsKindOf(RUNTIME_CLASS(CYDChoiceQuestionRef)));
 		CYDChoiceQuestionRef* pRef = (CYDChoiceQuestionRef*)m_pObjWrapper->m_pObjRef;
 		CComVariant var;
-		HRESULT hr = pRef->GetPropVal(L"TITLE", &var);
+		 hr = pRef->GetPropVal(L"TITLE", &var);
 		if (FAILED(hr))
 		{
 			return hr;
@@ -702,6 +914,11 @@ HRESULT CYDChoiceQuestionDlg::UpdateQuestionArea()
 			return hr;
 		}
 		m_strCreateDate = CDataHandler::VariantToString(var);
+		hr = CreateIndicator(pRef);
+		if (FAILED(hr))
+		{
+			return hr;
+		}
 	}
 	
 	UpdateData(FALSE);

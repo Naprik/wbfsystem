@@ -58,6 +58,9 @@ private:
 	BOOL EnableCtrl(QTYPE type);
 	BOOL ValidateOption();
 	BOOL ValidateAsnwer();
+	HRESULT CreateIndicator(CYDChoiceQuestionRef* _pRef);//创建指标的属性
+	HRESULT UpdateIndicator(CYDChoiceQuestionRef* _pRef);//更新指标
+	BOOL ValidateIndicator();
 private:
 	CString m_strCode;
 	CString m_strTitle;
@@ -69,12 +72,14 @@ private:
 	
 	CYDChoiceQuestionRef* m_pCQ;
 	CBCGPKeyGridCtrl	m_gridOption;
+	std::list<CYDObjectRef*> m_ListFactorInfo;
 private:
 	CListCtrl m_listCtrlKpAll;
 	CListCtrl m_listCtrlKpRelated;
 
 	std::list<CYdObjWrapper*>	m_lstAddKPs;
 	std::list<CYdObjWrapper*>	m_lstDeleteKPs;
+	CBCGPKeyGridCtrl			m_GridIndicator;
 public:
 	CYDQuestionRef* m_pParentQuestionRef;//当前选择题如果是挂在题库下，则m_pParentQuestionRef = NULL
 										 //当前选择题如果挂在其他题目下，如阅读题等
