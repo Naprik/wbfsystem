@@ -7,6 +7,11 @@
 #include "../Base/AutoClean.h"
 #include "../ObjRef/YDQuestionVault.h"
 #include "../ObjRef/YDQuestionRef.h"
+#include "../ObjHelper/FactorInfoHelper.h"
+#include "../Include/ShowErr.h"
+
+const int cColPropName = 0;//属性名
+const int cColPropVal = 1;//属性值
 
 CYDQuestionDlg::CYDQuestionDlg(UINT nIDTemplate,CWnd* _pParent)
 :CDialog(nIDTemplate,_pParent)
@@ -25,6 +30,7 @@ CYDQuestionDlg::~CYDQuestionDlg(void)
 {
 	CListAutoClean<CYdKnowledge> clean1(m_allKPs);
 	CListAutoClean<CYdObjWrapper> clean2(m_relatedKPs);
+	CListAutoClean<CYDObjectRef> clr2(m_lstFactorInfo);
 }
 
 HRESULT CYDQuestionDlg::SetListOperate(CListCtrlOperate* _pListOperate,int _index /*= 0*/)
@@ -140,4 +146,192 @@ std::list<CYdObjWrapper*>& CYDQuestionDlg::GetQuestionRelatedKnowledgePoint()
 	}
 
 	return m_relatedKPs;
+}
+
+HRESULT CYDQuestionDlg::CreateIndicatorGridCtrl(UINT _idBK,CBCGPGridCtrl* _pGrid)
+{
+	HRESULT hr = E_FAIL;
+	CRect rectBK;
+	GetDlgItem(_idBK)->GetWindowRect(&rectBK);
+	// TODO:  Add extra initialization here
+	ScreenToClient(&rectBK);
+	rectBK.top += 30;
+	rectBK.left += 10;
+	rectBK.right -= 10;
+	rectBK.bottom -= 10;
+	if (!_pGrid->Create(WS_CHILD | WS_TABSTOP | WS_VISIBLE, rectBK, this,
+		-1))
+	{
+		return S_FALSE;
+	}
+	_pGrid->EnableDragHeaderItems(FALSE);
+	_pGrid->EnableGroupByBox (FALSE);
+	_pGrid->SetWholeRowSel(FALSE);
+	_pGrid->EnableHeader (TRUE, 0);
+
+	_pGrid->InsertColumn(cColPropName, L"属性名", 100);
+	_pGrid->InsertColumn(cColPropVal, L"属性值", 100);
+	return S_OK;
+}
+
+HRESULT CYDQuestionDlg::CreateIndicator(CYDObjectRef* _pQuestionRef,CBCGPGridCtrl* _pGrid)
+{
+	HRESULT hr = E_FAIL;
+	ASSERT(m_pQVault);
+	ASSERT(m_pQType);
+	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
+	ASSERT(pDB);
+	CFactorInfoHelper helper;
+	hr = helper.GetFactorInfoByVaultQType(pDB,(CYDObjectRef*)m_pQVault,m_pQType,&m_lstFactorInfo);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	for(std::list<CYDObjectRef*>::const_iterator itr = m_lstFactorInfo.begin();
+		itr != m_lstFactorInfo.end();++itr)
+	{
+		CString strFactorName;
+		hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FACTORNAME,strFactorName);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		CString strFieldName;
+		hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FIELDNAME,strFieldName);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		CString strVal;
+		hr = _pQuestionRef->GetPropVal(CComBSTR(strFieldName),strVal);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		CBCGPGridRow* pRow = _pGrid->CreateRow(_pGrid->GetColumnCount());
+		//题型
+		pRow->GetItem(cColPropName)->SetValue(CComVariant(strFactorName));
+		pRow->GetItem(cColPropName)->Enable(FALSE);
+		pRow->GetItem(cColPropName)->SetBackgroundColor( RGB(110,180,200));
+		pRow->GetItem(cColPropVal)->SetValue(CComVariant(strVal));
+
+		_pGrid->AddRow(pRow);
+	}
+	return S_OK;
+}
+
+HRESULT CYDQuestionDlg::UpdateIndicator(CYDObjectRef* _pQuestionRef,CBCGPGridCtrl* _pGrid)
+{
+	HRESULT hr = E_FAIL;
+	for(int i = 0; i < _pGrid->GetRowCount();i++)
+	{
+		CBCGPGridRow* pRow = _pGrid->GetRow(i);
+		ASSERT(pRow);
+		CComVariant valFactorName = pRow->GetItem(cColPropName)->GetValue();
+		CString strFactorName = CDataHandler::VariantToString(valFactorName);
+		for(std::list<CYDObjectRef*>::const_iterator itr = m_lstFactorInfo.begin();
+		itr != m_lstFactorInfo.end();++itr)
+		{
+			CString strItrFactorName;
+			hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FACTORNAME,strItrFactorName);
+			if(FAILED(hr))
+			{
+				return hr;
+			}
+			if(strItrFactorName.CompareNoCase(strFactorName) == 0)
+			{
+				CString strFieldName;
+				hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FIELDNAME,strFieldName);
+				if(FAILED(hr))
+				{
+					return hr;
+				}
+				CComVariant val  = pRow->GetItem(cColPropVal)->GetValue();
+				long lVal = CDataHandler::VariantToLong(val);
+				val = lVal;
+				hr = _pQuestionRef->SetPropVal(CComBSTR(strFieldName),&val);
+				if(FAILED(hr))
+				{
+					return hr;
+				}
+				break;
+			}
+		
+		}
+	}
+	return S_OK;
+}
+
+BOOL CYDQuestionDlg::ValidateIndicator(CBCGPGridCtrl* _pGrid)
+{
+	HRESULT hr = E_FAIL;
+	for(int i = 0; i < _pGrid->GetRowCount();i++)
+	{
+		CBCGPGridRow* pRow = _pGrid->GetRow(i);
+		ASSERT(pRow);
+		CComVariant valFactorName = pRow->GetItem(cColPropName)->GetValue();
+		CString strFactorName = CDataHandler::VariantToString(valFactorName);
+		for(std::list<CYDObjectRef*>::const_iterator itr = m_lstFactorInfo.begin();
+		itr != m_lstFactorInfo.end();++itr)
+		{
+			CString strItrFactorName;
+			hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FACTORNAME,strItrFactorName);
+			if(FAILED(hr))
+			{
+				DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+				return FALSE;
+			}
+			if(strItrFactorName.CompareNoCase(strFactorName) == 0)
+			{
+				CString strFieldName;
+				hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FIELDNAME,strFieldName);
+				if(FAILED(hr))
+				{
+					DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+					return FALSE;
+				}
+				BOOL bNum = FALSE;
+				for(int i = 1; i <= 25;i++)
+				{
+					CString strNumI;
+					strNumI.Format(_T("D%d"),i);
+					if(strNumI.CompareNoCase(strFieldName) == 0)
+					{
+						bNum = TRUE;
+						break;
+					}
+				}
+				if(bNum)
+				{
+					//要验证数值型在最大值和最小值之间
+					long lMin = 0;
+					hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_MIN,&lMin);
+					if(FAILED(hr))
+					{
+						DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+						return FALSE;
+					}
+					long lMax = 0;
+					hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_MAX,&lMax);
+					if(FAILED(hr))
+					{
+						DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+						return FALSE;
+					}
+					CComVariant val  = pRow->GetItem(cColPropVal)->GetValue();
+					long lVal = CDataHandler::VariantToLong(val);
+					if(lVal < lMin || lVal > lMax)
+					{
+						CString strMsg;
+						strMsg.Format(_T("%s的属性值应该在%d和%d之间!"),strItrFactorName,lMin,lMax);
+						AfxMessageBox(strMsg);
+						return FALSE;
+					}
+				}
+				break;
+			}
+		
+		}
+	}
+	return TRUE;
 }

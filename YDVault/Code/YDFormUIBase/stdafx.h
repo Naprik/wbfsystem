@@ -46,3 +46,4 @@ using namespace ADODB;
 
 #include <windows.h>
 #include "../Include\ExtDllState.h"
+#include <BCGCBProInc.h>

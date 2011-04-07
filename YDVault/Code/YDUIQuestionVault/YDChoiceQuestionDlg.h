@@ -58,9 +58,7 @@ private:
 	BOOL EnableCtrl(QTYPE type);
 	BOOL ValidateOption();
 	BOOL ValidateAsnwer();
-	HRESULT CreateIndicator(CYDChoiceQuestionRef* _pRef);//创建指标的属性
-	HRESULT UpdateIndicator(CYDChoiceQuestionRef* _pRef);//更新指标
-	BOOL ValidateIndicator();
+
 private:
 	CString m_strCode;
 	CString m_strTitle;
@@ -72,7 +70,7 @@ private:
 	
 	CYDChoiceQuestionRef* m_pCQ;
 	CBCGPKeyGridCtrl	m_gridOption;
-	std::list<CYDObjectRef*> m_ListFactorInfo;
+	
 private:
 	CListCtrl m_listCtrlKpAll;
 	CListCtrl m_listCtrlKpRelated;

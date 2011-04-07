@@ -26,7 +26,7 @@ protected:
 	HRESULT GetQuestionType(QTYPE* pType);
 	std::list<CYdKnowledge*>& GetAllKnowledgPoint();
 	std::list<CYdObjWrapper*>& GetQuestionRelatedKnowledgePoint();
-
+	std::list<CYDObjectRef*> m_lstFactorInfo;
 protected:
 	CListCtrlOperate* m_pListOperate;
 	int				  m_index;//在更新时有效，指的是更新的Item
@@ -36,6 +36,10 @@ protected:
 	OPERATION		  m_uType ;
 	std::list<CYdKnowledge*>	m_allKPs;
 	std::list<CYdObjWrapper*>	m_relatedKPs;
+	HRESULT CreateIndicatorGridCtrl(UINT _idBK,CBCGPGridCtrl* _pGrid);
+	HRESULT CreateIndicator(CYDObjectRef* _pQuestionRef,CBCGPGridCtrl* _pGrid);//创建指标的属性
+	HRESULT UpdateIndicator(CYDObjectRef* _pQuestionRef,CBCGPGridCtrl* _pGrid);//更新指标
+	BOOL ValidateIndicator(CBCGPGridCtrl* _pGrid);
 public:
 	BOOL			  m_bIsInPaperGenerate;//是否是在生成试卷时，通过新建替换调用
 	CYdObjWrapper*    m_pInPaperGenrateObjWrapper;//当是在在生成试卷时，通过新建替换调用时

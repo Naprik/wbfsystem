@@ -22,8 +22,7 @@ HRESULT CFactorInfoHelper::GetFactorInfoByVaultQType(CDatabaseEx* pDb,CYDObjectR
 	ASSERT(_pVault);
 	ASSERT(_pQType);
 	ASSERT(_pListFactorInfo);
-	std::list<CPropQueryContidition*> lstQueryCon;
-	CListAutoClean<CPropQueryContidition> clr(lstQueryCon);
+
 	//Ìâ¿â
 	OBJID idVault = 0;
 	hr = _pVault->GetID(&idVault);
@@ -31,14 +30,7 @@ HRESULT CFactorInfoHelper::GetFactorInfoByVaultQType(CDatabaseEx* pDb,CYDObjectR
 	{
 		return hr;
 	}
-	CString strIDVault;
-	strIDVault.Format(_T("%d"),idVault);
-	CPropQueryContidition* pPropQueryContidition = new CPropQueryContidition();
-	pPropQueryContidition->m_uFieldType = VT_I4;
-	pPropQueryContidition->m_uOpType = Q_EQUAL;
-	pPropQueryContidition->m_strFiledName  = FIELD_YDFACTORINFOITEM_VAULTID;
-	pPropQueryContidition->m_strConVal = strIDVault;
-	lstQueryCon.push_back(pPropQueryContidition);
+	
 	//_pQType
 	OBJID idType = 0;
 	hr = _pQType->GetID(&idType);
@@ -46,18 +38,34 @@ HRESULT CFactorInfoHelper::GetFactorInfoByVaultQType(CDatabaseEx* pDb,CYDObjectR
 	{
 		return hr;
 	}
+	return GetFactorInfoByVaultQType(pDb,idVault,idType,_pListFactorInfo);
+	return S_OK;
+}
+
+HRESULT CFactorInfoHelper::GetFactorInfoByVaultQType(CDatabaseEx* pDb,OBJID _idVault,OBJID _idQType,
+										std::list<CYDObjectRef*> *_pListFactorInfo)
+{
+	HRESULT hr = E_FAIL;
+	ASSERT(pDb);
+	std::list<CPropQueryContidition*> lstQueryCon;
+	CListAutoClean<CPropQueryContidition> clr(lstQueryCon);
+	CString strIDVault;
+	strIDVault.Format(_T("%d"),_idVault);
+	CPropQueryContidition* pPropQueryContidition = new CPropQueryContidition();
+	pPropQueryContidition->m_uFieldType = VT_I4;
+	pPropQueryContidition->m_uOpType = Q_EQUAL;
+	pPropQueryContidition->m_strFiledName  = FIELD_YDFACTORINFOITEM_VAULTID;
+	pPropQueryContidition->m_strConVal = strIDVault;
+	lstQueryCon.push_back(pPropQueryContidition);
 	CString strIDType;
-	strIDType.Format(_T("%d"),idType);
+	strIDType.Format(_T("%d"),_idQType);
 	pPropQueryContidition = new CPropQueryContidition();
 	pPropQueryContidition->m_uFieldType = VT_I4;
 	pPropQueryContidition->m_uOpType = Q_EQUAL;
 	pPropQueryContidition->m_strFiledName  = FIELD_YDFACTORINFOITEM_QTYPEID;
 	pPropQueryContidition->m_strConVal = strIDType;
 	lstQueryCon.push_back(pPropQueryContidition);
-
-	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
-	ASSERT(pDB);
-	hr = CStaticObjHelper::GetObjRef(DB_YDFACTORINFOITEM,pDB,_pListFactorInfo,&lstQueryCon);
+	hr = CStaticObjHelper::GetObjRef(DB_YDFACTORINFOITEM,pDb,_pListFactorInfo,&lstQueryCon);
 	if(FAILED(hr))
 	{
 		return hr;
