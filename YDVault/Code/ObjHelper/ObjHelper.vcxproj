@@ -117,6 +117,7 @@
       </PrecompiledHeader>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
+    <ClCompile Include="FactorInfoHelper.cpp" />
     <ClCompile Include="ObjHelper.cpp" />
     <ClCompile Include="PaperAnsysHelper.cpp" />
     <ClCompile Include="PaperErrorResult.cpp" />
@@ -132,6 +133,7 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FactorInfoHelper.h" />
     <ClInclude Include="PaperAnsysHelper.h" />
     <ClInclude Include="PaperErrorResult.h" />
     <ClInclude Include="Resource.h" />

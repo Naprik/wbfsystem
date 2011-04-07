@@ -14,7 +14,7 @@
 #include "../ObjRef/PropQueryContidition.h"
 #include "../ObjRef/YdFactorInfoItemObjRef.h"
 #include "../Base/DataHandler.h"
-#include "FactorInfoHelper.h"
+#include "../ObjHelper/FactorInfoHelper.h"
 #include "../DBBase/DBTransactionRef.h"
 
 

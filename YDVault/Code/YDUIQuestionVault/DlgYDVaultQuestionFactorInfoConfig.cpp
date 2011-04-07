@@ -6,7 +6,7 @@
 #include "afxdialogex.h"
 #include "../Base/AutoClean.h"
 #include "../ObjRef/YDObjectRef.h"
-#include "FactorInfoHelper.h"
+#include "../ObjHelper/FactorInfoHelper.h"
 #include "../Include/ShowErr.h"
 #include "../Base/DataHandler.h"
 #include "../DBBase/DBTransactionRef.h"

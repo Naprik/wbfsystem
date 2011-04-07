@@ -76,13 +76,6 @@ HRESULT CSelectQuestionCfgMgr::Load(const CString& strPath)
 					nodeChild.ReadAttributeByNoCase(L"time",&bstrSpanTime);
 					m_uTimeSpan = (UINT)_ttoi(bstrSpanTime);
 				}
-				else if(CDataHandler::BSTRCompare(bstrChildNodeName,L"QUESTIONVAULT") == 0 )
-				{
-					//øº ‘Ã‚ø‚
-					CComBSTR bstrVaultID;
-					nodeChild.ReadAttributeByNoCase(L"ID",&bstrVaultID);
-					m_uQuestionVaultID = _ttoi(bstrVaultID);
-				}
 				else 
 				{
 					ASSERT(FALSE);
@@ -130,12 +123,7 @@ HRESULT CSelectQuestionCfgMgr::Save()
 			Writer.WriteAttributeString(L"time",CComBSTR(strTimeSpan));
 			Writer.WriteEndElement();
 		}
-		//øº ‘Ã‚ø‚
-		Writer.WriteStartElement(L"QUESTIONVAULT");
-		CString strVaultID;
-		strVaultID.Format(_T("%d"),m_uQuestionVaultID);
-		Writer.WriteAttributeString(L"ID",CComBSTR(strVaultID));
-		Writer.WriteEndElement();
+		
 		Writer.WriteEndElement();
 		Writer.Save(CComBSTR(m_strPath));
 		return S_OK;

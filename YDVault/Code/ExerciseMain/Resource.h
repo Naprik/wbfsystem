@@ -109,6 +109,7 @@
 #define IDD_DLG_EXISICE_MARK            337
 #define IDD_DIALOG1                     338
 #define IDD_DIALOG_RENAME               338
+#define IDD_DLG_EM_CFG_QUESTION_2       339
 #define IDC_TREE_EM_QUESTION            1000
 #define IDC_BTN_EM_PREV                 1001
 #define IDC_BTN_EM_NEXT                 1002
@@ -129,6 +130,7 @@
 #define IDC_COMBO_QUESTION_VAULT        1012
 #define IDC_TREE_EM_EXAM_QUESTION       1012
 #define IDC_BTN_EM_RENAME               1012
+#define IDC_CMB_QVAULT                  1012
 #define IDC_BTN_EM_EXAM_PREV            1013
 #define IDC_BTN_EM_EXAM_BEGIN           1014
 #define IDC_BTN_EM_EXAM_NEXT            1015
@@ -154,12 +156,23 @@
 #define IDC_RADIO_F                     1031
 #define IDC_BUTTON1                     1035
 #define IDC_BUTTON_PLAY                 1035
+#define IDC_BTN_ADD                     1035
 #define IDC_STATIC_BK_MEDIAPLAY         1036
+#define IDC_BTN_UPDATE                  1036
 #define IDC_STATIC_NO                   1037
+#define IDC_BTN_DEL                     1037
 #define IDC_LIST1                       1038
 #define IDC_LIST_LOG                    1038
+#define IDC_LIST_FACTORS                1038
 #define IDC_EDIT_MARK                   1039
 #define IDC_EDIT_NAME                   1040
+#define IDC_CMB_QTYPE                   1041
+#define IDC_EDIT_QNUM                   1042
+#define IDC_LIST_CON                    1043
+#define IDC_BTN_OK                      1044
+#define IDC_BTN_CANCEL                  1045
+#define IDC_EDIT_QNUM2                  1046
+#define IDC_EDIT_QMARK                  1046
 #define IDP_AFXBARRES_IMAGE_IS_REQUIRED 16001
 #define IDP_AFXBARRES_TEXT_IS_REQUIRED  16002
 #define IDC_AFXBARRES_CLEAR             16003
@@ -483,9 +496,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        339
+#define _APS_NEXT_RESOURCE_VALUE        340
 #define _APS_NEXT_COMMAND_VALUE         32793
-#define _APS_NEXT_CONTROL_VALUE         1041
+#define _APS_NEXT_CONTROL_VALUE         1045
 #define _APS_NEXT_SYMED_VALUE           314
 #endif
 #endif

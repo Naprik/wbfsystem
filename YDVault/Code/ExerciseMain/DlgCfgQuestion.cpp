@@ -439,35 +439,35 @@ HRESULT CDlgCfgQuestion::GetQNum(CYDQuestionType* _pType,
 				long &_lNum,
 				double &_fMark)
 {
-	HRESULT hr = E_FAIL;
-	_lNum = 0;//默认为0
-	_fMark = 0.0;
-	ASSERT(_pType);
-	OBJID idType = 0;
-	hr = _pType->GetID(&idType);
-	if(FAILED(hr))
-	{
-		return hr;
-	}
-	for(std::list<CQuestionCfgStruct*>::const_iterator itr = m_pSelQCfgMgr->m_lstQuestionStruct.begin();
-		itr != m_pSelQCfgMgr->m_lstQuestionStruct.end();++itr)
-	{
-		if((*itr)->m_QTypeID == idType)
-		{
-			for(std::list<CQuestionLevelNum*>::const_iterator itrLevelNum = (*itr)->m_lstLevelNum.begin();
-				itrLevelNum != (*itr)->m_lstLevelNum.end();++itrLevelNum)
-			{
-				if((*itrLevelNum)->m_level == _level && 
-					(*itrLevelNum)->m_uEachNum == _uEachNum)
-				{
-					_lNum = (*itrLevelNum)->m_uNumber;
-					_fMark = (*itrLevelNum)->m_fMark;
-					return S_OK;
-				}
-			}
-			break;
-		}
-	}
+// 	HRESULT hr = E_FAIL;
+// 	_lNum = 0;//默认为0
+// 	_fMark = 0.0;
+// 	ASSERT(_pType);
+// 	OBJID idType = 0;
+// 	hr = _pType->GetID(&idType);
+// 	if(FAILED(hr))
+// 	{
+// 		return hr;
+// 	}
+// 	for(std::list<CQuestionCfgStruct*>::const_iterator itr = m_pSelQCfgMgr->m_lstQuestionStruct.begin();
+// 		itr != m_pSelQCfgMgr->m_lstQuestionStruct.end();++itr)
+// 	{
+// 		if((*itr)->m_QTypeID == idType)
+// 		{
+// 			for(std::list<CQuestionLevelNum*>::const_iterator itrLevelNum = (*itr)->m_lstLevelNum.begin();
+// 				itrLevelNum != (*itr)->m_lstLevelNum.end();++itrLevelNum)
+// 			{
+// 				if((*itrLevelNum)->m_level == _level && 
+// 					(*itrLevelNum)->m_uEachNum == _uEachNum)
+// 				{
+// 					_lNum = (*itrLevelNum)->m_uNumber;
+// 					_fMark = (*itrLevelNum)->m_fMark;
+// 					return S_OK;
+// 				}
+// 			}
+// 			break;
+// 		}
+// 	}
 	return S_OK;
 }
 
@@ -539,75 +539,67 @@ void CDlgCfgQuestion::OnBnClickedOk()
 
 HRESULT CDlgCfgQuestion::UpdateQuestionCfg()
 {
-	HRESULT hr = E_FAIL;
-	CYDQuestionVault* pVault = (CYDQuestionVault*)m_cmbQuestionVault.GetItemData(m_cmbQuestionVault.GetCurSel());
-	ASSERT(pVault);
-	OBJID id = 0;
-	hr = pVault->GetID(&id);
-	if(FAILED(hr))
-	{
-		return hr;
-	}
-	m_pSelQCfgMgr->m_uQuestionVaultID = id;
-	hr= m_pSelQCfgMgr->Clear();
-	if(FAILED(hr))
-	{
-		return hr;
-	}
-	for (int i=0; i<m_gridList.GetRowCount(); ++i)
-	{
-		CYDPaperBlockConfigure* pCfg = (CYDPaperBlockConfigure*)m_gridList.GetRow(i)->GetData();
-		if (pCfg != NULL)
-		{
-			_variant_t varVal = m_gridList.GetRow(i)->GetItem(COL_QUESTION_HARDLEVEL)->GetValue();
-			CString str = CDataHandler::VariantToString(varVal);
-			long lLevel = CYDQuestionRef::TranslateHardLevel(str);
-			varVal.Clear();
-			varVal = m_gridList.GetRow(i)->GetItem(COL_QUESTION_EACH_NUM)->GetValue();
-			long lRelCount = CDataHandler::VariantToLong(varVal);
-			varVal.Clear();
-			varVal = m_gridList.GetRow(i)->GetItem(COL_QUESTION_NUM)->GetValue();
-			long lCount = CDataHandler::VariantToLong(varVal);
-			varVal.Clear();
-			varVal = m_gridList.GetRow(i)->GetItem(COL_QUESTION_MARK)->GetValue();
-			double fMark = varVal;
-			pCfg->UpdateConfigureItem(lLevel, lRelCount, lCount,fMark);
-		}
-	}
-	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
-	ASSERT(pDB);
-	for(std::list<CYDPaperBlockConfigure*>::const_iterator itr = m_lstCfg.begin();
-		itr != m_lstCfg.end();++itr)
-	{
-	CYDQuestionType QTypeObj(pDB);
-		hr = QTypeObj.SetID((*itr)->m_QType);
-		if(FAILED(hr))
-		{
-			return hr;
-		}
-		//直接存题型的objid
-		/*CComVariant valType;
-		hr = QTypeObj.GetPropVal(L"Type",&valType);
-		if(FAILED(hr))
-		{
-			return hr;
-		}
-		QTYPE qType = (QTYPE)CDataHandler::VariantToLong(valType);*/
-		CQuestionCfgStruct* pStruct = new CQuestionCfgStruct();
-		pStruct->m_QTypeID = (*itr)->m_QType;
-		m_pSelQCfgMgr->m_lstQuestionStruct.push_back(pStruct);
-		for(std::list<CYDPaperBlockConfigureItem*>::const_iterator itrItem = (*itr)->m_lstConfigureItem.begin();
-			itrItem != (*itr)->m_lstConfigureItem.end();++itrItem)
-		{
-			CQuestionLevelNum* pQLevelNum = new CQuestionLevelNum();
-			pQLevelNum->m_level = (HARDLEVEL)(*itrItem)->m_iLevel;
-			pQLevelNum->m_uEachNum = (*itrItem)->m_iRelNum;
-			pQLevelNum->m_uNumber = (*itrItem)->m_iCount;
-			pQLevelNum->m_fMark = (*itrItem)->m_fMark;
-			pStruct->m_lstLevelNum.push_back(pQLevelNum);
-			
-		}
-	}
+// 	HRESULT hr = E_FAIL;
+// 	CYDQuestionVault* pVault = (CYDQuestionVault*)m_cmbQuestionVault.GetItemData(m_cmbQuestionVault.GetCurSel());
+// 	ASSERT(pVault);
+// 	OBJID id = 0;
+// 	hr = pVault->GetID(&id);
+// 	if(FAILED(hr))
+// 	{
+// 		return hr;
+// 	}
+// 	m_pSelQCfgMgr->m_uQuestionVaultID = id;
+// 	hr= m_pSelQCfgMgr->Clear();
+// 	if(FAILED(hr))
+// 	{
+// 		return hr;
+// 	}
+// 	for (int i=0; i<m_gridList.GetRowCount(); ++i)
+// 	{
+// 		CYDPaperBlockConfigure* pCfg = (CYDPaperBlockConfigure*)m_gridList.GetRow(i)->GetData();
+// 		if (pCfg != NULL)
+// 		{
+// 			_variant_t varVal = m_gridList.GetRow(i)->GetItem(COL_QUESTION_HARDLEVEL)->GetValue();
+// 			CString str = CDataHandler::VariantToString(varVal);
+// 			long lLevel = CYDQuestionRef::TranslateHardLevel(str);
+// 			varVal.Clear();
+// 			varVal = m_gridList.GetRow(i)->GetItem(COL_QUESTION_EACH_NUM)->GetValue();
+// 			long lRelCount = CDataHandler::VariantToLong(varVal);
+// 			varVal.Clear();
+// 			varVal = m_gridList.GetRow(i)->GetItem(COL_QUESTION_NUM)->GetValue();
+// 			long lCount = CDataHandler::VariantToLong(varVal);
+// 			varVal.Clear();
+// 			varVal = m_gridList.GetRow(i)->GetItem(COL_QUESTION_MARK)->GetValue();
+// 			double fMark = varVal;
+// 			pCfg->UpdateConfigureItem(lLevel, lRelCount, lCount,fMark);
+// 		}
+// 	}
+// 	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
+// 	ASSERT(pDB);
+// 	for(std::list<CYDPaperBlockConfigure*>::const_iterator itr = m_lstCfg.begin();
+// 		itr != m_lstCfg.end();++itr)
+// 	{
+// 	CYDQuestionType QTypeObj(pDB);
+// 		hr = QTypeObj.SetID((*itr)->m_QType);
+// 		if(FAILED(hr))
+// 		{
+// 			return hr;
+// 		}
+// 		CQuestionCfgStruct* pStruct = new CQuestionCfgStruct();
+// 		pStruct->m_QTypeID = (*itr)->m_QType;
+// 		m_pSelQCfgMgr->m_lstQuestionStruct.push_back(pStruct);
+// 		for(std::list<CYDPaperBlockConfigureItem*>::const_iterator itrItem = (*itr)->m_lstConfigureItem.begin();
+// 			itrItem != (*itr)->m_lstConfigureItem.end();++itrItem)
+// 		{
+// 			CQuestionLevelNum* pQLevelNum = new CQuestionLevelNum();
+// 			pQLevelNum->m_level = (HARDLEVEL)(*itrItem)->m_iLevel;
+// 			pQLevelNum->m_uEachNum = (*itrItem)->m_iRelNum;
+// 			pQLevelNum->m_uNumber = (*itrItem)->m_iCount;
+// 			pQLevelNum->m_fMark = (*itrItem)->m_fMark;
+// 			pStruct->m_lstLevelNum.push_back(pQLevelNum);
+// 			
+// 		}
+// 	}
 	return S_OK;
 }
 void CDlgCfgQuestion::OnCbnSelchangeComboQuestionVault()

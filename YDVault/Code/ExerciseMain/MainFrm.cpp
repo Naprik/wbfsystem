@@ -18,7 +18,7 @@
 #include "MainFrm.h"
 #include "ExerciseMainDlg.h"
 #include "DlgCfgExamTime.h"
-#include "DlgCfgQuestion.h"
+#include "DlgSelQuestionCfg.h"
 #include "ExamSelectQuestionCfgMgr.h"
 #include "ExerciseSelectQuestionCfgMgr.h"
 #include "ExamMainDlg.h"
@@ -352,14 +352,14 @@ void CMainFrame::OnEmLoadExercise()
 
 void CMainFrame::OnEmSetExerciseCfg()
 {
-	CDlgCfgQuestion dlg;
+	CDlgSelQuestionCfg dlg;
 	dlg.m_pSelQCfgMgr = CExerciseSelectQuestionCfgMgr::Instance();
 	dlg.DoModal();
 }
 
 void CMainFrame::OnEmSetExamCfg()
 {
-	CDlgCfgQuestion dlg;
+	CDlgSelQuestionCfg dlg;
 	dlg.m_pSelQCfgMgr = CExamSelectQuestionCfgMgr::Instance();
 	dlg.DoModal();
 }

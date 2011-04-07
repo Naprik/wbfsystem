@@ -1,8 +1,11 @@
 #include "StdAfx.h"
 #include "QuestionCfgStruct.h"
-#include "../Base\Xml.h"
-#include "../\Base\DataHandler.h"
-#include "../Base\AutoClean.h"
+#include "../Base/AutoClean.h"
+#include "../Base/DataHandler.h"
+#include "../Base/Xml.h"
+#include "../ObjRef/YDQuestionType.h"
+#include "../ObjRef/YDQuestionVault.h"
+#include "ExerciseMain.h"
 
 CQuestionCfgStruct::CQuestionCfgStruct(void)
 {
@@ -11,7 +14,6 @@ CQuestionCfgStruct::CQuestionCfgStruct(void)
 
 CQuestionCfgStruct::~CQuestionCfgStruct(void)
 {
-	CListAutoClean<CQuestionLevelNum> clr(m_lstLevelNum);
 }
 
 HRESULT CQuestionCfgStruct::Load(CXmlNode& _node)
@@ -19,36 +21,33 @@ HRESULT CQuestionCfgStruct::Load(CXmlNode& _node)
 	HRESULT hr = E_FAIL;
 	CComBSTR bstrName = _node.GetNodeName();
 	ASSERT(CDataHandler::BSTRCompare(bstrName,L"QUESTION") == 0);
-	CComBSTR bstrType;
-	_node.ReadAttributeByNoCase(L"type",&bstrType);
-	m_QTypeID = (OBJID)_ttoi(bstrType);
+	CComBSTR sValue;
+	_node.ReadAttributeByNoCase(L"vault",&sValue);
+	m_vaultID = (OBJID)_ttoi(sValue);
+	_node.ReadAttributeByNoCase(L"type",&sValue);
+	m_QTypeID = (OBJID)_ttoi(sValue);
+	_node.ReadAttributeByNoCase(L"number", &sValue);
+	m_cNum = (int)_ttoi(sValue);
+	_node.ReadAttributeByNoCase(L"mark", &sValue);
+	if(sValue.Length() <= 0)
+	{
+		sValue = L"0.0";
+	}
+	m_dMark = (double)_tstof(sValue);
+
 	CXmlNodeList nodeList;
 	_node.GetChilds(nodeList);
 	for(long i = 0; i < nodeList.GetLength();i++)
 	{
 		CXmlNode childNode;
 		nodeList.GetNode(i,childNode);
-		CComBSTR bstrChildName =	childNode.GetNodeName();
-		ASSERT(CDataHandler::BSTRCompare(bstrChildName,L"HARDLEVEL") == 0);
-		CComBSTR bstrLevel;
-		childNode.ReadAttributeByNoCase(L"level",&bstrLevel);
-		CComBSTR bstrEachNum;
-		childNode.ReadAttributeByNoCase(L"eachnumber",&bstrEachNum);
-		CComBSTR bstrNumber;
-		childNode.ReadAttributeByNoCase(L"number",&bstrNumber);
-		CComBSTR bstrMark;
-		childNode.ReadAttributeByNoCase(L"mark",&bstrMark);
-		if(bstrMark.Length() <= 0)
-		{
-			bstrMark = L"0.0";
-		}
-		CQuestionLevelNum* pLevelNum = new CQuestionLevelNum();
-		pLevelNum->m_level = (HARDLEVEL)_ttoi(bstrLevel);
-		pLevelNum->m_uEachNum = (UINT)_ttoi(bstrEachNum);
-		pLevelNum->m_uNumber =  (UINT)_ttoi(bstrNumber);
-		pLevelNum->m_fMark = (double)_tstof(bstrMark);
-
-		m_lstLevelNum.push_back(pLevelNum);
+		CComBSTR sChildName = childNode.GetNodeName();
+		ASSERT(CDataHandler::BSTRCompare(sChildName,L"FACTOR") == 0);
+		CComBSTR sFactorName;
+		childNode.ReadAttributeByNoCase(L"name",&sFactorName);
+		CComBSTR sFactorVaule;
+		childNode.ReadAttributeByNoCase(L"value",&sFactorVaule);
+		m_lstFactors.push_back(std::make_pair(CString(sFactorName), CString(sFactorVaule)));
 	}
 	return S_OK;
 }
@@ -56,27 +55,65 @@ HRESULT CQuestionCfgStruct::Save(CXmlWriter& _writer)
 {
 	HRESULT hr = E_FAIL;
 	_writer.WriteStartElement(L"QUESTION");
-	CString strType;
-	strType.Format(_T("%d"),m_QTypeID);
-	_writer.WriteAttributeString(L"type",CComBSTR(strType));
-	for(std::list<CQuestionLevelNum* >::const_iterator itr = m_lstLevelNum.begin();
-		itr != m_lstLevelNum.end();++itr)
+	CString strProp;
+	strProp.Format(_T("%d"),m_vaultID);
+	_writer.WriteAttributeString(L"vault",CComBSTR(strProp));
+	strProp.Format(_T("%d"),m_QTypeID);
+	_writer.WriteAttributeString(L"type",CComBSTR(strProp));
+	strProp.Format(L"%d", m_cNum);
+	_writer.WriteAttributeString(L"number", CComBSTR(strProp));
+	strProp.Format(L"%.2f", m_dMark);
+	_writer.WriteAttributeString(L"mark", CComBSTR(strProp));
+	for(std::list<std::pair<CString, CString>>::const_iterator itr = m_lstFactors.begin();
+		itr != m_lstFactors.end(); ++itr)
 	{
-		CString strLevel;
-		strLevel.Format(_T("%d"),(*itr)->m_level);
-		CString strEachNum;
-		strEachNum.Format(_T("%d"),(*itr)->m_uEachNum);
-		CString strNumber;
-		strNumber.Format(_T("%d"),(*itr)->m_uNumber);
-		CString strMark;
-		strMark.Format(_T("%.2f"),(*itr)->m_fMark);
-		_writer.WriteStartElement(L"HARDLEVEL");
-		_writer.WriteAttributeString(L"level",CComBSTR(strLevel));
-		_writer.WriteAttributeString(L"eachnumber",CComBSTR(strEachNum));
-		_writer.WriteAttributeString(L"number",CComBSTR(strNumber));
-		_writer.WriteAttributeString(L"mark",CComBSTR(strMark));
+		_writer.WriteStartElement(L"FACTOR");
+		_writer.WriteAttributeString(L"name",CComBSTR(itr->first));
+		_writer.WriteAttributeString(L"value",CComBSTR(itr->second));
 		_writer.WriteEndElement();
 	}
 	_writer.WriteEndElement();
+	return S_OK;
+}
+
+HRESULT CQuestionCfgStruct::GetQuestionType(CString* questiontype)
+{
+	if (m_QTypeID != ID_EMPTY)
+	{
+		CYDQuestionType qtype(theApp.m_pDatabase);
+		qtype.SetID(m_QTypeID);
+		CString type;
+		qtype.GetLabel(&type);
+		CYDQuestionVault vault(theApp.m_pDatabase);
+		vault.SetID(m_vaultID);
+		vault.GetPropVal(FIELD_YDVAULT_NAME, *questiontype);
+		*questiontype += type;
+	}
+
+	return S_OK;
+}
+HRESULT CQuestionCfgStruct::GetDescription(CString* description)
+{
+	*description = L"";
+	CString strinfo;
+	strinfo.Format(L"题数：%d ", m_cNum);
+	*description += strinfo;
+	if (m_dMark > 0)
+	{
+		strinfo.Format(L"每题%.2f分 ", m_dMark);
+		*description += strinfo;
+	}
+	*description += L" 指标：";
+	std::list<std::pair<CString,CString>>::const_iterator itr
+		= m_lstFactors.begin();
+	for (; itr != m_lstFactors.end(); ++itr)
+	{
+		*description += L"(";
+		*description += itr->first;
+		*description += L"=";
+		*description += itr->second;
+		*description += L") ";
+	}
+
 	return S_OK;
 }

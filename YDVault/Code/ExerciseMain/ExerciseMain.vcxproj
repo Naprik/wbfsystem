@@ -134,6 +134,7 @@
     <ClCompile Include="DlgQuestion4.cpp" />
     <ClCompile Include="DlgQuestionArea.cpp" />
     <ClCompile Include="DlgReName.cpp" />
+    <ClCompile Include="DlgSelQuestionCfg.cpp" />
     <ClCompile Include="DlgStdAnswer.cpp" />
     <ClCompile Include="DlgStudentAnswer.cpp" />
     <ClCompile Include="ExamMainDlg.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="DlgQuestion4.h" />
     <ClInclude Include="DlgQuestionArea.h" />
     <ClInclude Include="DlgReName.h" />
+    <ClInclude Include="DlgSelQuestionCfg.h" />
     <ClInclude Include="DlgStdAnswer.h" />
     <ClInclude Include="DlgStudentAnswer.h" />
     <ClInclude Include="ExamMainDlg.h" />

@@ -16,6 +16,7 @@ public:
 
 private:
 	HRESULT GetQuestionByCfgItemFromAccess(OBJID vaultID, OBJID typeID, 
-											CYDQuestionRef* pQTmp,
-											CQuestionLevelNum* pItem);
+		CYDQuestionRef* pQTmp//,
+		//CQuestionLevelNum* pItem
+		);
 };

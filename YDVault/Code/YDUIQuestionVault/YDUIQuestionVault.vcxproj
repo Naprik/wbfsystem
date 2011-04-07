@@ -127,7 +127,6 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="DlgYDVaultQuestionFactorInfoConfig.cpp" />
-    <ClCompile Include="FactorInfoHelper.cpp" />
     <ClCompile Include="GeneratePaperFormView.cpp" />
     <ClCompile Include="GridListCtrlQuestion.cpp" />
     <ClCompile Include="PaperFolderFormView.cpp" />
@@ -163,7 +162,6 @@
     <ClInclude Include="AtricleQuestionFormView.h" />
     <ClInclude Include="DlgKnowledge.h" />
     <ClInclude Include="DlgYDVaultQuestionFactorInfoConfig.h" />
-    <ClInclude Include="FactorInfoHelper.h" />
     <ClInclude Include="GeneratePaperFormView.h" />
     <ClInclude Include="GridListCtrlQuestion.h" />
     <ClInclude Include="PaperFolderFormView.h" />

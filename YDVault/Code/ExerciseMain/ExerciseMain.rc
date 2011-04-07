@@ -16,13 +16,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Chinese (P.R.C.) resources
+// Chinese (Simplified, PRC) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
-#ifdef _WIN32
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 #pragma code_page(936)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -102,7 +100,7 @@ IDB_BITMAP_TREENODE     BITMAP                  "res\\treenode.bmp"
 // Toolbar
 //
 
-IDR_MAINFRAME TOOLBAR  16, 16
+IDR_MAINFRAME TOOLBAR 16, 16
 BEGIN
     BUTTON      ID_FILE_NEW
     BUTTON      ID_FILE_OPEN
@@ -121,7 +119,7 @@ BEGIN
     BUTTON      ID_APP_ABOUT
 END
 
-IDR_MAINFRAME_256 TOOLBAR  16, 16
+IDR_MAINFRAME_256 TOOLBAR 16, 16
 BEGIN
     BUTTON      ID_FILE_NEW
     BUTTON      ID_FILE_OPEN
@@ -146,7 +144,7 @@ END
 // Menu
 //
 
-IDR_MAINFRAME MENU 
+IDR_MAINFRAME MENU
 BEGIN
     POPUP "文件(&F)"
     BEGIN
@@ -213,7 +211,7 @@ BEGIN
     END
 END
 
-IDR_ExerciseMainTYPE MENU 
+IDR_ExerciseMainTYPE MENU
 BEGIN
     POPUP "文件(&F)"
     BEGIN
@@ -293,7 +291,7 @@ BEGIN
     END
 END
 
-IDR_POPUP_EDIT MENU 
+IDR_POPUP_EDIT MENU
 BEGIN
     POPUP "编辑"
     BEGIN
@@ -303,12 +301,12 @@ BEGIN
     END
 END
 
-IDR_WINDOWS_MENU MENU 
+IDR_WINDOWS_MENU MENU
 BEGIN
     MENUITEM "新建窗口(&N)",                    ID_WINDOW_NEW
 END
 
-IDR_THEME_MENU MENU 
+IDR_THEME_MENU MENU
 BEGIN
     MENUITEM "Office 2007 (蓝色样式)(&B)",      ID_VIEW_APPLOOK_OFF_2007_BLUE
     MENUITEM "Office 2007 (黑色样式)(&L)",      ID_VIEW_APPLOOK_OFF_2007_BLACK
@@ -322,7 +320,7 @@ END
 // Accelerator
 //
 
-IDR_MAINFRAME ACCELERATORS 
+IDR_MAINFRAME ACCELERATORS
 BEGIN
     "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
     "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
@@ -553,6 +551,30 @@ BEGIN
     EDITTEXT        IDC_EDIT_NAME,96,17,115,14,ES_AUTOHSCROLL
 END
 
+IDD_DLG_EM_CFG_QUESTION_2 DIALOGEX 0, 0, 646, 278
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "选题配置"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "题库",IDC_STATIC,12,21,17,8
+    COMBOBOX        IDC_CMB_QVAULT,30,20,91,93,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "条件录入",IDC_STATIC,6,6,240,246
+    LTEXT           "题型",IDC_STATIC,131,21,17,8
+    COMBOBOX        IDC_CMB_QTYPE,149,20,90,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "题数",IDC_STATIC,12,45,17,8
+    EDITTEXT        IDC_EDIT_QNUM,30,43,91,12,ES_AUTOHSCROLL
+    CONTROL         "",IDC_LIST_FACTORS,"SysListView32",LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,12,66,228,180
+    PUSHBUTTON      "新增",IDC_BTN_ADD,252,96,42,18
+    PUSHBUTTON      "更新",IDC_BTN_UPDATE,252,120,42,18
+    PUSHBUTTON      "删除",IDC_BTN_DEL,252,144,42,18
+    LTEXT           "选题条件",IDC_STATIC,300,6,33,8
+    CONTROL         "",IDC_LIST_CON,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,300,19,339,233
+    PUSHBUTTON      "确定",IDC_BTN_OK,524,257,50,18
+    PUSHBUTTON      "取消",IDC_BTN_CANCEL,590,257,50,18
+    LTEXT           "分数",IDC_STATIC,129,45,17,8
+    EDITTEXT        IDC_EDIT_QMARK,147,43,91,12,ES_AUTOHSCROLL
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -599,7 +621,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
@@ -612,6 +634,10 @@ BEGIN
     IDD_DLG_EM_EXAM, DIALOG
     BEGIN
         BOTTOMMARGIN, 314
+    END
+
+    IDD_DLG_EM_CFG_QUESTION, DIALOG
+    BEGIN
     END
 
     IDD_DLG_ARTICLE, DIALOG
@@ -709,6 +735,10 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 104
     END
+
+    IDD_DLG_EM_CFG_QUESTION_2, DIALOG
+    BEGIN
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -718,25 +748,25 @@ END
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDP_OLE_INIT_FAILED     "OLE 初始化失败。请确保 OLE 库是正确的版本。"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDR_MAINFRAME           "我百分练习系统"
     IDR_ExerciseMainTYPE    "\nExerciseMain\nExerciseMain\n\n\nExerciseMain.Document\nExerciseMain.Document"
     IDS_WINDOWS_MANAGER     "窗口(&W)..."
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_APP_TITLE       "我百分练习系统"
     AFX_IDS_IDLEMESSAGE     "就绪"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_INDICATOR_EXT        "EXT"
     ID_INDICATOR_CAPS       "CAP"
@@ -746,7 +776,7 @@ BEGIN
     ID_INDICATOR_REC        "REC"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_FILE_NEW             "创建新文档\n新建"
     ID_FILE_OPEN            "打开现有文档\n打开"
@@ -755,13 +785,13 @@ BEGIN
     ID_FILE_SAVE_AS         "用新名称保存活动文档\n另存为"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_APP_ABOUT            "显示程序信息、版本号和版权\n关于"
     ID_APP_EXIT             "退出应用程序；提示保存文档\n退出"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_FILE_MRU_FILE1       "打开此文档"
     ID_FILE_MRU_FILE2       "打开此文档"
@@ -781,13 +811,13 @@ BEGIN
     ID_FILE_MRU_FILE16      "打开此文档"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_NEXT_PANE            "切换到下一个窗格\n下一窗格"
     ID_PREV_PANE            "切换回上一个窗格\n上一窗格"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_WINDOW_NEW           "为活动文档打开另一个窗口\n新建窗口"
     ID_WINDOW_ARRANGE       "在窗口底部排列图标\n排列图标"
@@ -797,7 +827,7 @@ BEGIN
     ID_WINDOW_SPLIT         "将活动窗口拆分为多个窗格\n拆分"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_EDIT_CLEAR           "清除选定内容\n清除"
     ID_EDIT_CLEAR_ALL       "清除全部内容\n全部清除"
@@ -812,14 +842,14 @@ BEGIN
     ID_EDIT_REDO            "恢复上次撤消的操作\n重做"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_VIEW_TOOLBAR         "显示或隐藏工具栏\n切换工具栏"
     ID_VIEW_STATUS_BAR      "显示或隐藏状态栏\n切换状态栏"
     ID_VIEW_AUTOARRANGE     "以网格方式排列图标。"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_SCSIZE          "更改窗口大小"
     AFX_IDS_SCMOVE          "更改窗口位置"
@@ -830,14 +860,14 @@ BEGIN
     AFX_IDS_SCCLOSE         "关闭活动窗口并提示保存文档"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_SCRESTORE       "将窗口恢复到正常大小"
     AFX_IDS_SCTASKLIST      "激活任务列表"
     AFX_IDS_MDICHILD        "激活此窗口"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_VIEW_SMALLICON       "使用小图标显示各项。\n小图标"
     ID_VIEW_LARGEICON       "使用大图标显示各项。\n大图标"
@@ -847,7 +877,7 @@ BEGIN
     ID_VIEW_BYNAME          "按字母顺序对图标排序。"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_RIBBON_MAIN         "我百分练习系统"
     IDS_RIBBON_NEW          "新建(&N)"
@@ -862,7 +892,7 @@ BEGIN
     IDS_RIBBON_CLOSE        "关闭(&C)"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_RIBBON_RECENT_DOCS  "最近使用的文档"
     IDS_RIBBON_EXIT         "退出(&X)"
@@ -878,7 +908,7 @@ BEGIN
     IDS_RIBBON_STYLE_TIP    "修改视觉样式"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_RIBBON_STYLE_DESC   "选择一个 Office 2007 主题"
     IDS_RIBBON_STATUSBAR    "状态栏"
@@ -897,12 +927,12 @@ BEGIN
     IDS_RIBBON_SET_EXAMCFG  "考试抽题配置"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_EDIT_MENU           "编辑"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_AFXBARRES_PLACE_QAT_BELOW_RIBBON "在功能区下方显示快速访问工具栏"
     IDS_AFXBARRES_ADD_TO_QAT "添加到快速访问工具栏"
@@ -911,7 +941,7 @@ BEGIN
     IDS_AFXBARRES_MINIMIZE_RIBBON "最小化功能区"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_AFXBARRES_CUSTOMIZE_QAT_TOOLTIP "自定义快速访问工具栏"
     IDS_AFXBARRES_MORE_COMMANDS "其它命令..."
@@ -919,7 +949,7 @@ BEGIN
     IDS_AFXBARRES_PLACE_ABOVE_RIBBON "在功能区上方显示"
 END
 
-#endif    // Chinese (P.R.C.) resources
+#endif    // Chinese (Simplified, PRC) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

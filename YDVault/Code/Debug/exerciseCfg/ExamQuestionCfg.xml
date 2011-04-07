@@ -18,22 +18,18 @@
 <!-- <QUESTIONVAULT ID="1"> 考试的题库-->
 <!-- </QUESTIONVAULT> -->
 <!--   <PAPER> -->
-<!--     <QUESTION type="1"> 试题类型-->
-<!--       <HARDLEVEL level="1" eachnumber ="3" number="10" /> 每题问题数 容易题目数-->
-<!--       <HARDLEVEL level="16" eachnumber ="3" number="10" /> 困难题目数-->
+<!--     <QUESTION type="1" number="2"  mark=""> 试题类型-->
+<!--		<FACTOR name="" value="" /> 指标 -->
 <!--     </QUESTION> -->
 <!--   </PAPER> -->
 <!--   <EXAMTIME time="60" />考试时间默认60分钟-->
 <!-- </CFG> -->
 
 <CFG>
-   <QUESTIONVAULT ID="1">
-   </QUESTIONVAULT>
    <PAPER> 
-     <QUESTION type="1"> 
-       <HARDLEVEL level="1" eachnumber ="3" number="10" /> 
-       <HARDLEVEL level="16" eachnumber ="3" number="10" /> 
+     <QUESTION vault="" type="1" number=""  mark=""> 
+       <FACTOR name="" value="" /> 
      </QUESTION> 
-   </PAPER>
+   </PAPER> 
    <EXAMTIME time="60" />
 </CFG>
