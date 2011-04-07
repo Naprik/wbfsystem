@@ -43,6 +43,7 @@ private:
 	std::list<CYDObjectRef*>		m_lstQuestionVault;//所有的题库
 	std::list<CYDQuestionType*>		m_lstClean;
 	std::list<CQuestionCfgStruct*>  m_lstCfg;
+	std::list<CYDObjectRef*>		m_lstfactor;
 	CYDQuestionVault*				m_pVault;
 	CBCGPKeyGridCtrl				m_gridFactors;
 	CBCGPKeyGridCtrl				m_gridConditions;

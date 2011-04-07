@@ -3,6 +3,18 @@
 
 class CXmlNode;
 class CXmlWriter;
+class CFactorValue
+{
+public:
+	CFactorValue(const CString& field, const CString& name, const CString& value):
+	  m_field(field), m_name(name),m_value(value)
+	  {
+
+	  }
+	CString		m_field;
+	CString		m_value;
+	CString		m_name;
+};
 
 class CQuestionCfgStruct
 {
@@ -17,7 +29,7 @@ public:
 	OBJID	m_QTypeID; //题型ID
 	int		m_cNum;//题数
 	double  m_dMark;//分数
-	std::list<std::pair<CString,CString>>	m_lstFactors;
+	std::list<CFactorValue>	m_lstFactors;
 
 	HRESULT Load(CXmlNode& _node);
 	HRESULT Save(CXmlWriter& _writer);

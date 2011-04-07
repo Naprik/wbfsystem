@@ -15,8 +15,6 @@ public:
 							CLISTQUESTION* pLstQuestion);
 
 private:
-	HRESULT GetQuestionByCfgItemFromAccess(OBJID vaultID, OBJID typeID, 
-		CYDQuestionRef* pQTmp//,
-		//CQuestionLevelNum* pItem
-		);
+	HRESULT GetQuestionByCfgItemFromAccess(CQuestionCfgStruct* pcfg, CYDQuestionRef* pQTmp);
+	HRESULT GetQueryConditionFromFactor(CQuestionCfgStruct* pcfg, CString* condition);
 };

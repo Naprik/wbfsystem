@@ -82,7 +82,6 @@
 #define IDD_DLG_EM_EXAM                 313
 #define IDD_DLG_EM_CFG_EXAM_TIME        314
 #define IDB_BITMAP_BEGIN                314
-#define IDD_DLG_EM_CFG_QUESTION         315
 #define IDB_BITMAP_NEXT                 315
 #define IDB_BITMAP_PREV                 316
 #define IDB_BITMAP_STOP                 317
@@ -127,7 +126,6 @@
 #define IDC_BTN_EM_CLOSE                1011
 #define IDC_STATIC_BK                   1011
 #define IDC_COMBO1                      1012
-#define IDC_COMBO_QUESTION_VAULT        1012
 #define IDC_TREE_EM_EXAM_QUESTION       1012
 #define IDC_BTN_EM_RENAME               1012
 #define IDC_CMB_QVAULT                  1012
@@ -171,7 +169,6 @@
 #define IDC_LIST_CON                    1043
 #define IDC_BTN_OK                      1044
 #define IDC_BTN_CANCEL                  1045
-#define IDC_EDIT_QNUM2                  1046
 #define IDC_EDIT_QMARK                  1046
 #define IDP_AFXBARRES_IMAGE_IS_REQUIRED 16001
 #define IDP_AFXBARRES_TEXT_IS_REQUIRED  16002

@@ -127,7 +127,6 @@
     <ClCompile Include="ChoiceDlg.cpp" />
     <ClCompile Include="DefaultDlg.cpp" />
     <ClCompile Include="DlgCfgExamTime.cpp" />
-    <ClCompile Include="DlgCfgQuestion.cpp" />
     <ClCompile Include="DlgExsiceMark.cpp" />
     <ClCompile Include="DlgQuestion0.cpp" />
     <ClCompile Include="DlgQuestion1.cpp" />
@@ -189,7 +188,6 @@
     <ClInclude Include="ChoiceDlg.h" />
     <ClInclude Include="DefaultDlg.h" />
     <ClInclude Include="DlgCfgExamTime.h" />
-    <ClInclude Include="DlgCfgQuestion.h" />
     <ClInclude Include="DlgExsiceMark.h" />
     <ClInclude Include="DlgQuestion0.h" />
     <ClInclude Include="DlgQuestion1.h" />

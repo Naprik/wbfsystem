@@ -43,11 +43,13 @@ HRESULT CQuestionCfgStruct::Load(CXmlNode& _node)
 		nodeList.GetNode(i,childNode);
 		CComBSTR sChildName = childNode.GetNodeName();
 		ASSERT(CDataHandler::BSTRCompare(sChildName,L"FACTOR") == 0);
+		CComBSTR sFactorField;
+		childNode.ReadAttributeByNoCase(L"field",&sFactorField);
 		CComBSTR sFactorName;
 		childNode.ReadAttributeByNoCase(L"name",&sFactorName);
 		CComBSTR sFactorVaule;
 		childNode.ReadAttributeByNoCase(L"value",&sFactorVaule);
-		m_lstFactors.push_back(std::make_pair(CString(sFactorName), CString(sFactorVaule)));
+		m_lstFactors.push_back(CFactorValue(CString(sFactorField), CString(sFactorName), CString(sFactorVaule)));
 	}
 	return S_OK;
 }
@@ -64,12 +66,13 @@ HRESULT CQuestionCfgStruct::Save(CXmlWriter& _writer)
 	_writer.WriteAttributeString(L"number", CComBSTR(strProp));
 	strProp.Format(L"%.2f", m_dMark);
 	_writer.WriteAttributeString(L"mark", CComBSTR(strProp));
-	for(std::list<std::pair<CString, CString>>::const_iterator itr = m_lstFactors.begin();
+	for(std::list<CFactorValue>::const_iterator itr = m_lstFactors.begin();
 		itr != m_lstFactors.end(); ++itr)
 	{
 		_writer.WriteStartElement(L"FACTOR");
-		_writer.WriteAttributeString(L"name",CComBSTR(itr->first));
-		_writer.WriteAttributeString(L"value",CComBSTR(itr->second));
+		_writer.WriteAttributeString(L"field",CComBSTR((*itr).m_field));
+		_writer.WriteAttributeString(L"name",CComBSTR((*itr).m_name));
+		_writer.WriteAttributeString(L"value",CComBSTR((*itr).m_value));
 		_writer.WriteEndElement();
 	}
 	_writer.WriteEndElement();
@@ -104,14 +107,14 @@ HRESULT CQuestionCfgStruct::GetDescription(CString* description)
 		*description += strinfo;
 	}
 	*description += L" ָ�꣺";
-	std::list<std::pair<CString,CString>>::const_iterator itr
+	std::list<CFactorValue>::const_iterator itr
 		= m_lstFactors.begin();
 	for (; itr != m_lstFactors.end(); ++itr)
 	{
 		*description += L"(";
-		*description += itr->first;
+		*description += (*itr).m_name;
 		*description += L"=";
-		*description += itr->second;
+		*description += (*itr).m_value;
 		*description += L") ";
 	}
 

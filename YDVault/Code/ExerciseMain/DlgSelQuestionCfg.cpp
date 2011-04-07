@@ -36,6 +36,7 @@ CDlgSelQuestionCfg::~CDlgSelQuestionCfg()
 	CListAutoClean<CYDObjectRef> clr1(m_lstQuestionVault);
 	CListAutoClean<CYDQuestionType> clr2(m_lstClean);
 	CListAutoClean<CQuestionCfgStruct> clr3(m_lstCfg);
+	CListAutoClean<CYDObjectRef> clr4(m_lstfactor);
 }
 
 void CDlgSelQuestionCfg::DoDataExchange(CDataExchange* pDX)
@@ -100,7 +101,9 @@ void CDlgSelQuestionCfg::OnCbnSelchangeCmbQvault()
 	}
 
 	m_gridFactors.RemoveAll();
-	
+	{
+		CListAutoClean<CYDObjectRef> clr(m_lstfactor);
+	}
 }
 
 
@@ -242,7 +245,7 @@ HRESULT CDlgSelQuestionCfg::InitQuestionVault()
 HRESULT CDlgSelQuestionCfg::InsertCondition(CQuestionCfgStruct* pCondition)
 {
 	CBCGPGridRow* pRow = m_gridConditions.CreateRow(m_gridConditions.GetColumnCount());
-	BOOL bColor = (m_gridConditions.GetRowCount()%2 == 0) ? TRUE : FALSE;
+	BOOL bColor = ((m_gridConditions.GetRowCount()+1)%2 == 0) ? TRUE : FALSE;
 	CString str;
 	pCondition->GetQuestionType(&str);
 	pRow->GetItem(COL_QUESTION_TYPE)->SetValue(CComVariant(CComBSTR(str)));
@@ -267,6 +270,9 @@ HRESULT CDlgSelQuestionCfg::InsertCondition(CQuestionCfgStruct* pCondition)
 void CDlgSelQuestionCfg::OnCbnSelchangeCmbQtype()
 {
 	m_gridFactors.RemoveAll();
+	{
+		CListAutoClean<CYDObjectRef> clr(m_lstfactor);
+	}
 	CWaitCursor wati;
 	HRESULT hr = E_FAIL;
 	if(m_cmbQType.GetCurSel() == CB_ERR)
@@ -275,12 +281,11 @@ void CDlgSelQuestionCfg::OnCbnSelchangeCmbQtype()
 	}
 	int selindex = m_cmbQType.GetCurSel();
 	CYDQuestionType* pquestiontype = (CYDQuestionType*)m_cmbQType.GetItemData(selindex);	
-	std::list<CYDObjectRef*> lstfactor;
-	CListAutoClean<CYDObjectRef> clr(lstfactor);
+
 	CFactorInfoHelper helper;
-	helper.GetFactorInfoByVaultQType(theApp.m_pDatabase, m_pVault, pquestiontype, &lstfactor);
-	auto itr = lstfactor.begin();
-	for (; itr != lstfactor.end(); ++itr)
+	helper.GetFactorInfoByVaultQType(theApp.m_pDatabase, m_pVault, pquestiontype, &m_lstfactor);
+	auto itr = m_lstfactor.begin();
+	for (; itr != m_lstfactor.end(); ++itr)
 	{
 		CYDObjectRef* pfactor = *itr;
 		CBCGPGridRow* pRow = m_gridFactors.CreateRow(m_gridFactors.GetColumnCount());
@@ -297,7 +302,7 @@ void CDlgSelQuestionCfg::OnCbnSelchangeCmbQtype()
 		{
 			pRow->GetItem(COL_QUESTION_CONDITION)->SetValue(CComVariant((long)0));
 		}
-		
+		pRow->SetData(DWORD_PTR(*itr));
 		m_gridFactors.AddRow(pRow);
 	}
 	m_qnum = 0;
@@ -387,7 +392,10 @@ void CDlgSelQuestionCfg::OnBnClickedBtnAdd()
 		{
 			var = prow->GetItem(COL_QUESTION_TYPE)->GetValue();
 			CString factorname = CDataHandler::VariantToString(var);
-			pcfg->m_lstFactors.push_back(std::make_pair(factorname, factorvalue));
+			CYDObjectRef* pfactor = (CYDObjectRef*)prow->GetData();
+			CString field;
+			pfactor->GetPropVal(FIELD_YDFACTORINFOITEM_FIELDNAME, field);
+			pcfg->m_lstFactors.push_back(CFactorValue(field, factorname, factorvalue));
 		}
 	}
 	InsertCondition(pcfg);
