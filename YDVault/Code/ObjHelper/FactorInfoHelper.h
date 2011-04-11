@@ -12,5 +12,6 @@ public:
 										std::list<CYDObjectRef*> *_pListFactorInfo);
 	HRESULT GetFactorInfoByVaultQType(CDatabaseEx* pDb,OBJID _idVault,OBJID _idQType,
 										std::list<CYDObjectRef*> *_pListFactorInfo);
+	BOOL	IsNumberFieldName(CString _strFieldName);
 };
 

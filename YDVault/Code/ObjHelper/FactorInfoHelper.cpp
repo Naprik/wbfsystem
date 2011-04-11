@@ -72,3 +72,17 @@ HRESULT CFactorInfoHelper::GetFactorInfoByVaultQType(CDatabaseEx* pDb,OBJID _idV
 	}
 	return S_OK;
 }
+
+BOOL CFactorInfoHelper::IsNumberFieldName(CString _strFieldName)
+{
+	for(int iNumber = 1; iNumber <= 25;iNumber++)
+	{
+		CString strNumber;
+		strNumber.Format(_T("D%d"),iNumber);
+		if(_strFieldName.CompareNoCase(strNumber) == 0)
+		{
+			return TRUE;
+		}
+	}
+	return FALSE;
+}

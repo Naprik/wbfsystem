@@ -118,19 +118,19 @@ BOOL CDlgYDVaultQuestionFactorInfoConfig::OnInitDialog()
 		}
 		if(pPropDef->m_uDataType == VT_BSTR)
 		{
-			//字符串型，如果val为空，要将其修改为" ",中间加个空格，否则在Grid中不能输入值
+			//字符串型
 			CString strVal = CDataHandler::VariantToString(val);
-			if(strVal.IsEmpty())
-			{
-				strVal = _T(" ");
-				CDataHandler::StringToVariant(strVal,VT_BSTR,&val);
-			}
+			CDataHandler::StringToVariant(strVal,VT_BSTR,&val);
 		}
 		else if(pPropDef->m_uDataType == VT_I4)
 		{
 			//数值型，如果val为空，要将其修改为0,否则在Grid中不能输入值
 			long lVal = CDataHandler::VariantToLong(val);
 			val = lVal;
+		}
+		else
+		{
+			ASSERT(FALSE);
 		}
 		//插入记录
 		CBCGPGridRow* pRow = m_Grid.CreateRow(m_Grid.GetColumnCount());

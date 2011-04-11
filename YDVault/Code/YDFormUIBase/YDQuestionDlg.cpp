@@ -202,18 +202,30 @@ HRESULT CYDQuestionDlg::CreateIndicator(CYDObjectRef* _pQuestionRef,CBCGPGridCtr
 		{
 			return hr;
 		}
-		CString strVal;
-		hr = _pQuestionRef->GetPropVal(CComBSTR(strFieldName),strVal);
-		if(FAILED(hr))
+		CComVariant val;
+		hr = _pQuestionRef->GetPropVal(CComBSTR(strFieldName),&val);
+			if(FAILED(hr))
 		{
 			return hr;
+		}
+		if(helper.IsNumberFieldName(strFieldName))
+		{
+			//数值型，如果val为空，要将其修改为0,否则在Grid中不能输入值
+			long lVal = CDataHandler::VariantToLong(val);
+			val = lVal;
+		}
+		else 
+		{
+			//字符串型
+			CString strVal = CDataHandler::VariantToString(val);
+			CDataHandler::StringToVariant(strVal,VT_BSTR,&val);
 		}
 		CBCGPGridRow* pRow = _pGrid->CreateRow(_pGrid->GetColumnCount());
 		//题型
 		pRow->GetItem(cColPropName)->SetValue(CComVariant(strFactorName));
 		pRow->GetItem(cColPropName)->Enable(FALSE);
 		pRow->GetItem(cColPropName)->SetBackgroundColor( RGB(110,180,200));
-		pRow->GetItem(cColPropVal)->SetValue(CComVariant(strVal));
+		pRow->GetItem(cColPropVal)->SetValue(val);
 
 		_pGrid->AddRow(pRow);
 	}
@@ -223,6 +235,7 @@ HRESULT CYDQuestionDlg::CreateIndicator(CYDObjectRef* _pQuestionRef,CBCGPGridCtr
 HRESULT CYDQuestionDlg::UpdateIndicator(CYDObjectRef* _pQuestionRef,CBCGPGridCtrl* _pGrid)
 {
 	HRESULT hr = E_FAIL;
+	CFactorInfoHelper helper;
 	for(int i = 0; i < _pGrid->GetRowCount();i++)
 	{
 		CBCGPGridRow* pRow = _pGrid->GetRow(i);
@@ -247,8 +260,11 @@ HRESULT CYDQuestionDlg::UpdateIndicator(CYDObjectRef* _pQuestionRef,CBCGPGridCtr
 					return hr;
 				}
 				CComVariant val  = pRow->GetItem(cColPropVal)->GetValue();
-				long lVal = CDataHandler::VariantToLong(val);
-				val = lVal;
+				if(helper.IsNumberFieldName(strFieldName))
+				{
+					long lVal = CDataHandler::VariantToLong(val);
+					val = lVal;
+				}
 				hr = _pQuestionRef->SetPropVal(CComBSTR(strFieldName),&val);
 				if(FAILED(hr))
 				{
@@ -265,6 +281,7 @@ HRESULT CYDQuestionDlg::UpdateIndicator(CYDObjectRef* _pQuestionRef,CBCGPGridCtr
 BOOL CYDQuestionDlg::ValidateIndicator(CBCGPGridCtrl* _pGrid)
 {
 	HRESULT hr = E_FAIL;
+	CFactorInfoHelper helper;
 	for(int i = 0; i < _pGrid->GetRowCount();i++)
 	{
 		CBCGPGridRow* pRow = _pGrid->GetRow(i);
@@ -290,18 +307,7 @@ BOOL CYDQuestionDlg::ValidateIndicator(CBCGPGridCtrl* _pGrid)
 					DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
 					return FALSE;
 				}
-				BOOL bNum = FALSE;
-				for(int i = 1; i <= 25;i++)
-				{
-					CString strNumI;
-					strNumI.Format(_T("D%d"),i);
-					if(strNumI.CompareNoCase(strFieldName) == 0)
-					{
-						bNum = TRUE;
-						break;
-					}
-				}
-				if(bNum)
+				if(helper.IsNumberFieldName(strFieldName))
 				{
 					//要验证数值型在最大值和最小值之间
 					long lMin = 0;

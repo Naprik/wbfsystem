@@ -123,6 +123,7 @@ HRESULT CDlgYDVaultFactorInfoConfig::InsertItemByRowType(CBCGPGridRow* _pRowType
 		return hr;
 	}
 	CComVariant valIDVault(idVault);
+	CFactorInfoHelper helper;
 	//插入记录
 	for(int i = 0 ; i < _pRowType->GetSubItemsCount();++i)
 	{
@@ -152,18 +153,27 @@ HRESULT CDlgYDVaultFactorInfoConfig::InsertItemByRowType(CBCGPGridRow* _pRowType
 		{
 			return hr;
 		} 
-		CComVariant valMin = pSubRow->GetItem(cColMin)->GetValue();
-		hr = pFactorInfoItem->SetPropVal(FIELD_YDFACTORINFOITEM_MIN,&valMin);
-		if(FAILED(hr))
+		CString strFieldName = CDataHandler::VariantToString(valFieldName);
+		if(helper.IsNumberFieldName(strFieldName))
 		{
-			return hr;
-		} 
-		CComVariant valMax = pSubRow->GetItem(cColMax)->GetValue();
-		hr = pFactorInfoItem->SetPropVal(FIELD_YDFACTORINFOITEM_MAX,&valMax);
-		if(FAILED(hr))
-		{
-			return hr;
-		} 
+			CComVariant valMin = pSubRow->GetItem(cColMin)->GetValue();
+			long lMin =  CDataHandler::VariantToLong(valMin);
+			valMin = lMin;
+			hr = pFactorInfoItem->SetPropVal(FIELD_YDFACTORINFOITEM_MIN,&valMin);
+			if(FAILED(hr))
+			{
+				return hr;
+			} 
+			CComVariant valMax = pSubRow->GetItem(cColMax)->GetValue();
+			long lMax = CDataHandler::VariantToLong(valMax);
+			valMax = lMax;
+			hr = pFactorInfoItem->SetPropVal(FIELD_YDFACTORINFOITEM_MAX,&valMax);
+			if(FAILED(hr))
+			{
+				return hr;
+			} 
+		}
+		
 		CComVariant valDes = pSubRow->GetItem(cColDes)->GetValue();
 		hr = pFactorInfoItem->SetPropVal(FIELD_YDFACTORINFOITEM_DESCRIPTION,&valDes);
 		if(FAILED(hr))
@@ -332,7 +342,6 @@ HRESULT CDlgYDVaultFactorInfoConfig::InsertRowByFactorInfoItem(CBCGPGridRow* _pP
 		return hr;
 	}
 	pChildRow->GetItem(cColFieldName)->SetValue(valFieldName);
-
 	CComVariant valMin;
 	hr = _pFactorInfoItem->GetPropVal(FIELD_YDFACTORINFOITEM_MIN,&valMin);
 	if(FAILED(hr))
@@ -474,6 +483,7 @@ BOOL CDlgYDVaultFactorInfoConfig::ValidateDataByRowQType(CBCGPGridRow* _pRowQTyp
 	CYDQuestionType* pQType = (CYDQuestionType*)_pRowQType->GetData();
 	ASSERT(pQType);
 	std::list<CString> lstFactorName,lstFieldName;//用了校正指标名称和预留字段名称不能重复
+	CFactorInfoHelper helper;
 	for(int i = 0; i < _pRowQType->GetSubItemsCount();i++)
 	{
 		CBCGPGridRow* pRow = _pRowQType->GetSubItem(i);
@@ -482,7 +492,7 @@ BOOL CDlgYDVaultFactorInfoConfig::ValidateDataByRowQType(CBCGPGridRow* _pRowQTyp
 		CString strFactorName = CDataHandler::VariantToString(valFactorName);
 		if(strFactorName.IsEmpty())
 		{
-			CString strMsg = CreateInvalidateMsg(pQType,i+1,_T("指标名称"));
+			CString strMsg = CreateInvalidateMsg(pQType,i+1,_T("指标名称不能为空！"));
 			AfxMessageBox(strMsg);
 			return FALSE;
 		}
@@ -504,7 +514,7 @@ BOOL CDlgYDVaultFactorInfoConfig::ValidateDataByRowQType(CBCGPGridRow* _pRowQTyp
 		CString strFiledName = CDataHandler::VariantToString(valFieldName);
 		if(strFiledName.IsEmpty())
 		{
-			CString strMsg = CreateInvalidateMsg(pQType,i+1,_T("预留字段名称"));
+			CString strMsg = CreateInvalidateMsg(pQType,i+1,_T("预留字段名称不能为空！"));
 			AfxMessageBox(strMsg);
 			return FALSE;
 		}
@@ -523,18 +533,7 @@ BOOL CDlgYDVaultFactorInfoConfig::ValidateDataByRowQType(CBCGPGridRow* _pRowQTyp
 		}
 		lstFieldName.push_back(strFiledName);
 		//要判断strFiledName是否为D1--D25,当时数值型的时候，要判断最小值和最大值
-		BOOL bNumber = FALSE;
-		for(int iNumber = 1; iNumber <= 25;iNumber++)
-		{
-			CString strNumber;
-			strNumber.Format(_T("D%d"),iNumber);
-			if(strFiledName.CompareNoCase(strNumber) == 0)
-			{
-				bNumber = TRUE;
-				break;
-			}
-		}
-		if(!bNumber)
+		if(!helper.IsNumberFieldName(strFiledName))
 		{
 			//字符串型，不用校验最大最小值
 			continue;
@@ -543,15 +542,28 @@ BOOL CDlgYDVaultFactorInfoConfig::ValidateDataByRowQType(CBCGPGridRow* _pRowQTyp
 		CString strMin = CDataHandler::VariantToString(valMin);
 		if(strMin.IsEmpty())
 		{
-			CString strMsg = CreateInvalidateMsg(pQType,i+1,_T("最小值"));
+			CString strMsg = CreateInvalidateMsg(pQType,i+1,_T("最小值不能为空！"));
 			AfxMessageBox(strMsg);
 			return FALSE;
 		}
+		if(!CDataHandler::StringIsDigit(strMin))
+		{
+			CString strMsg = CreateInvalidateMsg(pQType,i+1,_T("最小值应该为数值型！"));
+			AfxMessageBox(strMsg);
+			return FALSE;
+		}
+		
 		CComVariant valMax = pRow->GetItem(cColMax)->GetValue();
 		CString strMax = CDataHandler::VariantToString(valMax);
 		if(strMax.IsEmpty())
 		{
-			CString strMsg = CreateInvalidateMsg(pQType,i+1,_T("最大值"));
+			CString strMsg = CreateInvalidateMsg(pQType,i+1,_T("最大值不能为空！"));
+			AfxMessageBox(strMsg);
+			return FALSE;
+		}
+		if(!CDataHandler::StringIsDigit(strMin))
+		{
+			CString strMsg = CreateInvalidateMsg(pQType,i+1,_T("最大值应该为数值型！"));
 			AfxMessageBox(strMsg);
 			return FALSE;
 		}
@@ -575,6 +587,7 @@ CString	CDlgYDVaultFactorInfoConfig::CreateInvalidateMsg(CYDQuestionType* _pQTyp
 	CString strLabel;
 	_pQType->GetLabel(&strLabel);
 	CString strMsg;
-	strMsg.Format(_T("%s中第%d行%s不能为空！"),strLabel,_iRow,_strName);
+	strMsg.Format(_T("%s中第%d行%s"),strLabel,_iRow,_strName);
 	return strMsg;
 }
+
