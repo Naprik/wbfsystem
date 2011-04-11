@@ -106,17 +106,21 @@ HRESULT CQuestionCfgStruct::GetDescription(CString* description)
 		strinfo.Format(L"每题%.2f分 ", m_dMark);
 		*description += strinfo;
 	}
-	*description += L" 指标：";
-	std::list<CFactorValue>::const_iterator itr
-		= m_lstFactors.begin();
-	for (; itr != m_lstFactors.end(); ++itr)
+	if (m_lstFactors.size() > 0)
 	{
-		*description += L"(";
-		*description += (*itr).m_name;
-		*description += L"=";
-		*description += (*itr).m_value;
-		*description += L") ";
+		*description += L" 指标：";
+		std::list<CFactorValue>::const_iterator itr
+			= m_lstFactors.begin();
+		for (; itr != m_lstFactors.end(); ++itr)
+		{
+			*description += L"(";
+			*description += (*itr).m_name;
+			*description += L"=";
+			*description += (*itr).m_value;
+			*description += L") ";
+		}
 	}
+	
 
 	return S_OK;
 }

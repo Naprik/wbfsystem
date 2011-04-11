@@ -258,8 +258,11 @@ HRESULT CSelectorEngine::GetQuestionByCfgItemFromAccess(CQuestionCfgStruct* pcfg
 	CString condition;
 	GetQueryConditionFromFactor(pcfg, &condition);
 	strSQL += condition;
-	
-	strSQL += L" and objid in (select id_b from ";
+	if (condition.GetLength() > 0)
+	{
+		strSQL += L" and ";
+	}
+	strSQL += L" objid in (select id_b from ";
 	strSQL += DB_VAULTQUESTION;
 	strSQL += L" where id_a = ";
 	CString strIDVault;
@@ -286,24 +289,10 @@ HRESULT CSelectorEngine::GetQuestionByCfgItemFromAccess(CQuestionCfgStruct* pcfg
 
 HRESULT CSelectorEngine::GetQueryConditionFromFactor(CQuestionCfgStruct* pcfg, CString* condition)
 {
-	auto itr = pcfg->m_lstFactors.begin();
-	*condition += L" ";
-	*condition += (*itr).m_field;
-	*condition += L"=";
-	if ((*itr).m_field.Find(L"C") > 0)
+	if (pcfg->m_lstFactors.size() > 0)
 	{
-		*condition += L"'";
-		*condition += (*itr).m_value;
-		*condition += L"'";
-	}
-	else
-	{
-		*condition += (*itr).m_value;
-	}
-	++itr;
-	for (; itr != pcfg->m_lstFactors.end(); ++itr)
-	{
-		*condition += L" and ";
+		auto itr = pcfg->m_lstFactors.begin();
+		*condition += L" ";
 		*condition += (*itr).m_field;
 		*condition += L"=";
 		if ((*itr).m_field.Find(L"C") > 0)
@@ -316,7 +305,25 @@ HRESULT CSelectorEngine::GetQueryConditionFromFactor(CQuestionCfgStruct* pcfg, C
 		{
 			*condition += (*itr).m_value;
 		}
+		++itr;
+		for (; itr != pcfg->m_lstFactors.end(); ++itr)
+		{
+			*condition += L" and ";
+			*condition += (*itr).m_field;
+			*condition += L"=";
+			if ((*itr).m_field.Find(L"C") > 0)
+			{
+				*condition += L"'";
+				*condition += (*itr).m_value;
+				*condition += L"'";
+			}
+			else
+			{
+				*condition += (*itr).m_value;
+			}
+		}
 	}
+	
 
 	return S_OK;
 }
