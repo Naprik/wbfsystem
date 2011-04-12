@@ -42,6 +42,7 @@ private:
 	BOOL	ValidateData();
 	BOOL    ValidateDataByRowQType(CBCGPGridRow* _pRowQType);
 	CString	CreateInvalidateMsg(CYDQuestionType* _pQType,int _iRow,CString _strName);
+	afx_msg LRESULT OnItemChanged(WPARAM wParam,LPARAM lParam);
 public:
 	afx_msg void OnBnClickedButtonAdd();
 	afx_msg void OnBnClickedButtonDel();

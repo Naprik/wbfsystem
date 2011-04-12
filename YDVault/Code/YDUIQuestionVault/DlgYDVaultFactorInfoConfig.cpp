@@ -52,6 +52,7 @@ BEGIN_MESSAGE_MAP(CDlgYDVaultFactorInfoConfig, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CDlgYDVaultFactorInfoConfig::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_BUTTON_ADD, &CDlgYDVaultFactorInfoConfig::OnBnClickedButtonAdd)
 	ON_BN_CLICKED(IDC_BUTTON_DEL, &CDlgYDVaultFactorInfoConfig::OnBnClickedButtonDel)
+	ON_REGISTERED_MESSAGE(BCGM_GRID_ITEM_CHANGED,OnItemChanged)
 END_MESSAGE_MAP()
 
 
@@ -342,6 +343,18 @@ HRESULT CDlgYDVaultFactorInfoConfig::InsertRowByFactorInfoItem(CBCGPGridRow* _pP
 		return hr;
 	}
 	pChildRow->GetItem(cColFieldName)->SetValue(valFieldName);
+	CString strFieldName = CDataHandler::VariantToString(valFieldName);
+	CFactorInfoHelper helper;
+	if(helper.IsNumberFieldName(strFieldName))
+	{
+		pChildRow->GetItem(cColMin)->Enable(TRUE);
+		pChildRow->GetItem(cColMax)->Enable(TRUE);
+	}
+	else
+	{
+		pChildRow->GetItem(cColMin)->Enable(FALSE);
+		pChildRow->GetItem(cColMax)->Enable(FALSE);
+	}
 	CComVariant valMin;
 	hr = _pFactorInfoItem->GetPropVal(FIELD_YDFACTORINFOITEM_MIN,&valMin);
 	if(FAILED(hr))
@@ -591,3 +604,31 @@ CString	CDlgYDVaultFactorInfoConfig::CreateInvalidateMsg(CYDQuestionType* _pQTyp
 	return strMsg;
 }
 
+LRESULT CDlgYDVaultFactorInfoConfig::OnItemChanged(WPARAM wParam,LPARAM lParam)
+{
+	BCGPGRID_ITEM_INFO* item_info = (BCGPGRID_ITEM_INFO*)lParam;
+	ASSERT(item_info != NULL);
+	int nCol = item_info->nCol;
+	if(nCol == cColFieldName)
+	{
+		int nRow = item_info->nRow;
+		CBCGPGridRow *pRow = m_Grid.GetRow(nRow);
+		ASSERT(pRow != NULL);
+		CBCGPGridItem *pItem = pRow->GetItem(cColFieldName);
+		ASSERT(pItem != NULL);
+		_variant_t val = pItem->GetValue();
+		CString strFieldName = CDataHandler::VariantToString(val);
+		CFactorInfoHelper helper;
+		if(helper.IsNumberFieldName(strFieldName))
+		{
+			pRow->GetItem(cColMin)->Enable(TRUE);
+			pRow->GetItem(cColMax)->Enable(TRUE);
+		}
+		else
+		{
+			pRow->GetItem(cColMin)->Enable(FALSE);
+			pRow->GetItem(cColMax)->Enable(FALSE);
+		}
+	}
+	return 1L;
+}

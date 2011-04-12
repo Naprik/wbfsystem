@@ -214,7 +214,8 @@ void CExamTreeView::FillExamView()
 		}
 		if(bRedOutRight)
 		{
-			m_wndExamOperateView.InsertItem(EXAN_FETCH_ANSWER,0,0,hRollCallItem);//红外提取答案
+			//wym红外提取答案丁提出不需要
+			//m_wndExamOperateView.InsertItem(EXAN_FETCH_ANSWER,0,0,hRollCallItem);//红外提取答案
 			m_wndExamOperateView.InsertItem(EXAM_INFRARED,0,0,hRollCallItem);
 		}
 		m_wndExamOperateView.InsertItem(EXAM_MARK_INFO,0,0,hRootItem);
