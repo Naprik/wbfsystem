@@ -295,7 +295,7 @@ HRESULT CSelectorEngine::GetQueryConditionFromFactor(CQuestionCfgStruct* pcfg, C
 		*condition += L" ";
 		*condition += (*itr).m_field;
 		*condition += L"=";
-		if ((*itr).m_field.Find(L"C") > 0)
+		if ((*itr).m_field.Find(L"C") >= 0)
 		{
 			*condition += L"'";
 			*condition += (*itr).m_value;
@@ -311,7 +311,7 @@ HRESULT CSelectorEngine::GetQueryConditionFromFactor(CQuestionCfgStruct* pcfg, C
 			*condition += L" and ";
 			*condition += (*itr).m_field;
 			*condition += L"=";
-			if ((*itr).m_field.Find(L"C") > 0)
+			if ((*itr).m_field.Find(L"C") >= 0)
 			{
 				*condition += L"'";
 				*condition += (*itr).m_value;

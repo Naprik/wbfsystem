@@ -324,9 +324,8 @@ BOOL CExerciseMainDlg::OnInitDialog()
 			long lCount = CDataHandler::VariantToLong(var);
 			CString str;
 			lCount++;
-			CComVariant valNew(lCount);
-			(*itr)->SetPropVal(L"USEDCOUNT", &valNew);
-			hr = (*itr)->Update();
+			
+			hr = pQuestion->UpdateUsedCount(lCount);
 			if (FAILED(hr))
 			{
 				trans.Rollback();

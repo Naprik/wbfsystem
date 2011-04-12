@@ -1,8 +1,9 @@
 #include "StdAfx.h"
 #include "YDQuestionRef.h"
-#include "../DBBase/DatabaseEx.h"
 #include "../Base/DataHandler.h"
 #include "../Base/AutoClean.h"
+#include "../DBBase/DatabaseEx.h"
+#include "../DBBase/DBTransactionRef.h"
 #include "YDQuestionType.h"
 #include "YdObjWrapper.h"
 
@@ -325,6 +326,22 @@ HRESULT CYDQuestionRef::SetFtp(CFtpRef* ftp)
 {
 	m_pFtp = ftp;
 
+	return S_OK;
+}
+
+HRESULT CYDQuestionRef::UpdateUsedCount(int usedcount)
+{
+	HRESULT hr = E_FAIL;
+	
+	CString strsqlformat = L"update " + m_strDBName + L" set USEDCOUNT=%d";
+	CString strsql;
+	strsql.Format(strsqlformat, usedcount);
+	m_pDb->InitializeSQL(_bstr_t(strsql));
+	hr = m_pDb->ExecuteSQL();
+	if(FAILED(hr))
+	{
+		return hr;
+	}	
 	return S_OK;
 }
 

@@ -31,7 +31,7 @@ public:
 	virtual HRESULT GetAnswerList(std::list<CString>* lst);
 
 	virtual HRESULT SetFtp(CFtpRef* ftp);
-
+	virtual HRESULT UpdateUsedCount(int usedcount);
 protected:
 	virtual HRESULT CreateFactorInfoItem();
 public:

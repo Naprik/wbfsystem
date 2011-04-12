@@ -294,7 +294,11 @@ void CDlgSelQuestionCfg::OnCbnSelchangeCmbQtype()
 		pfactor->GetPropVal(FIELD_YDFACTORINFOITEM_FACTORNAME, factorname);
 		pRow->GetItem(COL_QUESTION_TYPE)->SetValue(CComVariant(CComBSTR(factorname)));
 		pRow->GetItem(COL_QUESTION_TYPE)->Enable(FALSE);
-		if (factorname.Find(L'C') > 0)
+
+		CString factorfield;
+		pfactor->GetPropVal(FIELD_YDFACTORINFOITEM_FIELDNAME, factorfield);
+		int index = factorfield.Find(L"C");
+		if (index >= 0)
 		{
 			pRow->GetItem(COL_QUESTION_CONDITION)->SetValue(CComVariant(CComBSTR(L"")));
 		}
@@ -388,6 +392,7 @@ void CDlgSelQuestionCfg::OnBnClickedBtnAdd()
 		CBCGPGridRow* prow = m_gridFactors.GetRow(i);
 		_variant_t var = prow->GetItem(COL_QUESTION_CONDITION)->GetValue();
 		CString factorvalue = CDataHandler::VariantToString(var);
+
 		if (factorvalue.GetLength() > 0)
 		{
 			var = prow->GetItem(COL_QUESTION_TYPE)->GetValue();
@@ -395,6 +400,14 @@ void CDlgSelQuestionCfg::OnBnClickedBtnAdd()
 			CYDObjectRef* pfactor = (CYDObjectRef*)prow->GetData();
 			CString field;
 			pfactor->GetPropVal(FIELD_YDFACTORINFOITEM_FIELDNAME, field);
+			if (field.Find(L"D") >= 0)
+			{
+				long lfactorvalue = _ttoi(factorvalue);
+				if (lfactorvalue <= 0)
+				{
+					continue;
+				}
+			}
 			pcfg->m_lstFactors.push_back(CFactorValue(field, factorname, factorvalue));
 		}
 	}
