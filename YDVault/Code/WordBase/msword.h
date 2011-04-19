@@ -1,8 +1,9 @@
 // Machine generated IDispatch wrapper class(es) created with ClassWizard
 /////////////////////////////////////////////////////////////////////////////
 // _Application wrapper class
+#pragma once
 
-class _Application : public COleDispatchDriver
+class AFX_EXT_CLASS _Application : public COleDispatchDriver
 {
 public:
 	_Application() {}		// Calls COleDispatchDriver default constructor
@@ -411,7 +412,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // Documents wrapper class
 
-class Documents : public COleDispatchDriver
+class AFX_EXT_CLASS Documents : public COleDispatchDriver
 {
 public:
 	Documents() {}		// Calls COleDispatchDriver default constructor
@@ -443,7 +444,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // _Document wrapper class
 
-class _Document : public COleDispatchDriver
+class AFX_EXT_CLASS _Document : public COleDispatchDriver
 {
 public:
 	_Document() {}		// Calls COleDispatchDriver default constructor
@@ -1327,7 +1328,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // Range wrapper class
 
-class Range : public COleDispatchDriver
+class AFX_EXT_CLASS Range : public COleDispatchDriver
 {
 public:
 	Range() {}		// Calls COleDispatchDriver default constructor
@@ -1824,7 +1825,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // Section wrapper class
 
-class Section : public COleDispatchDriver
+class AFX_EXT_CLASS Section : public COleDispatchDriver
 {
 public:
 	Section() {}		// Calls COleDispatchDriver default constructor
@@ -1853,7 +1854,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // Paragraphs wrapper class
 
-class Paragraphs : public COleDispatchDriver
+class AFX_EXT_CLASS Paragraphs : public COleDispatchDriver
 {
 public:
 	Paragraphs() {}		// Calls COleDispatchDriver default constructor
@@ -1969,7 +1970,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // Paragraph wrapper class
 
-class Paragraph : public COleDispatchDriver
+class AFX_EXT_CLASS Paragraph : public COleDispatchDriver
 {
 public:
 	Paragraph() {}		// Calls COleDispatchDriver default constructor
@@ -4850,7 +4851,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // Selection wrapper class
 
-class Selection : public COleDispatchDriver
+class AFX_EXT_CLASS Selection : public COleDispatchDriver
 {
 public:
 	Selection() {}		// Calls COleDispatchDriver default constructor

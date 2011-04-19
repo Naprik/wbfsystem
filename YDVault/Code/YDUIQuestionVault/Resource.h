@@ -89,6 +89,8 @@
 #define IDC_BUTTON_QL_DEL2              1071
 #define IDC_BUTTON_QL_OUTPUT            1071
 #define IDC_BUTTON_QL_CONFIG_FACTORINFO 1072
+#define IDC_BUTTON_QL_OUTPUT2           1073
+#define IDC_BUTTON_QL_INPUT             1073
 #define IDC_BUTTON_QL_QUERY_PREV        1075
 #define IDC_BUTTON_QL_QUERY_NEXT        1076
 #define IDC_BUTTON_QL_QUERY_END         1077
@@ -135,7 +137,6 @@
 #define IDC_CHECK1                      15006
 #define IDC_STATIC_BK                   15007
 #define IDC_BUTTON_FACTORINFO_CONIFG    15008
-#define IDC_STATIC_INDI                 15010
 #define IDC_STATIC_INDICATOR            15010
 #define IDD_YDMAIN_DIALOG_PAPERFOLDER   30011
 #define IDD_YDUIQUESTIONVAULT_FORM_PAPERFOLDER 30011

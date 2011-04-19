@@ -23,6 +23,7 @@
 #include "QuestionViewDlg.h"
 #include "../UIBase\ListXlsoutput.h"
 #include "DlgYDVaultQuestionFactorInfoConfig.h"
+#include "VocabularyInputQuestionHelper.h"
 // CQuestionListFormView
 
 
@@ -68,6 +69,7 @@ BEGIN_MESSAGE_MAP(CQuestionListFormView, CYdFormView)
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST_QL_QUESTION, &CQuestionListFormView::OnNMDblclkListQlQuestion)
 	ON_BN_CLICKED(IDC_BUTTON_QL_OUTPUT, &CQuestionListFormView::OnBnClickedButtonQlOutput)
 	ON_BN_CLICKED(IDC_BUTTON_QL_CONFIG_FACTORINFO, &CQuestionListFormView::OnBnClickedButtonQlConfigFactorinfo)
+	ON_BN_CLICKED(IDC_BUTTON_QL_INPUT, &CQuestionListFormView::OnBnClickedButtonQlInput)
 END_MESSAGE_MAP()
 
 
@@ -1056,4 +1058,41 @@ void CQuestionListFormView::OnBnClickedButtonQlConfigFactorinfo()
 	dlg.m_pQType = pQType;
 	dlg.m_pQuestion = pObjWrapper->m_pObjRef;
 	dlg.DoModal();
+}
+
+
+void CQuestionListFormView::OnBnClickedButtonQlInput()
+{
+	// TODO: Add your control notification handler code here
+	QTYPE qType = (QTYPE)-1;
+	HRESULT hr = E_FAIL;
+	hr = GetQuestionType(&qType);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+		return;
+	}
+	if(qType != QTYPE_VOCABULARY)
+	{
+		AfxMessageBox(_T("暂不支持该类型题目导入！"));
+		return;
+	}
+	CFileDialog dlg(TRUE,NULL,NULL,OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT,_T("Rtf文件(*.rtf)|*.rtf|所有文件(*.*)|*.*||"));
+	if(dlg.DoModal() != IDOK)
+	{
+		return ;
+	}
+	CInputQuestionHelper* pHelper = NULL;
+	if(qType == QTYPE_VOCABULARY)
+	{
+		pHelper = new CVocabularyInputQuestionHelper();
+	}
+	ASSERT(pHelper);
+	CPtrAutoClean<CInputQuestionHelper> clr(pHelper);
+	hr = pHelper->ExeInputFile(dlg.GetPathName());
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+		return;
+	}
 }
