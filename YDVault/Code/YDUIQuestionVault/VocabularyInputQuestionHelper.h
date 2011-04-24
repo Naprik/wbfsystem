@@ -34,5 +34,6 @@ private:
 	HRESULT IsQuestionAnswer(CString _strText,BOOL &_IsAnswer,CString &_strAnswer);
 	//是否是选择题的指标，如果是,则在_lstFactor中插入一个指标
 	HRESULT IsQuestionFactor(CString _strText,BOOL &_IsOption,std::list<std::pair<CString,CString> > &_lstFactor);
+	HRESULT ShowPrevDlg();
 };
 

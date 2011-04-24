@@ -89,7 +89,6 @@
 #define IDC_BUTTON_QL_DEL2              1071
 #define IDC_BUTTON_QL_OUTPUT            1071
 #define IDC_BUTTON_QL_CONFIG_FACTORINFO 1072
-#define IDC_BUTTON_QL_OUTPUT2           1073
 #define IDC_BUTTON_QL_INPUT             1073
 #define IDC_BUTTON_QL_QUERY_PREV        1075
 #define IDC_BUTTON_QL_QUERY_NEXT        1076
@@ -133,6 +132,8 @@
 #define IDD_YDUIQUESTIONVAULT_DIALG_QUESTION_FACTORINFO_CONFIG 15003
 #define IDC_LIST1                       15004
 #define IDC_LIST_PAPERS                 15004
+#define IDD_DIALOG1                     15004
+#define IDD_YDUIQUESTIONVAULT_DIALOG_VOCABULARY_INPUT_PREVIEW 15004
 #define IDC_BTN_OUTPUT                  15005
 #define IDC_CHECK1                      15006
 #define IDC_STATIC_BK                   15007
@@ -148,7 +149,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        15004
+#define _APS_NEXT_RESOURCE_VALUE        15005
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         15011
 #define _APS_NEXT_SYMED_VALUE           15000

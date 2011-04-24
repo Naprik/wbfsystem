@@ -118,6 +118,7 @@
   <ItemGroup>
     <ClCompile Include="AtricleQuestionFormView.cpp" />
     <ClCompile Include="DlgKnowledge.cpp" />
+    <ClCompile Include="DlgVocabularyInputPreview.cpp" />
     <ClCompile Include="dllmain.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -163,6 +164,7 @@
   <ItemGroup>
     <ClInclude Include="AtricleQuestionFormView.h" />
     <ClInclude Include="DlgKnowledge.h" />
+    <ClInclude Include="DlgVocabularyInputPreview.h" />
     <ClInclude Include="DlgYDVaultQuestionFactorInfoConfig.h" />
     <ClInclude Include="GeneratePaperFormView.h" />
     <ClInclude Include="GridListCtrlQuestion.h" />

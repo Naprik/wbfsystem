@@ -2,6 +2,7 @@
 #include "VocabularyInputQuestionHelper.h"
 #include "../Base/DataHandler.h"
 #include "../Base/AutoClean.h"
+#include "DlgVocabularyInputPreview.h"
 
 HRESULT CVocabularyQuestion::Load(Paragraphs &_paragraphs,long _index)
 {
@@ -128,6 +129,9 @@ HRESULT CVocabularyInputQuestionHelper::ExeInputFile(CString _strFile)
 			continue;
 		}
 	}
+	CDlgVocabularyInputPreview dlg;
+	dlg.m_plstVocabularyQuestion = &lstQuestion;
+	dlg.DoModal();
 	return S_OK;
 }
 
@@ -237,3 +241,4 @@ HRESULT CVocabularyInputQuestionHelper::IsQuestionFactor(CString _strText,BOOL &
 	_lstFactor.push_back(std::make_pair(strFirst,strFactorVal));
 	return S_OK;
 }
+
