@@ -42,6 +42,7 @@ public:
 private:
 	//得到当前试题类型所属的题库
 	HRESULT GetQuestionVault(CYDQuestionVault* &_pQV);
+	HRESULT GetQuestionVaultID(OBJID* _pQVID);
 	//得到当前的试题类型
 	HRESULT GetQuestionType(CYDQuestionType* &PpQType);
 	HRESULT GetQuestionType(QTYPE* _pQtype);

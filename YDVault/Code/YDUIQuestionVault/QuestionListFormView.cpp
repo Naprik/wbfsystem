@@ -201,6 +201,22 @@ HRESULT CQuestionListFormView::GetQuestionVault(CYDQuestionVault* &_pQV)
 	return S_OK;
 }
 
+HRESULT CQuestionListFormView::GetQuestionVaultID(OBJID* _pQVID)
+{
+	HRESULT hr = E_FAIL;
+	CYDQuestionVault* pQV = NULL;
+	hr = GetQuestionVault(pQV);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	hr = pQV->GetID(_pQVID);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	return S_OK;
+}
 HRESULT CQuestionListFormView::GetQuestionType(CYDQuestionType* &_pQType)
 {
 	HRESULT hr = E_FAIL;
@@ -1082,10 +1098,17 @@ void CQuestionListFormView::OnBnClickedButtonQlInput()
 	{
 		return ;
 	}
+	OBJID IDVault = 0;
+	hr = GetQuestionVaultID(&IDVault);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+		return;
+	}
 	CInputQuestionHelper* pHelper = NULL;
 	if(qType == QTYPE_VOCABULARY)
 	{
-		pHelper = new CVocabularyInputQuestionHelper();
+		pHelper = new CVocabularyInputQuestionHelper(IDVault);
 	}
 	ASSERT(pHelper);
 	CPtrAutoClean<CInputQuestionHelper> clr(pHelper);

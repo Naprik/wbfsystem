@@ -1,10 +1,14 @@
 #include "StdAfx.h"
 #include "InputQuestionHelper.h"
+#include "../Base/AutoClean.h"
+#include "../ObjRef/YDObjectRef.h"
+#include "../ObjHelper/FactorInfoHelper.h"
 
 
-CInputQuestionHelper::CInputQuestionHelper(QTYPE qType)
+CInputQuestionHelper::CInputQuestionHelper(OBJID _IDVault,OBJID _IDType)
 {
-	m_qType = qType;
+	m_IDVault = _IDVault;
+	m_IDType = _IDType;
 	m_bCreateWordSuc = FALSE;
 }
 
@@ -20,6 +24,7 @@ CInputQuestionHelper::~CInputQuestionHelper(void)
 		m_oSel.ReleaseDispatch();
 		m_oWordApp.ReleaseDispatch();
 	}
+	CListAutoClean<CYDObjectRef> clr(m_lstFactorInfo);
 }
 
 HRESULT CInputQuestionHelper::CreateWord(CString _strFile)
@@ -59,5 +64,39 @@ HRESULT CInputQuestionHelper::CreateWord(CString _strFile)
 
 
 	m_bCreateWordSuc = TRUE;
+	return S_OK;
+}
+
+HRESULT CInputQuestionHelper::IsFactorName(CString _strName,VARIANT_BOOL* _bIs)
+{
+	HRESULT hr = E_FAIL;
+	*_bIs = VARIANT_FALSE;
+	if(m_lstFactorInfo.size() <= 0)
+	{
+		//读取数据库得到当前题型的指标名
+		CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
+		ASSERT(pDB);
+		CFactorInfoHelper helper;
+		hr = helper.GetFactorInfoByVaultQType(pDB,m_IDVault,m_IDType,&m_lstFactorInfo);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+	}
+	for(std::list<CYDObjectRef*>::const_iterator itr = m_lstFactorInfo.begin();
+		itr != m_lstFactorInfo.end();++itr)
+	{
+		CString strItrName ;
+		hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FACTORNAME,strItrName);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		if(strItrName.CompareNoCase(_strName) == 0)
+		{
+			*_bIs = VARIANT_TRUE;
+			break;
+		}
+	}
 	return S_OK;
 }
