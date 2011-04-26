@@ -12,6 +12,8 @@ class CYDInfraRedAppCom;
 class CYDEAddrUnit;
 class CYDStuMark;
 
+const int cMaxComCount = 10;//可以同时打开红外的最大端口数
+
 // CFormExamInfraRed 对话框
 class BASE_DLL_API CFormExamInfraRed : public CYdFormView
 {
@@ -31,12 +33,12 @@ public:
 	BOOL change_flag;
 
 
-	CYDInfraRedAppCom*   m_pYDAppCom;
-
+	
 	BOOL m_bOpenCom;//是否打开端口
 
-	HANDLE m_hThreadDecode;//解码线程
-	HANDLE m_hThreadReadData;//读取Com数据的线程
+	HANDLE m_hThreadDecode[cMaxComCount];//解码线程
+	HANDLE m_hThreadReadData[cMaxComCount];//读取Com数据的线程
+	std::list<CYDInfraRedAppCom*> m_lstYDAppCom;
 
 	CString m_recv;
 
@@ -75,12 +77,14 @@ private:
 public:
 	BOOL	m_bThreadQuit;  //线程退出的标记
 	virtual HRESULT Close();
-	HRESULT DecodData();
-	HRESULT ReadData();
+	HRESULT DecodData(CYDInfraRedAppCom* _pAppCom);
+	HRESULT ReadData(CYDInfraRedAppCom* _pAppCom);
+	
 private:
 	HRESULT CloseThread();
 	HRESULT CreateStuMark(CYDEAddrUnit* _pUnit,CYDStuMark*& _pStuMark);
 	HRESULT SetGStructData();//设置全局变量
+	HRESULT OpenTeacherCom();//打开红外教师机端口，根据combox中的端口号，可能有多个
 	CFont       m_EditFont;//设置edit的大小
 public:
 	COleDateTime m_timeExam;

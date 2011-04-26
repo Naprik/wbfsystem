@@ -245,3 +245,6 @@ public:
 									//如果为True表示要显示全局变量中当前试卷的信息
 
 };
+
+const int cInfraRedRate = 2400;//红外的波特率是2400
+const int cBlueRedRate = 9600;//蓝牙的波特率是9600

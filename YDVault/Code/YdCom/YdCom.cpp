@@ -53,7 +53,7 @@ BOOL CYDCom::SetCommParameter(CString Seriou,DWORD _dwBaudRate )
 参数：CString Seriou(com口)
 说明：打开com口
 ***********************************************/
-BOOL CYDCom::OpenComm(CString Seriou,DWORD _dwBaudRate /*= 9600*/)
+BOOL CYDCom::OpenComm(CString Seriou,DWORD _dwBaudRate /*= cBlueRedRate*/)
 {
 	if(m_bConnected)
 	{

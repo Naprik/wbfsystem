@@ -18,6 +18,7 @@
 #include "DlgResDetail.h"
 #include "../DBBase\DBTransactionRef.h"
 #include "DlgPaper.h"
+#include "../Base/CriticalSectionControl.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -41,17 +42,19 @@ CFormExamInfraRed::CFormExamInfraRed()
 	, m_timeExam(COleDateTime::GetCurrentTime())
 	, m_strReceiveStuno(_T(""))
 {
-	m_pYDAppCom = NULL;
 	m_bOpenCom = FALSE;
 	m_bThreadQuit = TRUE;
-	m_hThreadDecode = NULL;
-	m_hThreadReadData = NULL;
+	for(int i = 0; i < cMaxComCount;i++)
+	{
+		m_hThreadDecode[i] = NULL;
+		m_hThreadReadData[i] = NULL;
+	}
 	m_bNotSaveExam = FALSE;
 }
 CFormExamInfraRed::~CFormExamInfraRed()
 {
 	CListAutoClean<CYDObjectRef> clr(m_lstClear);
-	CPtrAutoClean<CYDInfraRedAppCom> clr2(m_pYDAppCom);
+	CListAutoClean<CYDInfraRedAppCom> clr2(m_lstYDAppCom);
 }
 
 void CFormExamInfraRed::DoDataExchange(CDataExchange* pDX)
@@ -114,8 +117,11 @@ void CFormExamInfraRed::OnInitialUpdate()
 	m_lstUnit.InsertColumn(CONST_COL_ANSWER_MARK,_T("分数"),LVCFMT_LEFT,10000);
 	
 	m_bOpenCom = FALSE;
-	m_hThreadDecode = NULL;
-	m_hThreadReadData = NULL;
+	for(int i = 0; i < cMaxComCount;i++)
+	{
+		m_hThreadDecode[i] = NULL;
+		m_hThreadReadData[i] = NULL;
+	}
 	m_recv = _T("");
 	SetTimer(1,200,NULL);
 
@@ -157,16 +163,21 @@ DWORD WINAPI ThreadDecode(LPVOID lpParam)
 {
 	CFormExamInfraRed *pForm = (CFormExamInfraRed *)lpParam;
 	ASSERT(pForm);
+	//list中的最后一个是当前线程中的pAppCom
+	ASSERT(pForm->m_lstYDAppCom.size() > 0);
+	std::list<CYDInfraRedAppCom*>::const_reverse_iterator itr = pForm->m_lstYDAppCom.rbegin();
+	CYDInfraRedAppCom* pAppCom = (*itr);
+	ASSERT(pAppCom);
 	HRESULT hr = E_FAIL;
 	while(!pForm->m_bThreadQuit)
 	{
-		hr = pForm->DecodData();
+		hr = pForm->DecodData(pAppCom);
 		if(FAILED(hr))
 		{
 			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
 			return hr;
 		}
-		Sleep(10);
+		Sleep(500);
 	}
 
 	return 0;
@@ -176,16 +187,21 @@ DWORD WINAPI ThreadReadData(LPVOID lpParam)
 {
 	CFormExamInfraRed *pForm = (CFormExamInfraRed *)lpParam;
 	ASSERT(pForm);
+	//list中的最后一个是当前线程中的pAppCom
+	ASSERT(pForm->m_lstYDAppCom.size() > 0);
+	std::list<CYDInfraRedAppCom*>::const_reverse_iterator itr = pForm->m_lstYDAppCom.rbegin();
+	CYDInfraRedAppCom* pAppCom =  (*itr);
+	ASSERT(pAppCom);
 	HRESULT hr = E_FAIL;
 	while(!pForm->m_bThreadQuit)
 	{
-		hr = pForm->ReadData();
+		hr = pForm->ReadData(pAppCom);
 		if(FAILED(hr))
 		{
 			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
 			return hr;
 		}
-		Sleep(10);
+		Sleep(500);
 	}
 
 	return 0;
@@ -483,7 +499,12 @@ void CFormExamInfraRed::OnBnClickedButtonOpenport()
 	if(m_cmbDevCom.GetCount() >0)
 	{
 		m_cmbDevCom.SetCurSel(0);
-		OnCbnSelchangeComboDevCom();
+		hr = OpenTeacherCom();
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+			return ;
+		}
 	}
 }
 
@@ -510,64 +531,60 @@ HRESULT CFormExamInfraRed::Close()
 HRESULT CFormExamInfraRed::CloseThread()
 {
 	m_bThreadQuit = TRUE;
-	if(m_hThreadReadData)
+	for(int i = 0;  i < cMaxComCount;i++)
 	{
-		WaitForSingleObject(m_hThreadReadData,15000);
-		m_hThreadReadData = NULL;
-	}
-	if(m_hThreadDecode)
-	{
-		WaitForSingleObject(m_hThreadDecode,15000);
-		m_hThreadDecode = NULL;
-	}
-	return S_OK;
-}
-
-HRESULT CFormExamInfraRed::DecodData()
-{
-	HRESULT hr = E_FAIL;
-	if(!m_bOpenCom)
-	{
-		return S_FALSE;
-	}
-	if(m_pYDAppCom)
-	{
-		std::list<std::pair<CString,CString> > lstMacAnswer;
-		hr = m_pYDAppCom->DecodData(lstMacAnswer);
-		if(FAILED(hr))
+		if(m_hThreadReadData[i])
 		{
-			return hr;
+			WaitForSingleObject(m_hThreadReadData[i],15000);
+			m_hThreadReadData[i] = NULL;
 		}
-		for(std::list<std::pair<CString,CString> >::const_iterator itr = lstMacAnswer.begin();
-			itr != lstMacAnswer.end();++itr)
+		if(m_hThreadDecode[i])
 		{
-			CString strMac = (*itr).first;
-			CString strAnswer = (*itr).second;
-			hr = UpdateListByMac(strMac,strAnswer);
-			if(FAILED(hr))
-			{
-				return hr;
-			}
+			WaitForSingleObject(m_hThreadDecode[i],15000);
+			m_hThreadDecode[i] = NULL;
 		}
 	}
 	return S_OK;
 }
 
-HRESULT CFormExamInfraRed::ReadData()
+HRESULT CFormExamInfraRed::DecodData(CYDInfraRedAppCom* _pAppCom)
 {
 	HRESULT hr = E_FAIL;
-	if(!m_bOpenCom)
+	ASSERT(_pAppCom);
+	std::list<std::pair<CString,CString> > lstMacAnswer;
+	hr = _pAppCom->DecodData(lstMacAnswer);
+	if(FAILED(hr))
 	{
-		return S_FALSE;
+		return hr;
 	}
-	if(m_pYDAppCom)
+	for(std::list<std::pair<CString,CString> >::const_iterator itr = lstMacAnswer.begin();
+		itr != lstMacAnswer.end();++itr)
 	{
-		hr = m_pYDAppCom->ReadData();
+		CString strMac = (*itr).first;
+		CString strAnswer = (*itr).second;
+		hr = UpdateListByMac(strMac,strAnswer);
 		if(FAILED(hr))
 		{
 			return hr;
 		}
 	}
+	return S_OK;
+}
+
+HRESULT CFormExamInfraRed::ReadData(CYDInfraRedAppCom* _pAppCom)
+{
+	HRESULT hr = E_FAIL;
+	ASSERT(_pAppCom);
+	if(!m_bOpenCom)
+	{
+		return S_FALSE;
+	}
+	hr = _pAppCom->ReadData();
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	
 	return S_OK;
 }
 
@@ -933,71 +950,76 @@ HRESULT CFormExamInfraRed::SetGStructData()
 	pGExamStruct->m_TeacherType = GFROM_INFRARED;
 	return S_OK;
 }
-void CFormExamInfraRed::OnCbnSelchangeComboDevCom()
+
+HRESULT CFormExamInfraRed::OpenTeacherCom()
 {
-	// TODO: Add your control notification handler code here
 	HRESULT hr = E_FAIL;
-	CWaitCursor wait;
-	hr = CloseThread();
-	if(FAILED(hr))
-	{
-		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
-		return ;
-	}
-	{
-		CPtrAutoClean<CYDInfraRedAppCom> clr(m_pYDAppCom);
-	}
-	CString strPort;
-	m_cmbDevCom.GetLBText(m_cmbDevCom.GetCurSel(),strPort);
-	if (strPort.GetLength() > 4 && 
-		strPort.Find(_T("\\\\.\\")) == -1) 
-	{
-		strPort = _T("\\\\.\\") + strPort;
-	}
-
-	m_pYDAppCom = new CYDInfraRedAppCom(strPort);
-	hr = m_pYDAppCom->OpenCom(2400);//红外的波特率是2400
-	if(FAILED(hr))
-	{
-		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
-		return ;
-	}
-
-	m_bOpenCom = TRUE;
-	if ( !m_bOpenCom  )
-	{
-		AfxMessageBox(_T("请打开串口！"));
-		return;
-	}
 	//要验证科目，试卷及考场是否已经选择
 	UpdateData();
 	if(m_cmbExamSubject.GetCurSel() == -1)
 	{
 		AfxMessageBox(_T("请选择考试科目！"));
-		return;
+		return S_FALSE;
 	}
 	if(m_cmbExamPaper.GetCurSel() == -1)
 	{
 		AfxMessageBox(_T("请选择考试试卷！"));
-		return;
+		return S_FALSE;
 	}
 	if(m_cmbExamRoom.GetCurSel() == -1)
 	{
 		AfxMessageBox(_T("请选择考试考场！"));
-		return;
+		return S_FALSE;
 	}
-	m_bThreadQuit = FALSE;
-	if (m_hThreadDecode == NULL)
+	CWaitCursor wait;
+	hr = CloseThread();
+	if(FAILED(hr))
 	{
-		DWORD dwThreadId2;
-		m_hThreadDecode = CreateThread(NULL, 0, ThreadDecode, this, 0, &dwThreadId2);	
+		return hr;
 	}
+	{
+		CListAutoClean<CYDInfraRedAppCom> clr2(m_lstYDAppCom);
+	}
+	for(int i = 0 ;i < m_cmbDevCom.GetCount();i++)
+	{
+		CString strPort;
+		m_cmbDevCom.GetLBText(i,strPort);
+		if (strPort.GetLength() > 4 && 
+			strPort.Find(_T("\\\\.\\")) == -1) 
+		{
+			strPort = _T("\\\\.\\") + strPort;
+		}
 
-	if (m_hThreadReadData == NULL)
-	{
-		DWORD dwThreadId;
-		m_hThreadReadData = CreateThread(NULL, 0, ThreadReadData, this, 0, &dwThreadId);	
+		CYDInfraRedAppCom* pYDAppCom = new CYDInfraRedAppCom(strPort);
+		hr = pYDAppCom->OpenCom(cInfraRedRate);//红外的波特率是2400
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		m_lstYDAppCom.push_back(pYDAppCom);
+		m_bThreadQuit = FALSE;
+		if (m_hThreadDecode[i] == NULL)
+		{
+			DWORD dwThreadId2;
+			m_hThreadDecode[i] = CreateThread(NULL, 0, ThreadDecode, this, 0, &dwThreadId2);	
+		}
+
+		if (m_hThreadReadData[i] == NULL)
+		{
+			DWORD dwThreadId;
+			m_hThreadReadData[i] = CreateThread(NULL, 0, ThreadReadData, this, 0, &dwThreadId);	
+		}
+		Sleep(100);//稍微等一下，让线程可以将新创建的pYDAppCom值存入到线程临时变量中
 	}
+	
+	m_bOpenCom = TRUE;
+	if ( !m_bOpenCom  )
+	{
+		AfxMessageBox(_T("请打开串口！"));
+		return S_FALSE;
+	}
+	
+	
 	Sleep(100);
 	//将其它按钮变灰
 	GetDlgItem(IDC_COMBO_EXAM_SUBJECT)->EnableWindow(FALSE);
@@ -1011,6 +1033,17 @@ void CFormExamInfraRed::OnCbnSelchangeComboDevCom()
 	GetDlgItem(IDC_BUTTON_PAPER_ANS)->EnableWindow(TRUE);
 	GetDlgItem(IDC_BUTTON_NEW_PAPER)->EnableWindow(FALSE);
 	AfxMessageBox(_T("打开串口成功！"));
+#ifdef DEBUG
+	GetDlgItem(IDC_COMBO_DEV_COM)->EnableWindow(TRUE);
+#endif
+	return S_OK;
+}
+
+void CFormExamInfraRed::OnCbnSelchangeComboDevCom()
+{
+	// TODO: Add your control notification handler code here
+	HRESULT hr = E_FAIL;
+	
 }
 
 BOOL CFormExamInfraRed::DestroyWindow()

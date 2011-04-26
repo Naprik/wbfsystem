@@ -11,7 +11,7 @@ public:
 	CYDAppCom(CString _strComPort);
 	virtual ~CYDAppCom(void);
 public:
-	virtual HRESULT    OpenCom(DWORD _dwBaudRate = 9600);
+	virtual HRESULT    OpenCom(DWORD _dwBaudRate = cBlueRedRate);
 	virtual HRESULT    Close();
 	HRESULT GetState(BOOL &_bOpen);
 	//返回当前机器的MAC地址，_iType=0,说明是教师机

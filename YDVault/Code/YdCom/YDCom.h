@@ -9,7 +9,7 @@ public:
 	BOOL Close();
 	CYDCom();
 	~CYDCom();
-	virtual BOOL		  OpenComm(CString Seriou,DWORD _dwBaudRate = 9600);                
+	virtual BOOL		  OpenComm(CString Seriou,DWORD _dwBaudRate = cBlueRedRate);                
 	void		  CloseComm();
 	BOOL		  Send(CString str);
 	CString		  ReadData();

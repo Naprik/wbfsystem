@@ -56,7 +56,7 @@ HRESULT CYDAppCom::contrl(CString cmd, int iTime,CString &_str)
 	return S_OK;
 }
 
-HRESULT CYDAppCom::OpenCom(DWORD _dwBaudRate /*= 9600*/)
+HRESULT CYDAppCom::OpenCom(DWORD _dwBaudRate /*= cBlueRedRate*/)
 {
 	HRESULT hr = E_FAIL;
 	if (m_strComPort.GetLength() > 4) //如果端口号大于"com10"，需要在端口名称前面增加“\\\\.\\”
