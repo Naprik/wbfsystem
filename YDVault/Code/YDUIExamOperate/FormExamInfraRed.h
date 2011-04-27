@@ -91,6 +91,7 @@ public:
 	BOOL		 m_bNotSaveExam;//标记是否有提取到答案的学生信息未存到数据库中
 private:
 	std::map<CYDEAddrUnit*, CYDStuMark*> m_mapUnitToMark;//一个考场单元对应于一个考试成绩
+	CCriticalSection m_cs; //临界点控制，用于多线程中控制
 public:
 	afx_msg void OnNMDblclkListStu(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnBnClickedButtonSave();

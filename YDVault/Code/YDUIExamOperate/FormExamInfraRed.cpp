@@ -177,7 +177,7 @@ DWORD WINAPI ThreadDecode(LPVOID lpParam)
 			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
 			return hr;
 		}
-		Sleep(500);
+		Sleep(100);
 	}
 
 	return 0;
@@ -201,7 +201,7 @@ DWORD WINAPI ThreadReadData(LPVOID lpParam)
 			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
 			return hr;
 		}
-		Sleep(500);
+		Sleep(100);
 	}
 
 	return 0;
@@ -535,12 +535,19 @@ HRESULT CFormExamInfraRed::CloseThread()
 	{
 		if(m_hThreadReadData[i])
 		{
-			WaitForSingleObject(m_hThreadReadData[i],15000);
+			if(WaitForSingleObject(m_hThreadReadData[i],15000) == WAIT_TIMEOUT)
+			{
+				TerminateThread(m_hThreadReadData[i],0);
+			}
 			m_hThreadReadData[i] = NULL;
 		}
 		if(m_hThreadDecode[i])
 		{
-			WaitForSingleObject(m_hThreadDecode[i],15000);
+			if(WaitForSingleObject(m_hThreadDecode[i],15000) == WAIT_TIMEOUT)
+			{
+				TerminateThread(m_hThreadDecode[i],0);
+			}
+			//WaitForSingleObject(m_hThreadDecode[i],15000);
 			m_hThreadDecode[i] = NULL;
 		}
 	}
@@ -591,6 +598,7 @@ HRESULT CFormExamInfraRed::ReadData(CYDInfraRedAppCom* _pAppCom)
 HRESULT CFormExamInfraRed::UpdateListByMac(CString _strMac,CString _strAnswer)
 {
 	HRESULT hr = E_FAIL;
+	CCriticalSectionControl cc(&m_cs);
 	for(int i = 0; i < m_lstUnit.GetItemCount();i++)
 	{	
 		CYDEAddrUnit* pUint = (CYDEAddrUnit*)m_lstUnit.GetItemData(i);
