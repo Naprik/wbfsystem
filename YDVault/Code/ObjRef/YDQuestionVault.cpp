@@ -296,7 +296,7 @@ HRESULT CYDQuestionVault::GetQuestionTypeIDDB(UINT _idQuestionType,
 		return hr;
 	}
 	_variant_t val;
-	hr = QType.GetPropVal(L"Type",&val);
+	hr = QType.GetPropVal(FIELD_QUESTIONTYPE_TYPE,&val);
 	if(FAILED(hr))
 	{
 		return hr;
@@ -340,7 +340,7 @@ HRESULT CYDQuestionVault::GetQuestionByTypeID(UINT _idQuestionType,
 	CYDQuestionType questionType(m_pDb);
 	questionType.SetID(_idQuestionType);
 	CComVariant varType;
-	questionType.GetPropVal(L"TYPE", &varType);
+	questionType.GetPropVal(FIELD_QUESTIONTYPE_TYPE, &varType);
 	QTYPE qtype = (QTYPE)CDataHandler::VariantToLong(varType);
 
 	ASSERT(m_pDb != NULL);

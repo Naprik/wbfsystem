@@ -29,8 +29,8 @@ HRESULT CVocabularyQuestion::Load(Paragraphs &_paragraphs,long _index)
 }
 
 
-CVocabularyInputQuestionHelper::CVocabularyInputQuestionHelper(OBJID _IDVault)
-	:CInputQuestionHelper(_IDVault,6)
+CVocabularyInputQuestionHelper::CVocabularyInputQuestionHelper(CYDObjectRef* _pVault,CYDObjectRef* _pType)
+	:CInputQuestionHelper(_pVault,_pType)
 {
 }
 
@@ -131,6 +131,8 @@ HRESULT CVocabularyInputQuestionHelper::ExeInputFile(CString _strFile)
 	}
 	CDlgVocabularyInputPreview dlg;
 	dlg.m_plstVocabularyQuestion = &lstQuestion;
+	dlg.m_pVault = m_pVault;
+	dlg.m_pType = m_pType;
 	dlg.DoModal();
 	return S_OK;
 }

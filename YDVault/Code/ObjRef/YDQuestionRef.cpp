@@ -240,7 +240,7 @@ HRESULT CYDQuestionRef::GetQuestionType(QTYPE* type)
 	CYDQuestionType qtype(m_pDb);
 	qtype.SetID(idtype);
 	varType.Clear();
-	qtype.GetPropVal(L"TYPE", &varType);
+	qtype.GetPropVal(FIELD_QUESTIONTYPE_TYPE, &varType);
 	*type = QTYPE(CDataHandler::VariantToLong(varType));
 
 	return S_OK;

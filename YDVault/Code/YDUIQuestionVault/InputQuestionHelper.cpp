@@ -5,10 +5,10 @@
 #include "../ObjHelper/FactorInfoHelper.h"
 
 
-CInputQuestionHelper::CInputQuestionHelper(OBJID _IDVault,OBJID _IDType)
+CInputQuestionHelper::CInputQuestionHelper(CYDObjectRef* _pVault,CYDObjectRef* _pType)
 {
-	m_IDVault = _IDVault;
-	m_IDType = _IDType;
+	m_pVault = _pVault;
+	m_pType = _pType;
 	m_bCreateWordSuc = FALSE;
 }
 
@@ -77,7 +77,7 @@ HRESULT CInputQuestionHelper::IsFactorName(CString _strName,VARIANT_BOOL* _bIs)
 		CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
 		ASSERT(pDB);
 		CFactorInfoHelper helper;
-		hr = helper.GetFactorInfoByVaultQType(pDB,m_IDVault,m_IDType,&m_lstFactorInfo);
+		hr = helper.GetFactorInfoByVaultQType(pDB,m_pVault,m_pType,&m_lstFactorInfo);
 		if(FAILED(hr))
 		{
 			return hr;

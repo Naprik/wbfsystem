@@ -241,7 +241,7 @@ HRESULT CQuestionListFormView::GetQuestionType(QTYPE* _pQtype)
 	}
 	ASSERT(pQtype);
 	CComVariant valType;
-	hr = pQtype->GetPropVal(L"TYPE",&valType);
+	hr = pQtype->GetPropVal(FIELD_QUESTIONTYPE_TYPE,&valType);
 	if(FAILED(hr))
 	{
 		return hr;
@@ -306,17 +306,17 @@ HRESULT CQuestionListFormView::CreateQuestionDlg(CYDQuestionDlg* &_pDlg)
 	}
 	else if (qType == QTYPE_LISTENINGSHORT)
 	{
-		//听力
+		//短句听力
 		_pDlg = new CYDReadQuestionDlg();
 	}
 	else if (qType == QTYPE_LISTENINGLONG)
 	{
-		//听力
+		//长句听力
 		_pDlg = new CYDReadQuestionDlg();
 	}
 	else if(qType == QTYPE_LISTENINGVOCABULARY)
 	{
-		//听力
+		//听力填空
 		_pDlg = new CYDReadQuestionDlg();
 	}
 	else if (qType == QTYPE_ERRORCORRECTION)
@@ -1080,14 +1080,17 @@ void CQuestionListFormView::OnBnClickedButtonQlConfigFactorinfo()
 void CQuestionListFormView::OnBnClickedButtonQlInput()
 {
 	// TODO: Add your control notification handler code here
-	QTYPE qType = (QTYPE)-1;
+	CYDQuestionType* pType = NULL;
 	HRESULT hr = E_FAIL;
-	hr = GetQuestionType(&qType);
+	hr = GetQuestionType(pType);
 	if(FAILED(hr))
 	{
 		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
 		return;
 	}
+	CComVariant varType;
+	hr = pType->GetPropVal(FIELD_QUESTIONTYPE_TYPE, &varType);
+	QTYPE qType = QTYPE(CDataHandler::VariantToLong(varType));
 	if(qType != QTYPE_VOCABULARY)
 	{
 		AfxMessageBox(_T("暂不支持该类型题目导入！"));
@@ -1098,8 +1101,8 @@ void CQuestionListFormView::OnBnClickedButtonQlInput()
 	{
 		return ;
 	}
-	OBJID IDVault = 0;
-	hr = GetQuestionVaultID(&IDVault);
+	CYDQuestionVault* pVault = NULL;
+	hr = GetQuestionVault(pVault);
 	if(FAILED(hr))
 	{
 		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
@@ -1108,7 +1111,7 @@ void CQuestionListFormView::OnBnClickedButtonQlInput()
 	CInputQuestionHelper* pHelper = NULL;
 	if(qType == QTYPE_VOCABULARY)
 	{
-		pHelper = new CVocabularyInputQuestionHelper(IDVault);
+		pHelper = new CVocabularyInputQuestionHelper(pVault,pType);
 	}
 	ASSERT(pHelper);
 	CPtrAutoClean<CInputQuestionHelper> clr(pHelper);

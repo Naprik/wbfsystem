@@ -19,7 +19,7 @@ CYDQuestionFactory::~CYDQuestionFactory(void)
 CYDQuestionRef* CYDQuestionFactory::CreateQuestion(CYDQuestionType* pType, CDatabaseEx* pDB)
 {
 	CComVariant varType;
-	HRESULT hr = pType->GetPropVal(L"TYPE", &varType);
+	HRESULT hr = pType->GetPropVal(FIELD_QUESTIONTYPE_TYPE, &varType);
 	if (FAILED(hr))
 	{
 		return NULL;

@@ -69,10 +69,27 @@ public:
 #define DB_QUESTIONVAULT                    _T("QUESTIONVAULT")                    //题库
 #define DB_QCLASSIFICATIONQVAULT            _T("QCLASSIFICATIONQVAULT")            //题库大类与题库关系
 #define DB_QUESTIONTYPE                     _T("QUESTIONTYPE")                     //题型
+#define FIELD_QUESTIONTYPE_TYPE             _T("TYPE")
+#define FIELD_QUESTIONTYPE_CREATOR          _T("CREATOR")
+#define FIELD_QUESTIONTYPE_CREATEDATE       _T("CREATEDATE")
+#define FIELD_QUESTIONTYPE_DESCRIPTION      _T("DESCRIPTION")
+
 #define DB_QVAULTQTYPE                      _T("QVAULTQTYPE")                      //题库与题型关系
 #define DB_KNOWLEDGEPOINT                   _T("KNOWLEDGEPOINT")                   //知识点
 #define DB_QVAULTKPOINT                     _T("QVAULTKPOINT")                     //题库与知识点
 #define DB_CHOICEQUESTION                   _T("CHOICEQUESTION")                   //选择类型题目
+#define FIELD_CHOICEQUESTION_CODE			_T("CODE")
+#define FIELD_CHOICEQUESTION_TITLE			_T("TITLE")
+#define FIELD_CHOICEQUESTION_CHOICE			_T("CHOICE")
+#define FIELD_CHOICEQUESTION_ANSWER			_T("ANSWER")
+#define FIELD_CHOICEQUESTION_TYPEID			_T("TYPEID")
+#define FIELD_CHOICEQUESTION_HARDLEVEL		_T("HARDLEVEL")
+#define FIELD_CHOICEQUESTION_USEDCOUNT		_T("USEDCOUNT")
+#define FIELD_CHOICEQUESTION_CREATOR		_T("CREATOR")
+#define FIELD_CHOICEQUESTION_CREATEDATE		_T("CREATEDATE")
+#define FIELD_CHOICEQUESTION_ANSWERDESC		_T("ANSWERDESC")
+
+
 #define DB_ARTICLEQUESTION                  _T("ARTICLEQUESTION")                  //带有阅读资料题
 #define DB_ARTICLEQCHOICEQ                  _T("ARTICLEQCHOICEQ")                  //文摘与题目关系
 #define DB_VAULTQUESTION                    _T("QVAULTQUESTION")                    //题库与试题的关系

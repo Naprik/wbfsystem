@@ -87,7 +87,7 @@ HRESULT CYDQuestionDlg::GetQuestionType(QTYPE* pType)
 	CComVariant var;
 	if (m_uType == OP_NEW)
 	{
-		hr = m_pQType->GetPropVal(L"TYPE", &var);
+		hr = m_pQType->GetPropVal(FIELD_QUESTIONTYPE_TYPE, &var);
 		if (FAILED(hr))
 		{
 			return hr;
@@ -104,7 +104,7 @@ HRESULT CYDQuestionDlg::GetQuestionType(QTYPE* pType)
 		OBJID idType = CDataHandler::VariantToLong(varID);
 		CYDQuestionType qtype(m_pObjWrapper->m_pObjRef->m_pDb);
 		qtype.SetID(idType);
-		hr = qtype.GetPropVal(L"TYPE", &var);
+		hr = qtype.GetPropVal(FIELD_QUESTIONTYPE_TYPE, &var);
 		if (FAILED(hr))
 		{
 			return hr;

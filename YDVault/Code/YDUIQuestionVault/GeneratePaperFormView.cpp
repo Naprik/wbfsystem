@@ -223,7 +223,7 @@ HRESULT CGeneratePaperFormView::FillGrid()
 	for (; itr != m_lstClean.end(); ++itr)
 	{
 		CComVariant var;
-		hr = (*itr)->GetPropVal(L"TYPE", &var);
+		hr = (*itr)->GetPropVal(FIELD_QUESTIONTYPE_TYPE, &var);
 		if (FAILED(hr))
 		{
 			return hr;
@@ -259,7 +259,7 @@ HRESULT CGeneratePaperFormView::FillGrid()
 	for (; itr != m_lstClean.end(); ++itr)
 	{
 		CComVariant var;
-		hr = (*itr)->GetPropVal(L"TYPE", &var);
+		hr = (*itr)->GetPropVal(FIELD_QUESTIONTYPE_TYPE, &var);
 		if (FAILED(hr))
 		{
 			return hr;
@@ -278,7 +278,7 @@ HRESULT CGeneratePaperFormView::FillGrid()
 	for (; itr != m_lstClean.end(); ++itr)
 	{
 		CComVariant var;
-		hr = (*itr)->GetPropVal(L"TYPE", &var);
+		hr = (*itr)->GetPropVal(FIELD_QUESTIONTYPE_TYPE, &var);
 		if (FAILED(hr))
 		{
 			return hr;

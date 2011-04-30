@@ -4,6 +4,11 @@
 #include "stdafx.h"
 #include "DlgVocabularyInputPreview.h"
 #include "afxdialogex.h"
+#include "../DBBase/DBTransactionRef.h"
+#include "../ObjRef/YDChoiceQuestionRef.h"
+#include "../Base/DataHandler.h"
+#include "../ObjHelper/FactorInfoHelper.h"
+#include "../Base/AutoClean.h"
 
 
 // CDlgVocabularyInputPreview dialog
@@ -22,6 +27,8 @@ CDlgVocabularyInputPreview::CDlgVocabularyInputPreview(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CDlgVocabularyInputPreview::IDD, pParent)
 {
 	m_plstVocabularyQuestion = NULL;
+	m_pVault = NULL;
+	m_pType = NULL;
 }
 
 CDlgVocabularyInputPreview::~CDlgVocabularyInputPreview()
@@ -36,6 +43,7 @@ void CDlgVocabularyInputPreview::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CDlgVocabularyInputPreview, CDialogEx)
+	ON_BN_CLICKED(IDOK, &CDlgVocabularyInputPreview::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -184,4 +192,246 @@ HRESULT CDlgVocabularyInputPreview::InsertRowByVocabularyQuestion(CVocabularyQue
 		pChildRow->GetItem(cColFactor)->SetValue(CComVariant((*itr).second));
 	}
 	return hr;
+}
+
+void CDlgVocabularyInputPreview::OnBnClickedOk()
+{
+	// TODO: Add your control notification handler code here
+	HRESULT hr = E_FAIL;
+	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
+	ASSERT(pDB);
+	CDBTransactionRef trans(pDB, TRUE);
+	for(int i = 0; i < m_Grid.GetRowCount();i++)
+	{
+		CBCGPGridRow* pRow = m_Grid.GetRow(i);
+		ASSERT(pRow);
+		CBCGPGridRow* pParentRow = pRow->GetParent();
+		if(pParentRow == NULL)
+		{
+			//当前是根节点，是一条选择题
+			hr = InsertQuestionByRow(pRow);
+			if(FAILED(hr))
+			{
+				DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+				return;
+			}
+		}
+	}
+	trans.Commit();
+	CDialogEx::OnOK();
+}
+
+HRESULT CDlgVocabularyInputPreview::InsertQuestionByRow(CBCGPGridRow* _pRootRow)
+{
+	HRESULT hr = E_FAIL;
+	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
+	ASSERT(pDB);
+	ASSERT(_pRootRow);
+	CYDChoiceQuestionRef* pRef = new CYDChoiceQuestionRef(pDB);
+	CPtrAutoClean<CYDChoiceQuestionRef> clr(pRef);
+	//提干
+	CComVariant valTitle = _pRootRow->GetItem(cColCaption)->GetValue();
+	hr = pRef->SetPropVal(FIELD_CHOICEQUESTION_TITLE,&valTitle);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	std::list<CString> lstChoices;
+	//选项
+	{
+		CString strOptionName,strOptionVal;
+		GetOption(_pRootRow,strOptionName,strOptionVal);
+		if(!strOptionVal.IsEmpty())
+		{
+			lstChoices.push_back(strOptionVal);
+		}
+		for(int i = 0; i < _pRootRow->GetSubItemsCount();i++)
+		{
+			CBCGPGridRow* pChildRow = _pRootRow->GetSubItem(i);
+			ASSERT(pChildRow);
+			CString strSubOptionName,strSubOptionVal;
+			GetOption(pChildRow,strSubOptionName,strSubOptionVal);
+			if(!strSubOptionVal.IsEmpty())
+			{
+				lstChoices.push_back(strSubOptionVal);
+			}
+		}
+	}
+	hr = pRef->SetOptionList(&lstChoices);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	CComVariant valAnswer = _pRootRow->GetItem(cColAnswer)->GetValue();
+	hr = pRef->SetPropVal(FIELD_CHOICEQUESTION_ANSWER,&valAnswer);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	//设置为选择题
+	CComVariant valTypeID(QTYPE_VOCABULARY);
+	hr = pRef->SetPropVal(FIELD_CHOICEQUESTION_TYPEID,&valTypeID);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	/*	CComVariant valCreator;
+		hr = CDataHandler::StringToVariant(m_strCreator,VT_BSTR,&valCreator);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		hr = _pRef->SetPropVal(L"CREATOR",&valCreator);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		CComVariant valCrateDate;
+		hr = CDataHandler::StringToVariant(m_strCreateDate,VT_DATE,&valCrateDate);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		hr = _pRef->SetPropVal(L"CREATEDATE",&valCrateDate);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+	}
+	CComVariant valHardLevel;
+	valHardLevel.vt = VT_I4;
+	valHardLevel.lVal = m_iHardLevel == 0 ? EASY : HARD;
+	hr = _pRef->SetPropVal(L"HARDLEVEL",&valHardLevel);
+	if(FAILED(hr))
+	{
+		return hr;
+	}*/
+	//设置指标
+	CFactorInfoHelper helper;
+	std::list<CYDObjectRef*> lstFactorInfo;
+	hr = helper.GetFactorInfoByVaultQType(pDB,m_pVault,m_pType,&lstFactorInfo);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	CListAutoClean<CYDObjectRef> clr2(lstFactorInfo);
+	{
+		CString strFactorName,strFactorVal;
+		GetFactor(_pRootRow,strFactorName,strFactorVal);
+		if(!strFactorName.IsEmpty())
+		{
+			hr = SetFactorProp(&lstFactorInfo,strFactorName,strFactorVal,pRef,&helper);
+			if(FAILED(hr))
+			{
+				return hr;
+			}
+		}
+		for(int i = 0; i < _pRootRow->GetSubItemsCount();i++)
+		{
+			CBCGPGridRow* pChildRow = _pRootRow->GetSubItem(i);
+			ASSERT(pChildRow);
+			CString strSubFactorName,strSubFactorVal;
+			GetFactor(pChildRow,strSubFactorName,strSubFactorVal);
+			if(!strSubFactorName.IsEmpty())
+			{
+				hr = SetFactorProp(&lstFactorInfo,strSubFactorName,strSubFactorVal,pRef,&helper);
+				if(FAILED(hr))
+				{
+					return hr;
+				}	
+			}
+		}
+	}
+	hr = pRef->Save();
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	CYDLinkRef* pLinkRef = new CYDLinkRef(pDB,DB_VAULTQUESTION);
+	CPtrAutoClean<CYDLinkRef> clr3(pLinkRef);
+	hr = pLinkRef->AddPropDef(_T("ID_TYPE"),VT_UINT);
+	if(FAILED(hr))
+	{
+		return hr ;
+	}
+	OBJID idType = 0;
+	hr= m_pType->GetID(&idType);
+	if(FAILED(hr))
+	{
+		return hr ;
+	}
+	CComVariant valIDType(idType);;
+	hr = pLinkRef->SetPropVal(L"ID_TYPE",&valTypeID);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	hr = pLinkRef->PutObjRef(m_pVault,pRef);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	hr = pLinkRef->Save();
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	return S_OK;
+}
+
+HRESULT CDlgVocabularyInputPreview::SetFactorProp(std::list<CYDObjectRef*> *_plstFactorInfo,
+					CString _strFactorName,CString _strFactor,CYDObjectRef* _pQRef,CFactorInfoHelper* _phelper)
+{
+	HRESULT hr = E_FAIL;
+	ASSERT(_plstFactorInfo);
+	for(std::list<CYDObjectRef*>::const_iterator itr = _plstFactorInfo->begin();
+		itr != _plstFactorInfo->end();++itr)
+	{
+		CString strItrFactorName;
+		hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FACTORNAME,strItrFactorName);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		if(strItrFactorName.CompareNoCase(_strFactorName) == 0)
+		{
+			CString strFieldName;
+			hr = (*itr)->GetPropVal(FIELD_YDFACTORINFOITEM_FIELDNAME,strFieldName);
+			if(FAILED(hr))
+			{
+				return hr;
+			}
+			CComVariant val(_strFactor);
+			if(_phelper->IsNumberFieldName(strFieldName))
+			{
+				long lVal = CDataHandler::VariantToLong(val);
+				val = lVal;
+			}
+			hr = _pQRef->SetPropVal(CComBSTR(strFieldName),&val);
+			if(FAILED(hr))
+			{
+				return hr;
+			}
+			break;
+		}
+		
+		
+	}
+	return S_OK;
+}
+
+void CDlgVocabularyInputPreview::GetOption(CBCGPGridRow* _pRow,CString &_strOptionName,CString &_strOption)
+{
+	CComVariant valChoiceName = _pRow->GetItem(cColOptionName)->GetValue();
+	_strOptionName = CDataHandler::VariantToString(valChoiceName);
+	CComVariant valChoice = _pRow->GetItem(cColOption)->GetValue();
+	_strOption = CDataHandler::VariantToString(valChoice);
+}
+
+void CDlgVocabularyInputPreview::GetFactor(CBCGPGridRow* _pRow,CString &_strFactorName,CString &_strFactor)
+{
+	CComVariant valFactorName = _pRow->GetItem(cColFactorName)->GetValue();
+	_strFactorName = CDataHandler::VariantToString(valFactorName);
+	CComVariant valFactor = _pRow->GetItem(cColFactor)->GetValue();
+	_strFactor = CDataHandler::VariantToString(valFactor);
 }

@@ -10,13 +10,13 @@ CYDQuestionType::CYDQuestionType(CDatabaseEx* pDB)
 	m_strDBName = DB_QUESTIONTYPE;
 	CYDPropDef* pPropDef = new CYDPropDef(_T("NAME"),VT_BSTR,_T(""));
 	m_lstPropDef.push_back(pPropDef);
-	pPropDef = new CYDPropDef(_T("TYPE"),VT_I1);
+	pPropDef = new CYDPropDef(FIELD_QUESTIONTYPE_TYPE,VT_I1);
 	m_lstPropDef.push_back(pPropDef);
-	pPropDef = new CYDPropDef(_T("CREATOR"),VT_BSTR);
+	pPropDef = new CYDPropDef(FIELD_QUESTIONTYPE_CREATOR,VT_BSTR);
 	m_lstPropDef.push_back(pPropDef);
-	pPropDef = new CYDPropDef(_T("CREATEDATE"),VT_DATE);
+	pPropDef = new CYDPropDef(FIELD_QUESTIONTYPE_CREATEDATE,VT_DATE);
 	m_lstPropDef.push_back(pPropDef);
-	pPropDef = new CYDPropDef(_T("DESCRIPTION"),VT_BSTR);
+	pPropDef = new CYDPropDef(FIELD_QUESTIONTYPE_DESCRIPTION,VT_BSTR);
 	m_lstPropDef.push_back(pPropDef);
 }
 

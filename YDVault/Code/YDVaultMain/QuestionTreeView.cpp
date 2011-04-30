@@ -782,7 +782,7 @@ void CQuestionTreeView::OnQuestionNew()
 	CYDQuestionVault* pQV = (CYDQuestionVault*)pObjA;
 
 	CComVariant valType;
-	hr = pParentQType->GetPropVal(L"Type",&valType);
+	hr = pParentQType->GetPropVal(FIELD_QUESTIONTYPE_TYPE,&valType);
 	if(FAILED(hr))
 	{
 		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);

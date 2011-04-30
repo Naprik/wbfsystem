@@ -48,5 +48,5 @@ using namespace ADODB;
 extern TCHAR	 _ModulePath[MAX_PATH] ;
 #include "../include\extdllstate.h"
 #include <afxcontrolbars.h>
-
+#include "../Include/ShowErr.h"
 

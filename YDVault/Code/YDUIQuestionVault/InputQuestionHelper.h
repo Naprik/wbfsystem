@@ -7,13 +7,13 @@ class CYDObjectRef;
 class CInputQuestionHelper
 {
 public:
-	CInputQuestionHelper(OBJID _IDVault,OBJID _IDType);
+	CInputQuestionHelper(CYDObjectRef* _pVault,CYDObjectRef* _pType);
 	~CInputQuestionHelper(void);
 public:
 	virtual HRESULT ExeInputFile(CString _strFile) = 0;
 protected:
-	OBJID   m_IDVault;
-	OBJID	m_IDType;
+	CYDObjectRef*   m_pVault;
+	CYDObjectRef*	 m_pType;
 	_Application m_oWordApp ; 
 	Selection m_oSel ; 
 	Documents m_oDocs ; 

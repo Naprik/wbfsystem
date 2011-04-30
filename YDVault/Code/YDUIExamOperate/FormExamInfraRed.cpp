@@ -531,6 +531,8 @@ HRESULT CFormExamInfraRed::Close()
 HRESULT CFormExamInfraRed::CloseThread()
 {
 	m_bThreadQuit = TRUE;
+	CPdemWait	wait(_T("正在关闭，请稍候..."));
+	wait.BeginWait();
 	for(int i = 0;  i < cMaxComCount;i++)
 	{
 		if(m_hThreadReadData[i])
@@ -630,6 +632,14 @@ HRESULT CFormExamInfraRed::UpdateListByMac(CString _strMac,CString _strAnswer)
 		}
 		ASSERT(pStuMark);
 		//学生答案
+		//要判断与之前收取的答案是否相同，如果不同，后面要响一下
+		CString strPrevAnswer;
+		hr = pStuMark->GetPropVal(FIELD_YDSTUMARK_ANSWER,strPrevAnswer);
+		BOOL bBeep = FALSE;
+		if(strPrevAnswer.CompareNoCase(_strAnswer) != 0)
+		{
+			bBeep = TRUE;
+		}
 		CComVariant valAnswer;
 		CDataHandler::StringToVariant(_strAnswer,VT_BSTR,&valAnswer);
 		hr = pStuMark->SetPropVal(FIELD_YDSTUMARK_ANSWER,&valAnswer);
@@ -676,7 +686,10 @@ HRESULT CFormExamInfraRed::UpdateListByMac(CString _strMac,CString _strAnswer)
 		GetDlgItem(IDC_EDIT_RECEIVE_STUNO)->SetWindowText(m_strReceiveStuno);
 		m_lstUnit.SetItemState(i,   LVIS_SELECTED,   LVIS_SELECTED); 
 		ASSERT(m_lstUnit.GetItemState(i, LVIS_SELECTED) == LVIS_SELECTED);
-		Beep(1000, 100); //发个系统声音，代表收卷
+		if(bBeep)
+		{
+			Beep(1000, 100); //发个系统声音，代表收卷
+		}
 		break;
 	}
 	return S_OK;

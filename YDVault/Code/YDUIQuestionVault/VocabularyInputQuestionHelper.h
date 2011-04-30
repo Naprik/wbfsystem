@@ -21,7 +21,7 @@ class CVocabularyInputQuestionHelper :
 	public CInputQuestionHelper
 {
 public:
-	CVocabularyInputQuestionHelper(OBJID _IDVault);
+	CVocabularyInputQuestionHelper(CYDObjectRef* _pVault,CYDObjectRef* _pType);
 	~CVocabularyInputQuestionHelper(void);
 public:
 	virtual HRESULT ExeInputFile(CString _strFile);
