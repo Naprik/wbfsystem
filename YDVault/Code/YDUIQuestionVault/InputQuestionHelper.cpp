@@ -17,11 +17,17 @@ CInputQuestionHelper::~CInputQuestionHelper(void)
 {
 	if(m_bCreateWordSuc)
 	{
+		 COleVariant vTrue((short)TRUE),    
+               vFalse((short)FALSE);
+		 m_oWordApp.Quit(vFalse,    // SaveChanges.
+				 vTrue,            // OriginalFormat.
+				 vFalse            // RouteDocument.
+				 );
 		// Õ∑≈
 		m_paragraphs.ReleaseDispatch();
+		m_oSel.ReleaseDispatch();
 		m_oDoc.ReleaseDispatch();
 		m_oDocs.ReleaseDispatch();
-		m_oSel.ReleaseDispatch();
 		m_oWordApp.ReleaseDispatch();
 	}
 	CListAutoClean<CYDObjectRef> clr(m_lstFactorInfo);

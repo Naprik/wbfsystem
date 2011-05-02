@@ -183,7 +183,25 @@ HRESULT CVocabularyInputQuestionHelper::IsQuestionOption(CString _strText,BOOL &
 				CString strOptionName;//A B C D等
 				strOptionName.Format(_T("%c"),strOption.GetAt(1));
 				CString strOptionVal = strOption.Right(strOption.GetLength() - 4);//选项值
-				_lstOption.push_back(std::make_pair(strOptionName,strOptionVal));
+				//要按照选项名进行排序
+				BOOL bInsert = FALSE;
+				for(std::list<std::pair<CString,CString> >::iterator itr = _lstOption.begin();
+					itr != _lstOption.end();++itr)
+				{
+					CString strItrOptionName = (*itr).first;
+					if(strItrOptionName.CompareNoCase(strOptionName) > 0)
+					{
+						//要在Itr之前插入一条记录
+						_lstOption.insert(itr,std::make_pair(strOptionName,strOptionVal));
+						bInsert = TRUE;
+					}
+				}
+				if(!bInsert)
+				{
+					//说明在list前面还没有插入记录，要在最后插入一条记录
+					_lstOption.push_back(std::make_pair(strOptionName,strOptionVal));
+				}
+				
 			}
 		}
 	}

@@ -531,7 +531,7 @@ HRESULT CFormExamInfraRed::Close()
 HRESULT CFormExamInfraRed::CloseThread()
 {
 	m_bThreadQuit = TRUE;
-	CPdemWait	wait(_T("正在关闭，请稍候..."));
+	CPdemWait	wait(_T("正在关闭，请稍候..."),FALSE,100,0);
 	wait.BeginWait();
 	for(int i = 0;  i < cMaxComCount;i++)
 	{
@@ -639,6 +639,11 @@ HRESULT CFormExamInfraRed::UpdateListByMac(CString _strMac,CString _strAnswer)
 		if(strPrevAnswer.CompareNoCase(_strAnswer) != 0)
 		{
 			bBeep = TRUE;
+		}
+		else
+		{
+			//这时候要考虑一下，暂时修改为与上一次收到的答案相同，就不做任何修改，退出程序
+			break;
 		}
 		CComVariant valAnswer;
 		CDataHandler::StringToVariant(_strAnswer,VT_BSTR,&valAnswer);
