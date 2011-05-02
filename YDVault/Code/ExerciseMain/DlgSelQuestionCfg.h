@@ -31,6 +31,8 @@ public:
 	afx_msg void OnBnClickedBtnDel();
 	afx_msg void OnBnClickedBtnUpdate();
 	afx_msg void OnBnClickedBtnAdd();
+	afx_msg void OnBnClickedBtnOk();
+	afx_msg void OnBnClickedBtnCancel();
 
 	virtual BOOL OnInitDialog();
 
@@ -51,7 +53,4 @@ private:
 	CComboBox						m_cmbQType;
 	int m_qnum;
 	double m_mark;
-public:
-	afx_msg void OnBnClickedBtnOk();
-	afx_msg void OnBnClickedBtnCancel();
 };

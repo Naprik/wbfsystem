@@ -198,7 +198,7 @@ BOOL CExerciseMainDlg::OnInitDialog()
 	nFlags |= ILC_COLOR24;
 
 	m_TreeNodeImages.Create(16, bmpObj.bmHeight, nFlags, 0, 0);
-	m_TreeNodeImages.Add(&bmp, RGB(255, 0, 0));
+	m_TreeNodeImages.Add(&bmp, RGB(0, 0, 0));
 
 	m_tree.SetImageList(&m_TreeNodeImages, TVSIL_NORMAL);
 

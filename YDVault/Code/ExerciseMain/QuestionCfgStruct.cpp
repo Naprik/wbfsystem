@@ -49,7 +49,9 @@ HRESULT CQuestionCfgStruct::Load(CXmlNode& _node)
 		childNode.ReadAttributeByNoCase(L"name",&sFactorName);
 		CComBSTR sFactorVaule;
 		childNode.ReadAttributeByNoCase(L"value",&sFactorVaule);
-		m_lstFactors.push_back(CFactorValue(CString(sFactorField), CString(sFactorName), CString(sFactorVaule)));
+		CComBSTR sRange;
+		childNode.ReadAttributeByNoCase(L"range", &sRange);
+		m_lstFactors.push_back(CFactorValue(CString(sFactorField), CString(sFactorName), CString(sFactorVaule), CString(sRange)));
 	}
 	return S_OK;
 }
@@ -73,6 +75,7 @@ HRESULT CQuestionCfgStruct::Save(CXmlWriter& _writer)
 		_writer.WriteAttributeString(L"field",CComBSTR((*itr).m_field));
 		_writer.WriteAttributeString(L"name",CComBSTR((*itr).m_name));
 		_writer.WriteAttributeString(L"value",CComBSTR((*itr).m_value));
+		_writer.WriteAttributeString(L"range", CComBSTR((*itr).m_range));
 		_writer.WriteEndElement();
 	}
 	_writer.WriteEndElement();
@@ -117,6 +120,13 @@ HRESULT CQuestionCfgStruct::GetDescription(CString* description)
 			*description += (*itr).m_name;
 			*description += L"=";
 			*description += (*itr).m_value;
+			long range = _ttoi((*itr).m_range);
+			if (range != 0)
+			{
+				*description += L"(+/-";
+				*description += (*itr).m_range;
+				*description += L")";
+			}
 			*description += L") ";
 		}
 	}

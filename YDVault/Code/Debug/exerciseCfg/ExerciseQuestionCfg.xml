@@ -27,7 +27,7 @@
 <CFG>
    <PAPER> 
      <QUESTION vault="" type="" number="" mark=""> 
-       <FACTOR field="" name="" value="" /> 
+       <FACTOR field="" name="" value="" range=""/> 
      </QUESTION> 
    </PAPER> 
 </CFG>

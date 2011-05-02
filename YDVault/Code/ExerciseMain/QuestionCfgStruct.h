@@ -6,14 +6,15 @@ class CXmlWriter;
 class CFactorValue
 {
 public:
-	CFactorValue(const CString& field, const CString& name, const CString& value):
-	  m_field(field), m_name(name),m_value(value)
+	CFactorValue(const CString& field, const CString& name, const CString& value, const CString& range):
+	  m_field(field), m_name(name),m_value(value), m_range(range)
 	  {
 
 	  }
 	CString		m_field;
 	CString		m_value;
 	CString		m_name;
+	CString		m_range;
 };
 
 class CQuestionCfgStruct

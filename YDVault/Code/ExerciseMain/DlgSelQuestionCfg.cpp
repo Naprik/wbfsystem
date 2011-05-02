@@ -20,6 +20,7 @@ namespace
 {
 const int COL_QUESTION_TYPE = 0;		//题型那一列
 const int COL_QUESTION_CONDITION = 1;	//难度
+const int COL_QUESTION_RANGE=2;
 }
 IMPLEMENT_DYNAMIC(CDlgSelQuestionCfg, CDialogEx)
 
@@ -153,7 +154,7 @@ BOOL CDlgSelQuestionCfg::OnInitDialog()
 	m_gridConditions.InsertColumn(COL_QUESTION_TYPE, strName, iWidth/4);
 
 	CString strHardLevel = L"选题条件";
-	m_gridConditions.InsertColumn(COL_QUESTION_CONDITION, strHardLevel, iWidth* 3/4 -2);
+	m_gridConditions.InsertColumn(COL_QUESTION_CONDITION, strHardLevel, iWidth* 3/4 -4);
 
 	for (int iColumn = 0; iColumn < m_gridConditions.GetColumnCount(); iColumn++)
 	{
@@ -191,8 +192,10 @@ BOOL CDlgSelQuestionCfg::OnInitDialog()
 	m_gridFactors.InsertColumn(COL_QUESTION_TYPE, factorname, iWidth/4);
 
 	CString factorvalue = L"指标值";
-	m_gridFactors.InsertColumn(COL_QUESTION_CONDITION, factorvalue, iWidth* 3/4 -2);
+	m_gridFactors.InsertColumn(COL_QUESTION_CONDITION, factorvalue, iWidth* 2/4);
 
+	CString factorrange = L"区间";
+	m_gridFactors.InsertColumn(COL_QUESTION_RANGE, factorrange, iWidth/4 -2);
 	for (int iColumn = 0; iColumn < m_gridFactors.GetColumnCount(); iColumn++)
 	{
 		m_gridFactors.SetHeaderAlign(iColumn,HDF_CENTER);
@@ -301,10 +304,13 @@ void CDlgSelQuestionCfg::OnCbnSelchangeCmbQtype()
 		if (index >= 0)
 		{
 			pRow->GetItem(COL_QUESTION_CONDITION)->SetValue(CComVariant(CComBSTR(L"")));
+			pRow->GetItem(COL_QUESTION_RANGE)->SetValue(CComVariant(CComBSTR(L"")));
+			pRow->GetItem(COL_QUESTION_RANGE)->Enable(FALSE);
 		}
 		else
 		{
 			pRow->GetItem(COL_QUESTION_CONDITION)->SetValue(CComVariant((long)0));
+			pRow->GetItem(COL_QUESTION_RANGE)->SetValue(CComVariant((long)0));
 		}
 		pRow->SetData(DWORD_PTR(*itr));
 		m_gridFactors.AddRow(pRow);
@@ -392,7 +398,8 @@ void CDlgSelQuestionCfg::OnBnClickedBtnAdd()
 		CBCGPGridRow* prow = m_gridFactors.GetRow(i);
 		_variant_t var = prow->GetItem(COL_QUESTION_CONDITION)->GetValue();
 		CString factorvalue = CDataHandler::VariantToString(var);
-
+		var = prow->GetItem(COL_QUESTION_RANGE)->GetValue();
+		CString factorrange = CDataHandler::VariantToString(var);
 		if (factorvalue.GetLength() > 0)
 		{
 			var = prow->GetItem(COL_QUESTION_TYPE)->GetValue();
@@ -407,8 +414,9 @@ void CDlgSelQuestionCfg::OnBnClickedBtnAdd()
 				{
 					continue;
 				}
+
 			}
-			pcfg->m_lstFactors.push_back(CFactorValue(field, factorname, factorvalue));
+			pcfg->m_lstFactors.push_back(CFactorValue(field, factorname, factorvalue, factorrange));
 		}
 	}
 	InsertCondition(pcfg);

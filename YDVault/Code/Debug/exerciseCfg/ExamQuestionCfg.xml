@@ -28,7 +28,7 @@
 <CFG>
    <PAPER> 
      <QUESTION vault="" type="1" number=""  mark=""> 
-       <FACTOR field="" name="" value="" /> 
+       <FACTOR field="" name="" value="" range="" /> 
      </QUESTION> 
    </PAPER> 
    <EXAMTIME time="60" />

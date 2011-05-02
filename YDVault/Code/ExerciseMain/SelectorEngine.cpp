@@ -294,32 +294,61 @@ HRESULT CSelectorEngine::GetQueryConditionFromFactor(CQuestionCfgStruct* pcfg, C
 		auto itr = pcfg->m_lstFactors.begin();
 		*condition += L" ";
 		*condition += (*itr).m_field;
-		*condition += L"=";
+		
 		if ((*itr).m_field.Find(L"C") >= 0)
 		{
+			*condition += L"=";
 			*condition += L"'";
 			*condition += (*itr).m_value;
 			*condition += L"'";
 		}
 		else
 		{
-			*condition += (*itr).m_value;
+			long lfactorvalue = _ttoi((*itr).m_value);
+			long lfactorrange = _ttoi((*itr).m_range);
+			if (lfactorrange == 0)
+			{
+				*condition += L"=";
+				*condition += (*itr).m_value;
+			}
+			else
+			{
+				CString strFormat = L" between %d and %d ";
+				CString str;
+				str.Format(strFormat, lfactorvalue-lfactorrange, lfactorvalue+lfactorrange);
+				*condition += str;
+			}
+			
 		}
 		++itr;
 		for (; itr != pcfg->m_lstFactors.end(); ++itr)
 		{
 			*condition += L" and ";
 			*condition += (*itr).m_field;
-			*condition += L"=";
 			if ((*itr).m_field.Find(L"C") >= 0)
 			{
+				*condition += L"=";
 				*condition += L"'";
 				*condition += (*itr).m_value;
 				*condition += L"'";
 			}
 			else
 			{
-				*condition += (*itr).m_value;
+				long lfactorvalue = _ttoi((*itr).m_value);
+				long lfactorrange = _ttoi((*itr).m_range);
+				if (lfactorrange == 0)
+				{
+					*condition += L"=";
+					*condition += (*itr).m_value;
+				}
+				else
+				{
+					CString strFormat = L" between %d and %d ";
+					CString str;
+					str.Format(strFormat, lfactorvalue-lfactorrange, lfactorvalue+lfactorrange);
+					*condition += str;
+				}
+			
 			}
 		}
 	}
