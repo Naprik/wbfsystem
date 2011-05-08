@@ -237,10 +237,6 @@ BOOL CYDChoiceQuestionDlg::ValidOther()
 // 		AfxMessageBox(L"选项不能为空！", MB_OK, MB_ICONWARNING);
 // 		return FALSE;
 // 	}
-	if(!ValidateIndicator(&m_GridIndicator))
-	{
-		return FALSE;
-	}
 	return TRUE;
 }
 
@@ -647,6 +643,7 @@ HRESULT CYDChoiceQuestionDlg::EnableQuestionArea(BOOL bEnable)
 HRESULT CYDChoiceQuestionDlg::UpdateQuestionArea()
 {
 	HRESULT hr = E_FAIL;
+	m_GridIndicator.RemoveAll();
 	if (m_uType == OP_NEW)
 	{
 		m_strTitle = L"";
@@ -665,10 +662,15 @@ HRESULT CYDChoiceQuestionDlg::UpdateQuestionArea()
 		m_strCreateDate = CDataHandler::VariantToString(varCreateDate);
 		m_strCreator = DEFAULT_CREATOR;
 		m_listCtrlKpRelated.DeleteAllItems();
-		hr = CreateIndicator(m_pCQ,&m_GridIndicator);
-		if (FAILED(hr))
+		QTYPE iQType = QTYPE(-1);
+		GetQuestionType(&iQType);
+		if (iQType == QTYPE_VOCABULARY)//选择题
 		{
-			return hr;
+			hr = CreateIndicator(m_pCQ,&m_GridIndicator);
+			if (FAILED(hr))
+			{
+				return hr;
+			}
 		}
 	}
 	else
@@ -733,13 +735,19 @@ HRESULT CYDChoiceQuestionDlg::UpdateQuestionArea()
 			return hr;
 		}
 		m_strCreateDate = CDataHandler::VariantToString(var);
-		hr = CreateIndicator(pRef,&m_GridIndicator);
-		if (FAILED(hr))
+		QTYPE iQType = QTYPE(-1);
+		GetQuestionType(&iQType);
+		if (iQType == QTYPE_VOCABULARY)//选择题
 		{
-			return hr;
+			hr = CreateIndicator(pRef,&m_GridIndicator);
+			if (FAILED(hr))
+			{
+				return hr;
+			}
 		}
+		
 	}
-	
+
 	UpdateData(FALSE);
 	return S_OK;
 }

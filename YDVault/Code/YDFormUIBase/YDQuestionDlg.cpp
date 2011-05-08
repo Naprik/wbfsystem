@@ -177,6 +177,9 @@ HRESULT CYDQuestionDlg::CreateIndicatorGridCtrl(UINT _idBK,CBCGPGridCtrl* _pGrid
 HRESULT CYDQuestionDlg::CreateIndicator(CYDObjectRef* _pQuestionRef,CBCGPGridCtrl* _pGrid)
 {
 	HRESULT hr = E_FAIL;
+	{
+		CListAutoClean<CYDObjectRef> clr(m_lstFactorInfo);
+	}
 	ASSERT(m_pQVault);
 	ASSERT(m_pQType);
 	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
