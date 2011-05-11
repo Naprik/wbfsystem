@@ -29,6 +29,7 @@
 #include "../MainUIBase\DlgLoginEX.h"
 #include "../Base\FilePathHelper.h"
 #include "../FtpBase\FtpRef.h"
+#include "BasicView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -180,8 +181,8 @@ BOOL CExerciseMainApp::InitInstance()
 	CMultiDocTemplate* pDocTemplate;
 	pDocTemplate = new CMultiDocTemplate(IDR_ExerciseMainTYPE,
 		RUNTIME_CLASS(CExerciseMainDoc),
-		RUNTIME_CLASS(CChildFrame), // 自定义 MDI 子框架
-		RUNTIME_CLASS(CLeftView));
+		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
+		RUNTIME_CLASS(CBasicView));
 	if (!pDocTemplate)
 		return FALSE;
 	AddDocTemplate(pDocTemplate);
@@ -205,8 +206,8 @@ BOOL CExerciseMainApp::InitInstance()
 
 	// 调度在命令行中指定的命令。如果
 	// 用 /RegServer、/Register、/Unregserver 或 /Unregister 启动应用程序，则返回 FALSE。
-// 	if (!ProcessShellCommand(cmdInfo))
-// 		return FALSE;
+ 	if (!ProcessShellCommand(cmdInfo))
+ 		return FALSE;
 	// 主窗口已初始化，因此显示它并对其进行更新
 	pMainFrame->ShowWindow(SW_MAXIMIZE);
 	pMainFrame->UpdateWindow();

@@ -13,7 +13,7 @@
 //
 
 #pragma once
-
+#include "PersionInfoTreeView.h"
 class CMainFrame : public CMDIFrameWndEx
 {
 	DECLARE_DYNAMIC(CMainFrame)
@@ -42,7 +42,7 @@ protected:  // 控件条嵌入成员
 	CMFCRibbonBar     m_wndRibbonBar;
 	CMFCRibbonApplicationButton m_MainButton;
 	CMFCToolBarImages m_PanelImages;
-
+	CPersionInfoTreeView m_treeview;
 // 生成的消息映射函数
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);

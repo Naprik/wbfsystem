@@ -61,7 +61,8 @@ using namespace ADODB;
 extern CString g_CfgPath;
 extern CString g_LogPath;
 
-
+const int IDC_TREE = 1000000;
+const int IDC_TREE_VIEW = IDC_TREE+1;
 
 #ifdef _UNICODE
 #if defined _M_IX86

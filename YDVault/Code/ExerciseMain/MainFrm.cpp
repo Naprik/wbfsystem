@@ -82,7 +82,21 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// 启用增强的窗口管理对话框
 	EnableWindowsDialog(ID_WINDOW_MANAGER, IDS_WINDOWS_MANAGER, TRUE);
+	CDockablePane* pFirstDockablePane = NULL;
 
+	CString strInfo(L"用户基本信息");
+		
+	if (!m_treeview.Create(strInfo, this, CRect(0, 0, 200, 200), TRUE, IDC_TREE_VIEW, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT| CBRS_FLOAT_MULTI))
+	{
+		TRACE0("Failed to create File View window\n");
+		return FALSE; // failed to create
+	}
+	m_treeview.EnableDocking(CBRS_ALIGN_ANY);
+	if(!pFirstDockablePane)
+	{
+		pFirstDockablePane = &m_treeview;
+	}
+	DockPane(pFirstDockablePane);
 	return 0;
 }
 

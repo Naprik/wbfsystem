@@ -1,13 +1,3 @@
-// 这段 MFC 示例源代码演示如何使用 MFC Microsoft Office Fluent 用户界面 
-// ("Fluent UI")，该示例仅作为参考资料提供， 
-// 用以补充《Microsoft 基础类参考》和 
-// MFC C++ 库软件随附的相关电子文档。
-// 复制、使用或分发 Fluent UI 的许可条款是单独提供的。
-// 若要了解有关 Fluent UI 许可计划的详细信息，请访问  
-// http://msdn.microsoft.com/officeui。
-//
-// 版权所有 (C) Microsoft Corporation
-// 保留所有权利。
 
 // ChildFrm.cpp : CChildFrame 类的实现
 //
@@ -16,8 +6,6 @@
 #include "ExerciseMain.h"
 
 #include "ChildFrm.h"
-#include "LeftView.h"
-#include "ExerciseMainView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -28,8 +16,6 @@
 IMPLEMENT_DYNCREATE(CChildFrame, CMDIChildWndEx)
 
 BEGIN_MESSAGE_MAP(CChildFrame, CMDIChildWndEx)
-	ON_UPDATE_COMMAND_UI_RANGE(AFX_ID_VIEW_MINIMUM, AFX_ID_VIEW_MAXIMUM, &CChildFrame::OnUpdateViewStyles)
-	ON_COMMAND_RANGE(AFX_ID_VIEW_MINIMUM, AFX_ID_VIEW_MAXIMUM, &CChildFrame::OnViewStyle)
 END_MESSAGE_MAP()
 
 // CChildFrame 构造/析构
@@ -43,20 +29,6 @@ CChildFrame::~CChildFrame()
 {
 }
 
-BOOL CChildFrame::OnCreateClient(LPCREATESTRUCT /*lpcs*/, CCreateContext* pContext)
-{
-	// 创建拆分窗口
-	if (!m_wndSplitter.CreateStatic(this, 1, 2))
-		return FALSE;
-
-	if (!m_wndSplitter.CreateView(0, 0, RUNTIME_CLASS(CLeftView), CSize(100, 100), pContext) ||
-		!m_wndSplitter.CreateView(0, 1, RUNTIME_CLASS(CExerciseMainView), CSize(100, 100), pContext))
-	{
-		m_wndSplitter.DestroyWindow();
-		return FALSE;
-	}
-	return TRUE;
-}
 
 BOOL CChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
@@ -82,110 +54,11 @@ void CChildFrame::Dump(CDumpContext& dc) const
 #endif //_DEBUG
 
 // CChildFrame 消息处理程序
-CExerciseMainView* CChildFrame::GetRightPane()
+
+
+void CChildFrame::ActivateFrame(int nCmdShow)
 {
-	CWnd* pWnd = m_wndSplitter.GetPane(0, 1);
-	CExerciseMainView* pView = DYNAMIC_DOWNCAST(CExerciseMainView, pWnd);
-	return pView;
-}
-
-void CChildFrame::OnUpdateViewStyles(CCmdUI* pCmdUI)
-{
-	if (!pCmdUI)
-		return;
-
-	// TODO: 自定义或扩展此代码以处理“视图”菜单上的选项。
-	CExerciseMainView* pView = GetRightPane(); 
-
-	// 如果右窗格尚未创建或者不是视图，则禁用此范围内的命令
-	if (pView == NULL)
-		pCmdUI->Enable(FALSE);
-	else
-	{
-		DWORD dwStyle = pView->GetStyle() & LVS_TYPEMASK;
-		// 如果命令是 ID_VIEW_LINEUP，则只有在处于
-		// LVS_ICON 或 LVS_SMALLICON 模式时才启用命令
-		if (pCmdUI->m_nID == ID_VIEW_LINEUP)
-		{
-			if (dwStyle == LVS_ICON || dwStyle == LVS_SMALLICON)
-				pCmdUI->Enable();
-			else
-				pCmdUI->Enable(FALSE);
-		}
-		else
-		{
-			// 否则，使用点线来反映视图的样式
-			pCmdUI->Enable();
-			BOOL bChecked = FALSE;
-
-			switch (pCmdUI->m_nID)
-			{
-			case ID_VIEW_DETAILS:
-				bChecked = (dwStyle == LVS_REPORT);
-				break;
-
-			case ID_VIEW_SMALLICON:
-				bChecked = (dwStyle == LVS_SMALLICON);
-				break;
-
-			case ID_VIEW_LARGEICON:
-				bChecked = (dwStyle == LVS_ICON);
-				break;
-
-			case ID_VIEW_LIST:
-				bChecked = (dwStyle == LVS_LIST);
-				break;
-
-			default:
-				bChecked = FALSE;
-				break;
-			}
-
-			pCmdUI->SetRadio(bChecked ? 1 : 0);
-		}
-	}
-}
-
-void CChildFrame::OnViewStyle(UINT nCommandID)
-{
-	// TODO: 自定义或扩展此代码以处理“视图”菜单上的选项。
-	CExerciseMainView* pView = GetRightPane();
-
-	// 如果右窗格已创建并且是 CExerciseMainView，则处理菜单命令...
-	if (pView != NULL)
-	{
-		int nStyle = -1;
-
-		switch (nCommandID)
-		{
-		case ID_VIEW_LINEUP:
-			{
-				// 要求列表控件与网格对齐
-				CListCtrl& refListCtrl = pView->GetListCtrl();
-				refListCtrl.Arrange(LVA_SNAPTOGRID);
-			}
-			break;
-
-		// 其他命令更改列表控件上的样式
-		case ID_VIEW_DETAILS:
-			nStyle = LVS_REPORT;
-			break;
-
-		case ID_VIEW_SMALLICON:
-			nStyle = LVS_SMALLICON;
-			break;
-
-		case ID_VIEW_LARGEICON:
-			nStyle = LVS_ICON;
-			break;
-
-		case ID_VIEW_LIST:
-			nStyle = LVS_LIST;
-			break;
-		}
-
-		// 更改样式；窗口将自动重新绘制
-		if (nStyle != -1)
-			pView->ModifyStyle(LVS_TYPEMASK, nStyle);
-	}
+	// TODO: Add your specialized code here and/or call the base class
+	nCmdShow = SW_SHOWMAXIMIZED;
+	CMDIChildWndEx::ActivateFrame(nCmdShow);
 }

@@ -123,6 +123,7 @@
   <ItemGroup>
     <ClCompile Include="ArticleDlg.cpp" />
     <ClCompile Include="ArticleListenDlgh.cpp" />
+    <ClCompile Include="BasicView.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ChoiceDlg.cpp" />
     <ClCompile Include="DefaultDlg.cpp" />
@@ -148,6 +149,7 @@
     <ClCompile Include="LeftView.cpp" />
     <ClCompile Include="ListenDlg.cpp" />
     <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="PersionInfoTreeView.cpp" />
     <ClCompile Include="QuestionAreaItem.cpp" />
     <ClCompile Include="QuestionCfgStruct.cpp" />
     <ClCompile Include="QuestionDlg.cpp" />
@@ -184,6 +186,7 @@
   <ItemGroup>
     <ClInclude Include="ArticleDlg.h" />
     <ClInclude Include="ArticleListenDlgh.h" />
+    <ClInclude Include="BasicView.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ChoiceDlg.h" />
     <ClInclude Include="DefaultDlg.h" />
@@ -209,6 +212,7 @@
     <ClInclude Include="LeftView.h" />
     <ClInclude Include="ListenDlg.h" />
     <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="PersionInfoTreeView.h" />
     <ClInclude Include="QuestionAreaItem.h" />
     <ClInclude Include="QuestionCfgStruct.h" />
     <ClInclude Include="QuestionDlg.h" />
@@ -250,6 +254,7 @@
     <None Include="res\filesmall.bmp" />
     <None Include="res\Finish.bmp" />
     <None Include="res\main.bmp" />
+    <None Include="res\maintree.bmp" />
     <None Include="res\Op_Abort.bmp" />
     <None Include="res\Op_Begin.bmp" />
     <None Include="res\Op_Next.bmp" />

@@ -94,6 +94,7 @@ IDB_BITMAP_STDANS       BITMAP                  "res\\stdAnswer.bmp"
 IDB_BITMAP_STUANS       BITMAP                  "res\\stuAnswer.bmp"
 IDB_BITMAP_FINISH       BITMAP                  "res\\Finish.bmp"
 IDB_BITMAP_TREENODE     BITMAP                  "res\\treenode.bmp"
+IDB_BITMAP_MAINTREE     BITMAP                  "res\\maintree.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

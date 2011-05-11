@@ -109,6 +109,8 @@
 #define IDD_DIALOG1                     338
 #define IDD_DIALOG_RENAME               338
 #define IDD_DLG_EM_CFG_QUESTION_2       339
+#define IDB_BITMAP3                     340
+#define IDB_BITMAP_MAINTREE             340
 #define IDC_TREE_EM_QUESTION            1000
 #define IDC_BTN_EM_PREV                 1001
 #define IDC_BTN_EM_NEXT                 1002
@@ -493,7 +495,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        340
+#define _APS_NEXT_RESOURCE_VALUE        341
 #define _APS_NEXT_COMMAND_VALUE         32793
 #define _APS_NEXT_CONTROL_VALUE         1045
 #define _APS_NEXT_SYMED_VALUE           314
