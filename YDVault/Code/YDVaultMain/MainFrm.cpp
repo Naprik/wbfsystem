@@ -687,7 +687,7 @@ HRESULT CMainFrame::OnOpenDocument(WPARAM wParam, LPARAM lParam)
 	m_pLastSheet = NULL;
 	CYdObjWrapper* pObjWrapper = (CYdObjWrapper*)wParam;
 	CString strTitle;
-	if(pObjWrapper )
+	if(pObjWrapper)
 	{
 		CYDObjectRef* pObjRef = pObjWrapper->m_pObjRef;
 		OBJID id = ID_EMPTY;

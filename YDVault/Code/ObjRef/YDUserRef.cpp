@@ -7,6 +7,14 @@ CYDUserRef::CYDUserRef(CDatabaseEx* pDB): CYDObjectRef(pDB)
 	AddPropDef(FIELD_YDUSER_NAME,VT_BSTR,_T(""));
 	AddPropDef(FIELD_YDUSER_PASSWORD,VT_BSTR,_T(""));
 	AddPropDef(FIELD_YDUSER_AUTHORITY,VT_I4, _T("0"));
+	AddPropDef(FIELD_YDUSER_AGE,VT_I4, _T("0"));
+	AddPropDef(FIELD_YDUSER_GENDER,VT_BSTR,_T(""));
+	AddPropDef(FIELD_YDUSER_ID,VT_BSTR,_T(""));
+	AddPropDef(FIELD_YDUSER_LEVEL,VT_BSTR,_T(""));
+	AddPropDef(FIELD_YDUSER_DEPARTMENT,VT_BSTR,_T(""));
+	AddPropDef(FIELD_YDUSER_MPHONE,VT_BSTR,_T(""));
+	AddPropDef(FIELD_YDUSER_QQ,VT_BSTR,_T(""));
+	AddPropDef(FIELD_YDUSER_EMAIL,VT_BSTR,_T(""));
 }
 
 CYDUserRef::~CYDUserRef(void)

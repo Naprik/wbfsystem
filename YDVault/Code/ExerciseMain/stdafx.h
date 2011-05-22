@@ -56,6 +56,7 @@
 
 #import "../Lib/msado15.dll" rename("EOF","adoEOF")
 #include <afxdhtml.h>
+#include "../Include/YdVaultConst.h"
 using namespace ADODB;
 
 extern CString g_CfgPath;
@@ -63,7 +64,8 @@ extern CString g_LogPath;
 
 const int IDC_TREE = 1000000;
 const int IDC_TREE_VIEW = IDC_TREE+1;
-
+const CString TREE_NODE_USER_INFO = L"人员信息";
+const CString TREE_NODE_HISTORY = L"历史记录";
 #ifdef _UNICODE
 #if defined _M_IX86
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")

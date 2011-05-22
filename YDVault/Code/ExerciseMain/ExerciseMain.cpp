@@ -30,6 +30,7 @@
 #include "../Base\FilePathHelper.h"
 #include "../FtpBase\FtpRef.h"
 #include "BasicView.h"
+#include "../YDFormUIBase/ObjPropertyView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -56,6 +57,7 @@ CExerciseMainApp::CExerciseMainApp()
 	// 将所有重要的初始化放置在 InitInstance 中
 	m_pDatabase = NULL;
 	m_pFtpRef = new CFtpRef();
+	m_bInit = FALSE;
 }
 CExerciseMainApp::~CExerciseMainApp()
 {
@@ -182,11 +184,11 @@ BOOL CExerciseMainApp::InitInstance()
 	pDocTemplate = new CMultiDocTemplate(IDR_ExerciseMainTYPE,
 		RUNTIME_CLASS(CExerciseMainDoc),
 		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
-		RUNTIME_CLASS(CBasicView));
+		RUNTIME_CLASS(CObjPropertyView));
 	if (!pDocTemplate)
 		return FALSE;
 	AddDocTemplate(pDocTemplate);
-
+	m_pDocTemplate = pDocTemplate;
 	// 创建主 MDI 框架窗口
 	CMainFrame* pMainFrame = new CMainFrame;
 	if (!pMainFrame || !pMainFrame->LoadFrame(IDR_MAINFRAME))
@@ -211,7 +213,8 @@ BOOL CExerciseMainApp::InitInstance()
 	// 主窗口已初始化，因此显示它并对其进行更新
 	pMainFrame->ShowWindow(SW_MAXIMIZE);
 	pMainFrame->UpdateWindow();
-
+	m_bInit = TRUE;
+	pMainFrame->SetFirstSelect();
 	return TRUE;
 }
 

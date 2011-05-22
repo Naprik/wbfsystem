@@ -124,6 +124,7 @@
     <ClCompile Include="ArticleDlg.cpp" />
     <ClCompile Include="ArticleListenDlgh.cpp" />
     <ClCompile Include="BasicView.cpp" />
+    <ClCompile Include="BelowBar.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ChoiceDlg.cpp" />
     <ClCompile Include="DefaultDlg.cpp" />
@@ -146,10 +147,12 @@
     <ClCompile Include="ExerciseMainView.cpp" />
     <ClCompile Include="ExerciseQuestionRecord.cpp" />
     <ClCompile Include="ExerciseSelectQuestionCfgMgr.cpp" />
+    <ClCompile Include="HistoryInfoView.cpp" />
     <ClCompile Include="LeftView.cpp" />
     <ClCompile Include="ListenDlg.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="PersionInfoTreeView.cpp" />
+    <ClCompile Include="PersionInfoView.cpp" />
     <ClCompile Include="QuestionAreaItem.cpp" />
     <ClCompile Include="QuestionCfgStruct.cpp" />
     <ClCompile Include="QuestionDlg.cpp" />
@@ -187,6 +190,7 @@
     <ClInclude Include="ArticleDlg.h" />
     <ClInclude Include="ArticleListenDlgh.h" />
     <ClInclude Include="BasicView.h" />
+    <ClInclude Include="BelowBar.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ChoiceDlg.h" />
     <ClInclude Include="DefaultDlg.h" />
@@ -209,10 +213,12 @@
     <ClInclude Include="ExerciseMainView.h" />
     <ClInclude Include="ExerciseQuestionRecord.h" />
     <ClInclude Include="ExerciseSelectQuestionCfgMgr.h" />
+    <ClInclude Include="HistoryInfoView.h" />
     <ClInclude Include="LeftView.h" />
     <ClInclude Include="ListenDlg.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="PersionInfoTreeView.h" />
+    <ClInclude Include="PersionInfoView.h" />
     <ClInclude Include="QuestionAreaItem.h" />
     <ClInclude Include="QuestionCfgStruct.h" />
     <ClInclude Include="QuestionDlg.h" />
@@ -300,6 +306,12 @@
     <ProjectReference Include="..\UIBase\UIBase.vcxproj">
       <Project>{6694239b-0638-4461-8a2d-272896b8a4f0}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\YDFormUIBase\YDFormUIBase.vcxproj">
+      <Project>{e882242e-143d-4d1c-b462-3d55399fdbd5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\YDUIUserManagement\YDUIUserManagement.vcxproj">
+      <Project>{b1c31b4a-e7b9-43c7-ac6b-e5e8f301b816}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

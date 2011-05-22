@@ -44,6 +44,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YDUIUserManagement", "YDUIUserManagement\YDUIUserManagement.vcxproj", "{B1C31B4A-E7B9-43C7-AC6B-E5E8F301B816}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExerciseMain", "ExerciseMain\ExerciseMain.vcxproj", "{ADCC31A7-D7D2-45B9-869C-EE67AD5837D9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B1C31B4A-E7B9-43C7-AC6B-E5E8F301B816} = {B1C31B4A-E7B9-43C7-AC6B-E5E8F301B816}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MainUIBase", "MainUIBase\MainUIBase.vcxproj", "{CA5B97E0-14D3-49F8-9657-2577DE567AD6}"
 EndProject

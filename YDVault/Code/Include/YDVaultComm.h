@@ -50,7 +50,7 @@ public:
 #define WM_YD_GETLAST_SHEET                  WM_USER + 1017 //得到最近打开的一个Sheet
 #define WM_YD_CLOSE_PROP					 WM_USER + 1018 //关闭一个指定的Prop页
 
-
+#define WM_YD_OPEN_BASIC_VIEW	 WM_USER + 1019 //练习系统打开基本属性页
 
 
 
@@ -144,6 +144,14 @@ public:
 #define FIELD_YDUSER_NAME	     				_T("NAME")//用户名
 #define FIELD_YDUSER_PASSWORD	     			_T("PASSWORD")//密码
 #define FIELD_YDUSER_AUTHORITY	     			_T("AUTHORITY")//权限值
+#define FIELD_YDUSER_GENDER	     			_T("GENDER")
+#define FIELD_YDUSER_AGE	     			_T("AGE")
+#define FIELD_YDUSER_ID	     				_T("ID")
+#define FIELD_YDUSER_LEVEL	     			_T("STUDYLEVEL")
+#define FIELD_YDUSER_DEPARTMENT	     		_T("DEPARTMENT")
+#define FIELD_YDUSER_MPHONE		     		_T("MPHONE")
+#define FIELD_YDUSER_QQ			     		_T("QQ")
+#define FIELD_YDUSER_EMAIL			     		_T("EMAIL")
 
 #define YD_NOT_FILL_ANSWER                      _T("未填写")
 

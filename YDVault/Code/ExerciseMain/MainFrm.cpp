@@ -23,6 +23,13 @@
 #include "ExerciseSelectQuestionCfgMgr.h"
 #include "ExamMainDlg.h"
 #include "SelLogDlg.h"
+#include "BasicView.h"
+#include "PersionInfoView.h"
+#include "HistoryInfoView.h"
+#include "ChildFrm.h"
+#include "../YDFormUIBase/ObjPropertyView.h"
+#include "../YDFormUIBase/ObjPropShow.h"
+#include "../Base/AutoClean.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -48,6 +55,10 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_WM_CLOSE()
 	ON_MESSAGE(WM_YD_GET_DB,OnGetDB)
 	ON_MESSAGE(WM_YD_GET_FTPREF,OnGetFtpRef)
+	ON_MESSAGE(WM_YD_ADD_PAGE,OnAddPage)
+	ON_MESSAGE(WM_YD_OPEN_OBJECT_EX, OnOpenOBjectEX)
+	ON_MESSAGE(WM_YD_OPEN_DOCUMENT_EX, OnOpenDocumentEX)
+	ON_MESSAGE(WM_YD_GETLAST_SHEET,OnGetLastSheet)
 END_MESSAGE_MAP()
 
 // CMainFrame 构造/析构
@@ -56,10 +67,13 @@ CMainFrame::CMainFrame()
 {
 	// TODO: 在此添加成员初始化代码
 	theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_OFF_2007_BLUE);
+	m_pPropSheetManager = new CObjPropSheetManager();
+	m_pLastSheet = NULL;
 }
 
 CMainFrame::~CMainFrame()
 {
+	CPtrAutoClean<CObjPropSheetManager> clr(m_pPropSheetManager);
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -386,7 +400,25 @@ void CMainFrame::OnClose()
 	}
 	CMDIFrameWndEx::OnClose();
 }
-
+//HRESULT CMainFrame::OnOpenBasicInfoView(WPARAM wParam, LPARAM lParam)
+//{
+//	CMultiDocTemplate* pDocTemp = theApp.m_pDocTemplate;
+//
+//	ASSERT(pDocTemp != NULL);	
+//	CDocument* pDoc = pDocTemp->OpenDocumentFile(NULL);
+//	if (pDoc != NULL)
+//	{
+//		CMDIChildWnd* pChild = (CMDIChildWnd *) this->GetActiveFrame();
+//		POSITION pos = pDoc->GetFirstViewPosition();
+//		CView* pView = pDoc->GetNextView(pos);
+//		_ASSERT(pView!=NULL);
+//		ASSERT( pView->IsKindOf(RUNTIME_CLASS(CBasicView)) );
+//		CBasicView* pTabView = (CBasicView*)pView;
+//		pTabView->AddView(RUNTIME_CLASS (CPersionInfoView),L"用户基本信息",-1,NULL);
+//	}
+//
+//	return S_OK;
+//}
 HRESULT CMainFrame::OnGetDB(WPARAM wParam, LPARAM lParam)
 {
 	return (HRESULT)theApp.m_pDatabase;
@@ -394,4 +426,132 @@ HRESULT CMainFrame::OnGetDB(WPARAM wParam, LPARAM lParam)
 HRESULT CMainFrame::OnGetFtpRef(WPARAM wParam, LPARAM lParam)
 {
 	return (HRESULT)theApp.m_pFtpRef;
+}
+
+HRESULT CMainFrame::SetFirstSelect()
+{
+	COpenObjExParam OpenObjExParam;
+	OpenObjExParam.m_strName = TREE_NODE_USER_INFO;
+	OpenObjExParam.m_Op = OP_VIEW;
+	OpenObjExParam.m_bUseStaicStruct = FALSE;
+	HRESULT hr = AfxGetMainWnd()->SendMessage(WM_YD_OPEN_OBJECT_EX,(WPARAM)(&OpenObjExParam),0);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+		return hr;
+	}
+
+	return S_OK;
+}
+
+
+HRESULT CMainFrame::OnAddPage(WPARAM wParam,LPARAM lParam)
+{
+	HRESULT hr = E_FAIL;
+	CObjPropShow* pObjPropShow = (CObjPropShow*)wParam;
+	ASSERT(pObjPropShow);
+	CObjPropertySheet* pSheet = pObjPropShow->m_pSheet;
+	ASSERT(pSheet);
+	if(pObjPropShow->m_type == SHOW_STRING)
+	{
+		if(pObjPropShow->m_strName.CompareNoCase(TREE_NODE_USER_INFO) == 0)
+		{
+			//user info
+			pSheet->AddPage(RUNTIME_CLASS (CPersionInfoView), pObjPropShow->m_strName);
+		}
+		else if(pObjPropShow->m_strName.CompareNoCase(TREE_NODE_HISTORY) == 0)
+		{
+			pSheet->AddPage(RUNTIME_CLASS (CHistoryInfoView), pObjPropShow->m_strName);
+		}
+	}
+	return S_OK;
+}
+
+HRESULT CMainFrame::OnOpenOBjectEX(WPARAM wParam, LPARAM lParam)
+{
+	HRESULT hr = E_FAIL;
+	
+	if(theApp.m_pMainWnd == NULL)
+	{
+		return S_OK;
+	}
+	COpenObjExParam* pOpenObjExParam = (COpenObjExParam*)wParam;
+	ASSERT(pOpenObjExParam);
+	_ASSERT(pOpenObjExParam->m_Op == OP_NEW ||
+			pOpenObjExParam->m_Op==OP_EDIT || 
+			pOpenObjExParam->m_Op == OP_VIEW );
+  
+	
+	CObjPropertySheet* pSheet = m_pPropSheetManager->IsExist(pOpenObjExParam->m_strName);
+	if(pSheet != NULL)
+	{
+		OPERATION type;
+		pSheet->GetOPERATION(type);
+		if(type == pOpenObjExParam->m_Op)
+		{
+			CMDIChildWnd* pChildFrm = (CMDIChildWnd*)pSheet->GetParentView()->GetParent();
+			_ASSERT(pChildFrm!=NULL && pChildFrm->IsKindOf(RUNTIME_CLASS(CChildFrame)));
+			pChildFrm->MDIActivate();
+		}
+
+	}
+	else
+	{
+		hr = m_pPropSheetManager->Show(pOpenObjExParam->m_strName, pOpenObjExParam->m_Op,pSheet);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+	}
+	if(pSheet == NULL)
+	{
+		return S_OK;
+	}
+	
+	return S_OK;
+}
+
+HRESULT CMainFrame::OnOpenDocumentEX(WPARAM wParam, LPARAM lParam)
+{
+	HRESULT hr = E_FAIL;
+	m_pLastSheet = NULL;
+	CString *sTitle = (CString *)wParam;
+	OPERATION nOp  = (OPERATION)lParam;
+
+	CMultiDocTemplate* pDocTemp = theApp.m_pDocTemplate;
+
+	ASSERT(pDocTemp != NULL);	
+	CDocument* pDoc = pDocTemp->OpenDocumentFile(NULL);
+	_ASSERT(pDoc != NULL);
+
+	CMDIChildWnd* pChild = (CMDIChildWnd *) this->GetActiveFrame();
+	POSITION pos = pDoc->GetFirstViewPosition();
+	CView* pView = pDoc->GetNextView(pos);
+	_ASSERT(pView!=NULL);
+	ASSERT( pView->IsKindOf(RUNTIME_CLASS(CObjPropertyView)) );
+	CObjPropertyView* pObjPropView = (CObjPropertyView*)pView;
+	hr = pObjPropView->CreateSheetEx(*sTitle,nOp);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	pDoc->SetTitle((LPCTSTR)(*sTitle));
+	if(nOp == OP_VIEW)
+	{
+		((CChildFrame*)pChild)->ShowBelowBar(FALSE);
+	}
+	else
+	{
+		((CChildFrame*)pChild)->ShowBelowBar(TRUE);
+	}
+	((CChildFrame*)pChild)->UpdateBelowBar(nOp);
+	pChild->RecalcLayout();
+	m_pLastSheet = pObjPropView->GetPropertySheet();
+
+	return S_OK;
+}
+
+HRESULT CMainFrame::OnGetLastSheet(WPARAM wParam,LPARAM lParam)
+{
+	return (HRESULT)m_pLastSheet;
 }

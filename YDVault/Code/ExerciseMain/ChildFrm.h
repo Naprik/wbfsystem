@@ -1,8 +1,13 @@
 
-// ChildFrm.h : CChildFrame 类的接口
+// ChildFrm.h : interface of the CChildFrame class
 //
 
 #pragma once
+#include "resource.h"
+#include "BelowBar.h"
+
+class CYdFormView;
+class CYdObjWrapper;
 
 class CChildFrame : public CMDIChildWndEx
 {
@@ -10,16 +15,16 @@ class CChildFrame : public CMDIChildWndEx
 public:
 	CChildFrame();
 
-// 特性
+// Attributes
 public:
 
-// 操作
+// Operations
 public:
 
-// 重写
+// Overrides
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 
-// 实现
+// Implementation
 public:
 	virtual ~CChildFrame();
 #ifdef _DEBUG
@@ -27,9 +32,31 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
-// 生成的消息映射函数
+// Generated message map functions
 protected:
 	DECLARE_MESSAGE_MAP()
+private:
+	CBelowBar m_belowbar;
+public:
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+public:
+	void ShowBelowBar(BOOL bShow){m_belowbar.ShowWindow(bShow);}
+	void UpdateBelowBar(OPERATION type){m_belowbar.ShowBegin(type);}
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp);
+	afx_msg void OnNcPaint();
+	afx_msg void OnPaint();
+	afx_msg void OnPropertySave();
+	afx_msg void OnPropertyUpdate();
+	afx_msg void OnPropertyCancel();
+	afx_msg void OnUpdatePropertySave(CCmdUI* pCmdUI);
+	afx_msg void OnUpdatePropertyUpdate(CCmdUI* pCmdUI);
+	afx_msg void OnUpdatePropertyCancel(CCmdUI* pCmdUI);
+	afx_msg void OnClose();
+	afx_msg HRESULT OnShowBelowBar(WPARAM wParam, LPARAM lParam);
+	afx_msg HRESULT OnUpdateBelowBar(WPARAM wParam, LPARAM lParam);
+private:
+	HRESULT UpdateRelatedTree(CYdObjWrapper* _pObjWrapper);
 public:
 	virtual void ActivateFrame(int nCmdShow = -1);
 };

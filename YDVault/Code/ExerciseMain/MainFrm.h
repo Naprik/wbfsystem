@@ -14,6 +14,8 @@
 
 #pragma once
 #include "PersionInfoTreeView.h"
+#include "../YDFormUIBase/ObjPropSheetManager.h"
+#include "../YDFormUIBase/ObjPropertySheet.h"
 class CMainFrame : public CMDIFrameWndEx
 {
 	DECLARE_DYNAMIC(CMainFrame)
@@ -43,13 +45,21 @@ protected:  // 控件条嵌入成员
 	CMFCRibbonApplicationButton m_MainButton;
 	CMFCToolBarImages m_PanelImages;
 	CPersionInfoTreeView m_treeview;
+
+public:
+	
+	CObjPropSheetManager*	m_pPropSheetManager;
+	CObjPropertySheet*		m_pLastSheet;//最近一个打开的Sheet
 // 生成的消息映射函数
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnWindowManager();
 	afx_msg void OnApplicationLook(UINT id);
 	afx_msg void OnUpdateApplicationLook(CCmdUI* pCmdUI);
+	afx_msg HRESULT OnOpenDocumentEX(WPARAM wParam, LPARAM lParam);
+	afx_msg HRESULT OnOpenOBjectEX(WPARAM wParam, LPARAM lParam);
 	afx_msg HRESULT OnGetDB(WPARAM wParam, LPARAM lParam);
+	afx_msg HRESULT OnAddPage(WPARAM wParam,LPARAM lParam);
 	HRESULT OnGetFtpRef(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
 
@@ -63,6 +73,10 @@ public:
 	afx_msg void OnEmSetExerciseCfg();
 	afx_msg void OnEmSetExamCfg();
 	afx_msg void OnClose();
+	afx_msg HRESULT OnGetLastSheet(WPARAM wParam,LPARAM lParam);
+
+public:
+	HRESULT SetFirstSelect();
 };
 
 

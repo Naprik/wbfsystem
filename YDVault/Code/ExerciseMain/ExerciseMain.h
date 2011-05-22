@@ -26,7 +26,6 @@
 
 class CDatabaseEx;
 class CFtpRef;
-
 class CExerciseMainApp : public CWinAppEx
 {
 public:
@@ -49,6 +48,8 @@ public:
 public:
 	CDatabaseEx* m_pDatabase;
 	CFtpRef*	 m_pFtpRef;
+	CMultiDocTemplate*  m_pDocTemplate;
+	BOOL		 m_bInit;
 };
 
 extern CExerciseMainApp theApp;
