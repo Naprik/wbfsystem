@@ -12,4 +12,7 @@ public:
 	virtual HRESULT Load();
 	virtual HRESULT Save();
 	virtual HRESULT CreateLog();
+
+protected:
+	virtual HRESULT GetFilePath(CString &_strPath);
 };

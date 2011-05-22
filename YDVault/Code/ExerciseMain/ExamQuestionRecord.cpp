@@ -145,10 +145,10 @@ HRESULT CExamQuestionRecord::CreateLog()
 {
 	//ExamRecord201012092034.xml
 	HRESULT hr = E_FAIL;
-	m_strFileName = _T("ExamRecord");
+	m_strFileName = _T("考试历史记录");
 	COleDateTime currentime = COleDateTime::GetCurrentTime();
 	CString strCurTime;
-	strCurTime.Format(_T("%d%d%d%d%d%d"),currentime.GetYear(),
+	strCurTime.Format(_T("%d-%d-%d %d时%d分%d秒"),currentime.GetYear(),
 										currentime.GetMonth(),
 										currentime.GetDay(),
 										currentime.GetHour(),
@@ -160,3 +160,11 @@ HRESULT CExamQuestionRecord::CreateLog()
 }
 
 
+HRESULT CExamQuestionRecord::GetFilePath(CString &_strPath)
+{
+	HRESULT hr = E_FAIL;
+	_strPath = g_LogPath;
+	_strPath += TEXT("\\exam\\");
+	_strPath += m_strFileName;
+	return S_OK;
+}

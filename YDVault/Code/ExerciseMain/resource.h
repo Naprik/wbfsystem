@@ -176,11 +176,12 @@
 #define IDC_EDIT_ID                     1046
 #define IDC_EDIT_LEVEL                  1047
 #define IDC_EDIT_DEP                    1048
-#define IDC_STATIC_EXERCISE             1048
 #define IDC_EDIT_PHONE                  1049
-#define IDC_STATIC_EXAM                 1049
 #define IDC_EDIT_EMAIL                  1050
+#define IDC_LIST_EXAM                   1050
 #define IDC_EDIT_QQ                     1051
+#define IDC_LIST_EXERCISE2              1051
+#define IDC_LIST_EXERCISE               1051
 #define IDC_EDIT_AGE                    1052
 #define IDP_AFXBARRES_IMAGE_IS_REQUIRED 16001
 #define IDP_AFXBARRES_TEXT_IS_REQUIRED  16002
@@ -512,7 +513,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        343
 #define _APS_NEXT_COMMAND_VALUE         32793
-#define _APS_NEXT_CONTROL_VALUE         1050
+#define _APS_NEXT_CONTROL_VALUE         1051
 #define _APS_NEXT_SYMED_VALUE           314
 #endif
 #endif

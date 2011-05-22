@@ -24,7 +24,7 @@ public:
 protected:
 	CString m_strFileName;
 	int		m_iCurNo;
-	HRESULT GetFilePath(CString &_strPath);
+	virtual HRESULT GetFilePath(CString &_strPath);
 	HRESULT Clear();
 public:
 	std::list<CQuestionRecordStruct*> m_lstQuestionStruct;
