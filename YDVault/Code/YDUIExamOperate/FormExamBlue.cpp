@@ -1633,6 +1633,8 @@ void CFormExamBlue::OnBnClickedButtonRolling()
 		ASSERT(FALSE);
 		return ;
 	}
+	//在蓝牙模式下，点击收卷后将点名按钮禁用
+	GetDlgItem(IDC_BUTTON_SEARCH)->EnableWindow(FALSE);
 }
 
 void CFormExamBlue::OnBnClickedButtonCancelProgress()
