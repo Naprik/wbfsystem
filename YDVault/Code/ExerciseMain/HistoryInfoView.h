@@ -2,7 +2,7 @@
 
 #include "resource.h"
 #include "../YDFormUIBase/YdFormView.h"
-
+#include "../UIBase/BCGPSortListCtrl.h"
 
 // CHistoryInfoView form view
 
@@ -30,10 +30,17 @@ protected:
 public:
 	virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, CCreateContext* pContext = NULL);
 private:
-	CBCGPListCtrl	m_ExerciseListCtrl;
-	CBCGPListCtrl	m_ExamListCtrl;
+	CBCGPSortListCtrl	m_ExerciseListCtrl;
+	CBCGPSortListCtrl	m_ExamListCtrl;
 public:
 	virtual void OnInitialUpdate();
+
+private:
+	bool InsertExerciseLog();
+	bool InsertExamLog();
+public:
+	afx_msg void OnNMDblclkListExam(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMDblclkListExercise(NMHDR *pNMHDR, LRESULT *pResult);
 };
 
 

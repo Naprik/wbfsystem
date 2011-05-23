@@ -98,7 +98,7 @@ BOOL CSelLogDlg::OnInitDialog()
 
 	CString strFileName;
 	CString strPath = g_LogPath;
-	strPath += TEXT("\\");
+	strPath += TEXT("\\exercise\\");
 	LongList lList;
 	StringList strList;
 	GetFileList(strPath, TEXT("xml"), lList, strList);
