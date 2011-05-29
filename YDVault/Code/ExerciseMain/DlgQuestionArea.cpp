@@ -148,6 +148,7 @@ BOOL CDlgQuestionArea::ShowQuestion()
 {
 	m_nCurrentHeight = 0;
 	CleanDlg();
+	SendMessage ( WM_VSCROLL, SB_TOP, 0) ;
 	CYDArticleQuestionRef* pArticle = dynamic_cast<CYDArticleQuestionRef*>(m_pRecord->m_pQuestion);
 
 	std::list<CString>::const_iterator itrAns = m_pRecord->m_listUserAnswers.begin();
