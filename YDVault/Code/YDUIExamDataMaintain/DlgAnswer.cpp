@@ -155,7 +155,7 @@ HRESULT CDlgAnswer::FillGrid()
 		pObjWrapper->m_pLinkRef = (*itrLink);
 		pObjWrapper->m_state = S_UNKNOW;
 		m_lstObjWrapperCache.push_back(pObjWrapper);
-		InsertItem(pObjWrapper);
+		InsertItem(pObjWrapper,lstNO);
 		if (itrNo != lstNO.end())
 		{
 			++itrNo;
@@ -173,16 +173,34 @@ HRESULT CDlgAnswer::FillGrid()
 		pObjWrapper->m_pLinkRef->PutObjRef(m_pPaper, pObjWrapper->m_pObjRef);
 		pObjWrapper->m_state = S_UNKNOW;
 		m_lstObjWrapperCache.push_back(pObjWrapper);
-		InsertItem(pObjWrapper);
+		InsertItem(pObjWrapper,lstNO);
 	}
 
 	return S_OK;
 }
 
 
-HRESULT CDlgAnswer::InsertItem(CYdObjWrapper* pObjWrapper)
+HRESULT CDlgAnswer::InsertItem(CYdObjWrapper* pObjWrapper,std::list<long> &_lstNo)
 {
 	HRESULT hr = E_FAIL;
+	//要判断题号是否在试卷的段落题号中，如果不在，不用在列表中插入
+
+	BOOL bFind = FALSE;
+	long lNO = 0;
+	pObjWrapper->m_pObjRef->GetPropVal(FIELD_YDANSWER_NO, &lNO);
+	for(std::list<long>::const_iterator itr =  _lstNo.begin();
+		itr != _lstNo.end();++itr)
+	{
+		if(*itr == lNO)
+		{
+			bFind = TRUE;
+			break;
+		}
+	}
+	if(!bFind)
+	{
+		return S_FALSE;
+	}
 
 	CBCGPGridRow* pRow = m_AnswerGrid.CreateRow(m_AnswerGrid.GetColumnCount());
 	
@@ -211,8 +229,7 @@ HRESULT CDlgAnswer::InsertItem(CYdObjWrapper* pObjWrapper)
 	pRow->GetItem(0)->Enable(FALSE);
 	//题号
 	
-	long lNO = 0;
-	pObjWrapper->m_pObjRef->GetPropVal(FIELD_YDANSWER_NO, &lNO);
+	
 	CString strNO ;
 	strNO.Format(_T("%d"),lNO);
 	pRow->ReplaceItem(1, new CBCGPGridItem(_bstr_t(strNO)));

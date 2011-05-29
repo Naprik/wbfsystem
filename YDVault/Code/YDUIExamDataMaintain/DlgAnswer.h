@@ -31,7 +31,7 @@ public:
 
 private:
 	HRESULT FillGrid();
-	HRESULT InsertItem(CYdObjWrapper* pObjWrapper);
+	HRESULT InsertItem(CYdObjWrapper* pObjWrapper,std::list<long> &_lstNo);
 
 private:
 	CBCGPKeyGridCtrl	m_AnswerGrid;
