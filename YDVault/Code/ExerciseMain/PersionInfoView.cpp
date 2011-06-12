@@ -64,7 +64,7 @@ void CPersionInfoView::Dump(CDumpContext& dc) const
 void CPersionInfoView::OnInitialUpdate()
 {
 	CFormView::OnInitialUpdate();
-	CYDUserRef* pUser = NULL;
+	/*CYDUserRef* pUser = NULL;
 	CStaticYdUser::Instance()->GetCurUser(pUser);
 	pUser->GetPropVal(FIELD_YDUSER_NAME, m_strName);
 	pUser->GetPropVal(FIELD_YDUSER_AGE, m_strAge);
@@ -74,7 +74,7 @@ void CPersionInfoView::OnInitialUpdate()
 	pUser->GetPropVal(FIELD_YDUSER_DEPARTMENT, m_strDepartment);
 	pUser->GetPropVal(FIELD_YDUSER_MPHONE, m_strPhone);
 	pUser->GetPropVal(FIELD_YDUSER_QQ, m_strQQ);
-	pUser->GetPropVal(FIELD_YDUSER_EMAIL, m_strEmail);
+	pUser->GetPropVal(FIELD_YDUSER_EMAIL, m_strEmail);*/
 	UpdateData(FALSE);
 }
 
@@ -90,4 +90,29 @@ void CPersionInfoView::ReadonlyPage(BOOL bReadonly)
 	GetDlgItem(IDC_EDIT_QQ)->EnableWindow(!bReadonly);
 	GetDlgItem(IDC_EDIT_EMAIL)->EnableWindow(!bReadonly);
 
+}
+
+HRESULT CPersionInfoView::UpdateProp(BOOL bUpdate)
+{
+	if (bUpdate)
+	{
+		CYDUserRef* pUser = NULL;
+		CStaticYdUser::Instance()->GetCurUser(pUser);
+		pUser->GetPropVal(FIELD_YDUSER_NAME, m_strName);
+		pUser->GetPropVal(FIELD_YDUSER_AGE, m_strAge);
+		pUser->GetPropVal(FIELD_YDUSER_GENDER, m_strGender);
+		pUser->GetPropVal(FIELD_YDUSER_ID, m_strID);
+		pUser->GetPropVal(FIELD_YDUSER_LEVEL, m_strLevel);
+		pUser->GetPropVal(FIELD_YDUSER_DEPARTMENT, m_strDepartment);
+		pUser->GetPropVal(FIELD_YDUSER_MPHONE, m_strPhone);
+		pUser->GetPropVal(FIELD_YDUSER_QQ, m_strQQ);
+		pUser->GetPropVal(FIELD_YDUSER_EMAIL, m_strEmail);
+		UpdateData(FALSE);
+	}
+	else
+	{
+		assert(FALSE);
+	}
+
+	return S_OK;
 }

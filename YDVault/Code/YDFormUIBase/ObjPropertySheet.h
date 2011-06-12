@@ -49,6 +49,8 @@ public:
 
 	//关闭
 	virtual HRESULT Close();
+	//更新
+	virtual HRESULT UpdateShow();
 
 	//设置显示方式
 	virtual HRESULT ResetOPERATION(OPERATION nOp);

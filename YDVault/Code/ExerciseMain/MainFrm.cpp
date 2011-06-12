@@ -59,6 +59,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_MESSAGE(WM_YD_OPEN_OBJECT_EX, OnOpenOBjectEX)
 	ON_MESSAGE(WM_YD_OPEN_DOCUMENT_EX, OnOpenDocumentEX)
 	ON_MESSAGE(WM_YD_GETLAST_SHEET,OnGetLastSheet)
+	ON_MESSAGE(WM_YD_UPDATE_PERSIONINFO, OnUpdatePersionInfo)
 END_MESSAGE_MAP()
 
 // CMainFrame ¹¹Ôì/Îö¹¹
@@ -554,4 +555,15 @@ HRESULT CMainFrame::OnOpenDocumentEX(WPARAM wParam, LPARAM lParam)
 HRESULT CMainFrame::OnGetLastSheet(WPARAM wParam,LPARAM lParam)
 {
 	return (HRESULT)m_pLastSheet;
+}
+
+HRESULT  CMainFrame::OnUpdatePersionInfo(WPARAM wParam,LPARAM lParam)
+{
+	CString *title = (CString *)wParam;
+	CObjPropertySheet* psheet  = m_pPropSheetManager->IsExist(*title);
+	if (psheet != NULL)
+	{
+		psheet->UpdateShow();
+	}
+	return S_OK;
 }

@@ -50,7 +50,9 @@ public:
 #define WM_YD_GETLAST_SHEET                  WM_USER + 1017 //得到最近打开的一个Sheet
 #define WM_YD_CLOSE_PROP					 WM_USER + 1018 //关闭一个指定的Prop页
 
+
 #define WM_YD_OPEN_BASIC_VIEW	 WM_USER + 1019 //练习系统打开基本属性页
+#define WM_YD_UPDATE_PERSIONINFO	 WM_USER + 1020 //练习系统打开基本属性页
 
 
 
@@ -136,6 +138,11 @@ public:
 #define FIELD_YDANSWER_NO					_T("ITEMNO")  //题号
 #define FIELD_YDANSWER_ANSWER                _T("ANSWER") //答案
 #define FIELD_YDANSWER_MARK					_T("MARK")//分数
+
+#define DB_VAULTLEVEL                       _T("VAULTLEVEL") //题库层次
+#define FIELD_VAULTLEVEL_VAULTID					_T("VAULTID")  //题库id
+#define FIELD_VAULTLEVEL_LEVEL               _T("USERLEVEL") //层次描述
+#define FIELD_VAULTLEVEL_CONDITION					_T("CONDITION")//层次条件（正确率）
 
 #define DB_PAPERANSWER                     _T("PAPERANSWER")                      //试卷与标准答案关系
 

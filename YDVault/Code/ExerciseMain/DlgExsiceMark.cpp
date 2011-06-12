@@ -24,6 +24,7 @@ CDlgExsiceMark::CDlgExsiceMark(CWnd* pParent /*=NULL*/)
 	, m_strMark(_T(""))
 {
 	m_pQuestionRecord = NULL;
+	m_accuracy = 0;
 }
 
 CDlgExsiceMark::~CDlgExsiceMark()
@@ -38,6 +39,7 @@ void CDlgExsiceMark::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CDlgExsiceMark, CDialog)
+	ON_BN_CLICKED(IDOK, &CDlgExsiceMark::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -72,7 +74,7 @@ BOOL CDlgExsiceMark::OnInitDialog()
 
 	ASSERT(m_pQuestionRecord);
 	double dbMark = 0.0;
-	hr = m_pQuestionRecord->ComputeMark(&dbMark);
+	hr = m_pQuestionRecord->ComputeMark(&dbMark, &m_accuracy);
 	if(FAILED(hr))
 	{
 		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
@@ -158,6 +160,17 @@ HRESULT CDlgExsiceMark::InsertList(CQuestionRecordStruct* _pQRecordStuct,
 	{
 		return hr;
 	}
+	
+	if (_pQRecordStuct->m_QTypeID == 8)//ÔÄ¶ÁÑ¡´ÊÌî¿Õ
+	{
+		CString useranswer = *(lstStdAnswer.begin());
+		lstStdAnswer.clear();
+		for (int i=0; i<useranswer.GetLength(); ++i)
+		{
+			CString answer(useranswer.GetAt(i));
+			lstStdAnswer.push_back(answer);
+		}
+	}
 	ASSERT(lstStdAnswer.size() >= _pQRecordStuct->m_listUserAnswers.size());
 	int index = 1;
 	BOOL bUserAnswerEnd = FALSE;
@@ -186,4 +199,16 @@ HRESULT CDlgExsiceMark::InsertList(CQuestionRecordStruct* _pQRecordStuct,
 		}
 	}
 	return S_OK;
+}
+
+
+void CDlgExsiceMark::OnBnClickedOk()
+{
+	// TODO: Add your control notification handler code here
+	CDialog::OnOK();
+}
+
+int		CDlgExsiceMark::GetAccuracy()
+{
+	return m_accuracy;
 }

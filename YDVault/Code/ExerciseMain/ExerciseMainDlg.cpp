@@ -15,7 +15,10 @@
 #include "../Base/DataHandler.h"
 #include "DlgExsiceMark.h"
 #include "DlgReName.h"
+#include "StudentLevelUpdateUtil.h"
 
+#include "../YDUIUserManagement/StaticYdUser.h"
+#include "../ObjRef/YDUserRef.h"
 // CExerciseMainDlg dialog
 
 IMPLEMENT_DYNAMIC(CExerciseMainDlg, CDialog)
@@ -30,6 +33,7 @@ CExerciseMainDlg::CExerciseMainDlg(CWnd* pParent /*=NULL*/)
 	m_pWriteDlg = NULL;
 	m_pChoiceDlg = NULL;
 	m_pArticleListenDlg = NULL;
+	m_isupdateuser = FALSE;
 }
 
 CExerciseMainDlg::~CExerciseMainDlg()
@@ -643,6 +647,26 @@ void CExerciseMainDlg::OnBnClickedBtnEmClose()
 	CDlgExsiceMark dlg;
 	dlg.m_pQuestionRecord = &m_log;
 	dlg.DoModal();
+
+	if (!m_isupdateuser)
+	{
+		OBJID vaultid;
+		HRESULT hr = (*m_lstQuestions.begin())->GetVaultID(&vaultid);
+		CString level;
+		CStudentLevelUpdateUtil::Instance()->GetStudentLevel(vaultid, dlg.m_accuracy, &level);
+		CYDUserRef* puser = NULL;
+		CStaticYdUser::Instance()->GetCurUser(puser);
+		puser->SetPropVal(FIELD_YDUSER_LEVEL, &CComVariant(level));
+		AfxGetMainWnd()->SendMessage(WM_YD_UPDATE_PERSIONINFO, (WPARAM)(&TREE_NODE_USER_INFO),0);
+		CDBTransactionRef trans(theApp.m_pDatabase, TRUE);
+		hr = puser->Update();
+		if (FAILED(hr))
+		{
+			return;
+		}
+		trans.Commit();
+		m_isupdateuser = TRUE;
+	}
 }
 
 void CExerciseMainDlg::OnBnClickedBtnEmRename()

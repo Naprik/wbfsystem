@@ -90,7 +90,23 @@ HRESULT CObjPropertySheet::Show(CString sTipName, OPERATION nOp)
 	return S_OK;
 }
 
+HRESULT CObjPropertySheet::UpdateShow()
+{
+	HRESULT hr = E_FAIL;
+	UINT iCount = GetPageCount();
+	for(UINT i = 0;i < iCount;i++)
+	{
+		CYdFormView* pYdFromView = GetPage(i);
+		ASSERT(pYdFromView);
+		hr = pYdFromView->UpdateProp(TRUE);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+	}
 
+	return S_OK;
+}
 
 
 HRESULT CObjPropertySheet::Show(CYdObjWrapper* _pObjWrapper,OPERATION nOp)

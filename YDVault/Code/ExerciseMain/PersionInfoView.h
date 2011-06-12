@@ -28,6 +28,7 @@ protected:
 public:
 	virtual void OnInitialUpdate();
 	virtual void ReadonlyPage(BOOL bReadonly);
+	virtual HRESULT UpdateProp(BOOL bUpdate);
 private:
 	CString m_strGender;
 	CString m_strName;

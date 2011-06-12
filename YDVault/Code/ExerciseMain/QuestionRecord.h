@@ -17,7 +17,7 @@ public:
 	//增加一条记录
 	virtual HRESULT AddRecord(UINT _uQNo, CYDQuestionRef* pQestion, CQuestionRecordStruct** pNewRecordStruct);
 	//计算成绩
-	virtual HRESULT ComputeMark(double* _dbMark);
+	virtual HRESULT ComputeMark(double* _dbMark, int* _accuracy = NULL);
 	//bRenameFile:是否要修改文件名
 	virtual HRESULT SetFileName(CString& _strFileName,BOOL bRenameFile = FALSE);
 	virtual HRESULT GetFileName(CString& _strFileName);

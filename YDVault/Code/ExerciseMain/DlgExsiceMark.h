@@ -31,4 +31,10 @@ private:
 		CBCGPGridRow* _pParentRow,
 		CBCGPGridRow*& _pInsertRow,
 		int _iItemNo /*Ã‚∫≈*/);
+
+public:
+	afx_msg void OnBnClickedOk();
+	int		GetAccuracy();
+public:
+	int m_accuracy;
 };

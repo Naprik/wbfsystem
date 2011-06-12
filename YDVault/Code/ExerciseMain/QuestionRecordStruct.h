@@ -14,6 +14,8 @@ public:
 	UINT	m_QNo;//题号
 	UINT	m_QTypeID;//题型的OBJID
 	UINT	m_uObjID;//OBJID
+	int		m_answercount;
+	int		m_yescount;
 	float   m_fMark;//分数
 	std::list<CString>	m_listUserAnswers;//by lkf
 	CString m_strStdAnswer;//标准答案

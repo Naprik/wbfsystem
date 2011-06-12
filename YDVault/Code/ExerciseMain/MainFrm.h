@@ -60,6 +60,7 @@ protected:
 	afx_msg HRESULT OnOpenOBjectEX(WPARAM wParam, LPARAM lParam);
 	afx_msg HRESULT OnGetDB(WPARAM wParam, LPARAM lParam);
 	afx_msg HRESULT OnAddPage(WPARAM wParam,LPARAM lParam);
+	afx_msg HRESULT OnUpdatePersionInfo(WPARAM wParam,LPARAM lParam);
 	HRESULT OnGetFtpRef(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
 

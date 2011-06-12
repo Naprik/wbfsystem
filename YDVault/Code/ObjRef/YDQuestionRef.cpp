@@ -246,6 +246,65 @@ HRESULT CYDQuestionRef::GetQuestionType(QTYPE* type)
 	return S_OK;
 }
 
+HRESULT CYDQuestionRef::GetVaultID(OBJID* vaultid)
+{
+	HRESULT hr = E_FAIL;
+	ASSERT(m_pDb != NULL);
+	_variant_t varIDType;
+	hr = GetPropVal(L"TYPEID", &varIDType);
+	if (FAILED(hr))
+	{
+		return hr;
+	}
+	CString strSQL = _T("SELECT ID_A FROM ");
+	strSQL += DB_VAULTQUESTION;
+	strSQL += _T(" WHERE ID_B = ? and ID_TYPE = ?");
+	hr = m_pDb->InitializeSQL(_bstr_t(strSQL));
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	_variant_t vtParam((long)m_uObjID);
+	hr = m_pDb->AddParameter(L"ID_B", 
+		adUnsignedInt, 
+		adParamInput, 
+		sizeof(m_uObjID),&vtParam);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+
+	long idtype = CDataHandler::VariantToLong(varIDType);
+	_variant_t vtParamType((long)idtype);
+	hr = m_pDb->AddParameter(L"ID_TYPE", 
+		adUnsignedInt, 
+		adParamInput, 
+		sizeof(long),&vtParamType);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	hr = m_pDb->ExecuteSQL();
+	if(FAILED(hr))
+	{
+		return hr;
+	}	
+	while(!m_pDb->IsEOF())
+	{
+		_variant_t val;
+		hr = m_pDb->GetField(_variant_t("ID_A"), val);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		*vaultid = CDataHandler::VariantToLong(val);
+
+		return  S_OK;
+	}
+
+	return  S_OK;
+}
+
 HRESULT CYDQuestionRef::Remove()
 {
 	HRESULT hr = E_FAIL;

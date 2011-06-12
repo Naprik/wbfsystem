@@ -141,6 +141,7 @@
     <ClCompile Include="YDQuestionVault.cpp" />
     <ClCompile Include="YDQuestionVaultClassification.cpp" />
     <ClCompile Include="YDUserRef.cpp" />
+    <ClCompile Include="YDVaultLevel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ObjRef.def" />
@@ -170,6 +171,7 @@
     <ClInclude Include="YDQuestionVault.h" />
     <ClInclude Include="YDQuestionVaultClassification.h" />
     <ClInclude Include="YDUserRef.h" />
+    <ClInclude Include="YDVaultLevel.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ObjRef.rc" />

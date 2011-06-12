@@ -106,5 +106,7 @@ HRESULT CArticleDlg::PersistData()
 {
 	m_pRecord->m_listUserAnswers.clear();
 	m_Area.GetStuAnswers(&(m_pRecord->m_listUserAnswers));	
+	
+
 	return S_OK;
 }

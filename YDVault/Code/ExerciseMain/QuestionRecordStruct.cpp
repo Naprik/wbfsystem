@@ -9,6 +9,8 @@ CQuestionRecordStruct::CQuestionRecordStruct(void)
 	m_QNo = 0;
 	m_uObjID = 0;
 	m_fMark = 0.0;
+	m_answercount = 0;
+	m_yescount = 0;
 }
 
 CQuestionRecordStruct::~CQuestionRecordStruct(void)
@@ -144,8 +146,10 @@ HRESULT CQuestionRecordStruct::ComputeMark(double* _dbMark)
 	for(;itrStd != lstStdAnswer.end() && itrUser != m_listUserAnswers.end();
 		++itrStd,++itrUser)
 	{
+		++m_answercount;
 		if((*itrStd).CompareNoCase(*itrUser) == 0)
 		{
+			++m_yescount;
 			*_dbMark = m_fMark;
 		}
 	}

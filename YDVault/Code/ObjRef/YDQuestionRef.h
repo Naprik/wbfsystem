@@ -30,6 +30,7 @@ public:
 	virtual HRESULT Remove();
 	virtual HRESULT GetAnswerList(std::list<CString>* lst);
 
+	virtual HRESULT GetVaultID(OBJID* vault);
 	virtual HRESULT SetFtp(CFtpRef* ftp);
 	virtual HRESULT UpdateUsedCount(int usedcount);
 protected:

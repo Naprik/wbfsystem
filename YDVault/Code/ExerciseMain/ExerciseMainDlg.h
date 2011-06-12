@@ -47,7 +47,8 @@ public:
 
 private:
 	CLISTQUESTION m_lstQuestions;
-	CImageList				 m_TreeNodeImages;
+	long				m_vaultid;
+	CImageList			m_TreeNodeImages;
 
 	CQuestionDlg*		m_pArticleDlg;
 	CQuestionDlg*		m_pListenDlg;
@@ -59,6 +60,7 @@ private:
 	CQuestionDlg*			m_pActiveDlg;
 
 	CExerciseQuestionRecord	m_log;
+	BOOL				m_isupdateuser;
 public:
 	afx_msg void OnBnClickedBtnEmStuanswer();
 	afx_msg void OnBnClickedBtnEmStdanswer();

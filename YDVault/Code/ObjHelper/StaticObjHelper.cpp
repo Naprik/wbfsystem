@@ -19,6 +19,7 @@
 #include "../ObjRef\YDQuestionVault.h"
 #include "../YDExamObjRef\YDStuMark.h"
 #include "../ObjRef/YdFactorInfoItemObjRef.h"
+#include "../ObjRef/YDVaultLevel.h"
 
 CStaticObjHelper::CStaticObjHelper(void)
 {
@@ -268,7 +269,11 @@ HRESULT CStaticObjHelper::CreateObjRefByDBName(CString _strDBName,
 		//预留字段”与指标的映射关系
 		_pRef = new CYdFactorInfoItemObjRef(pDB);
 	}
-	
+	else if (_strDBName.CompareNoCase(DB_VAULTLEVEL) == 0)
+	{
+		//预留字段”与指标的映射关系
+		_pRef = new CYDVaultLevel(pDB);
+	}
 	else
 	{
 		ASSERT(FALSE);

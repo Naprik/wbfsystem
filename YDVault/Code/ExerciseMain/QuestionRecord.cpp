@@ -64,10 +64,12 @@ HRESULT CQuestionRecord::AddRecord(UINT _uQNo, CYDQuestionRef* _pQestion, CQuest
 	return S_OK;
 }
 
-HRESULT CQuestionRecord::ComputeMark(double* _dbMark)
+HRESULT CQuestionRecord::ComputeMark(double* _dbMark, int* _accuracy)
 {
 	HRESULT hr = E_FAIL;
 	*_dbMark = 0.0;
+	int allcount = 0;
+	int yescount = 0;
 	for(std::list<CQuestionRecordStruct*>::const_iterator itr = m_lstQuestionStruct.begin();
 		itr != m_lstQuestionStruct.end();++itr)
 	{
@@ -77,10 +79,17 @@ HRESULT CQuestionRecord::ComputeMark(double* _dbMark)
 		{
 			return hr;
 		}
+		allcount += (*itr)->m_answercount;
+		yescount += (*itr)->m_yescount;
 		*_dbMark += dbItrMark;
+	}
+	if (allcount != 0)
+	{
+		*_accuracy = (yescount*100)/allcount;
 	}
 	return S_OK;
 }
+
 
 HRESULT CQuestionRecord::SetFileName(CString& _strFileName,BOOL bRenameFile /*= FALSE*/)
 {
