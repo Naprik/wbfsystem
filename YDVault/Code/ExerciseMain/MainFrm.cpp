@@ -30,6 +30,8 @@
 #include "../YDFormUIBase/ObjPropertyView.h"
 #include "../YDFormUIBase/ObjPropShow.h"
 #include "../Base/AutoClean.h"
+#include "../YDUIUserManagement/StaticYdUser.h"
+#include "../ObjRef/YDUserRef.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -52,6 +54,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_EM_LOAD_EXERCISE, &CMainFrame::OnEmLoadExercise)
 	ON_COMMAND(ID_EM_SET_EXERCISE_CFG, &CMainFrame::OnEmSetExerciseCfg)
 	ON_COMMAND(ID_EM_SET_EXAM_CFG, &CMainFrame::OnEmSetExamCfg)
+	ON_COMMAND(ID_EM_LOADVAULT, &CMainFrame::OnLoadVault)
 	ON_WM_CLOSE()
 	ON_MESSAGE(WM_YD_GET_DB,OnGetDB)
 	ON_MESSAGE(WM_YD_GET_FTPREF,OnGetFtpRef)
@@ -154,6 +157,8 @@ void CMainFrame::InitializeRibbon()
  	bNameValid = strTemp.LoadString(IDS_RIBBON_NEW_EXAM);
  	ASSERT(bNameValid);
  	pMainPanel->Add(new CMFCRibbonButton(ID_EM_NEW_EXAM, strTemp, 2, 2));
+	ASSERT(bNameValid);
+ 	pMainPanel->Add(new CMFCRibbonButton(ID_EM_LOADVAULT, strTemp, 8, 8));
  	
 	bNameValid = strTemp.LoadString(IDS_RIBBON_EXIT);
 	ASSERT(bNameValid);
@@ -427,6 +432,27 @@ HRESULT CMainFrame::OnGetDB(WPARAM wParam, LPARAM lParam)
 HRESULT CMainFrame::OnGetFtpRef(WPARAM wParam, LPARAM lParam)
 {
 	return (HRESULT)theApp.m_pFtpRef;
+}
+
+void CMainFrame::OnLoadVault()
+{
+	CYDUserRef* puser = NULL;
+	CStaticYdUser::Instance()->GetCurUser(puser);
+	CString commandline = L"YDVaultMain.exe ";
+	commandline += L"-u \"";
+	CString value;
+	puser->GetPropVal(FIELD_YDUSER_NAME, value);
+	commandline += value;
+	commandline += L"\"";
+	puser->GetPropVal(FIELD_YDUSER_PASSWORD, value);
+	commandline += L" -p \"";
+	commandline += value;
+	commandline += L"\"";
+	STARTUPINFO startinfo = {sizeof(startinfo)};
+	PROCESS_INFORMATION processinfo;
+	CreateProcess(NULL, (LPWSTR)(LPCTSTR)commandline, NULL, NULL,
+		FALSE, 0, NULL, NULL, &startinfo, &processinfo);
+	
 }
 
 HRESULT CMainFrame::SetFirstSelect()

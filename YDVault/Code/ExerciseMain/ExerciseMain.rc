@@ -210,6 +210,10 @@ BEGIN
         MENUITEM "¡∑œ∞≥È»° ‘Ã‚≈‰÷√",                    ID_EM_SET_EXERCISE_CFG
         MENUITEM "øº ‘≥È»° ‘Ã‚≈‰÷√",                    ID_EM_SET_EXAM_CFG
     END
+    POPUP "Ã‚ø‚"
+    BEGIN
+        MENUITEM "‘ÿ»ÎÃ‚ø‚",                        ID_EM_LOADVAULT
+    END
 END
 
 IDR_ExerciseMainTYPE MENU
@@ -778,7 +782,6 @@ BEGIN
 
     IDD_DLG_PERSIONINFO_HISTORY, DIALOG
     BEGIN
-        MOCKUP, 0, 84, 0, 0, ".\res\main_back.bmp"
         RIGHTMARGIN, 363
     END
 END

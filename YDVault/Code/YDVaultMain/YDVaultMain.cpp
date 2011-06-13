@@ -128,7 +128,17 @@ BOOL CYDVaultMainApp::InitInstance()
 		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
 		return S_OK;
 	}
+	
 	CDlgLoginEX dlg;
+	int argc = 0;
+	PWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+	if (argc == 5)
+	{
+		dlg.m_slientmode = TRUE;
+		dlg.m_user = CString(argv[2]);
+		dlg.m_pass = CString(argv[4]);
+		HeapFree(GetProcessHeap(), 0, argv);
+	}
 	dlg.m_pDatabase = m_pDatabase;
 	if(dlg.DoModal() != IDOK)
 	{

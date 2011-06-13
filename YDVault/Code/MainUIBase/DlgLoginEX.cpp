@@ -31,6 +31,7 @@ CDlgLoginEX::CDlgLoginEX(CWnd* pParent /*=NULL*/)
 	m_pass = _T("");
 	//}}AFX_DATA_INIT
 	m_pDatabase = NULL;
+	m_slientmode = FALSE;
 }
 
 
@@ -150,7 +151,10 @@ BOOL CDlgLoginEX::OnInitDialog()
 	GetDlgItem(IDC_STATIC_COPYRIGHT)->SetWindowText(_T("Copyright @ 2010-2020 南京我佰分教育科技有限公司"));
 	
 	Invalidate(TRUE);
-	
+	if (m_slientmode)
+	{
+		OnBnClickedOk();
+	}
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -182,7 +186,10 @@ void CDlgLoginEX::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
 	ASSERT(m_pDatabase);
-	UpdateData();
+	if (!m_slientmode)
+	{
+		UpdateData();
+	}
 	if(m_user.IsEmpty())
 	{
 		AfxMessageBox(_T("用户名不能为空！"));

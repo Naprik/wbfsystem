@@ -36,7 +36,7 @@ public:
 	CString	m_user;
 	CDatabaseEx* m_pDatabase;
 	//}}AFX_DATA
-
+	BOOL	m_slientmode;
 
 // Overrides
 	// ClassWizard generated virtual function overrides

@@ -73,9 +73,10 @@ public:
 	afx_msg void OnEmLoadExercise();
 	afx_msg void OnEmSetExerciseCfg();
 	afx_msg void OnEmSetExamCfg();
+	afx_msg void OnLoadVault();
 	afx_msg void OnClose();
 	afx_msg HRESULT OnGetLastSheet(WPARAM wParam,LPARAM lParam);
-
+	
 public:
 	HRESULT SetFirstSelect();
 };

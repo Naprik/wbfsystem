@@ -180,7 +180,6 @@
 #define IDC_EDIT_EMAIL                  1050
 #define IDC_LIST_EXAM                   1050
 #define IDC_EDIT_QQ                     1051
-#define IDC_LIST_EXERCISE2              1051
 #define IDC_LIST_EXERCISE               1051
 #define IDC_EDIT_AGE                    1052
 #define IDP_AFXBARRES_IMAGE_IS_REQUIRED 16001
@@ -506,13 +505,15 @@
 #define ID_EM_LOAD_EXERCISE             32790
 #define ID_EM_SET_EXERCISE_CFG          32791
 #define ID_EM_SET_EXAM_CFG              32792
+#define ID_32793                        32793
+#define ID_EM_LOADVAULT                 32794
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        343
-#define _APS_NEXT_COMMAND_VALUE         32793
+#define _APS_NEXT_COMMAND_VALUE         32795
 #define _APS_NEXT_CONTROL_VALUE         1051
 #define _APS_NEXT_SYMED_VALUE           314
 #endif

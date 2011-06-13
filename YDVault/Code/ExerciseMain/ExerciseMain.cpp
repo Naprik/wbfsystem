@@ -167,6 +167,7 @@ BOOL CExerciseMainApp::InitInstance()
 		return S_OK;
 	}
 	CDlgLoginEX dlg;
+	
 	dlg.m_pDatabase = m_pDatabase;
 	if(dlg.DoModal() != IDOK)
 	{
