@@ -632,3 +632,4 @@ LRESULT CDlgYDVaultFactorInfoConfig::OnItemChanged(WPARAM wParam,LPARAM lParam)
 	}
 	return 1L;
 }
+

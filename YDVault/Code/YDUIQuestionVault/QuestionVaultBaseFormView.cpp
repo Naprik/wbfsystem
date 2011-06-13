@@ -7,6 +7,7 @@
 #include "../ObjRef/YDLinkRef.h"
 #include "../ObjRef/YdObjWrapper.h"
 #include "../Base/DataHandler.h"
+#include "DlgVaultLevelConfig.h"
 
 
 // CQuestionVaultBaseFormView
@@ -37,6 +38,7 @@ void CQuestionVaultBaseFormView::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CQuestionVaultBaseFormView, CFormView)
+	ON_BN_CLICKED(IDC_BUTTON_VAULT_LEVEL_CONFIG, &CQuestionVaultBaseFormView::OnBnClickedButtonVaultLevelConfig)
 END_MESSAGE_MAP()
 
 
@@ -199,4 +201,16 @@ BOOL CQuestionVaultBaseFormView::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindo
 		pParentWnd,
 		nID,
 		pContext);
+}
+
+void CQuestionVaultBaseFormView::OnBnClickedButtonVaultLevelConfig()
+{
+	// TODO: Add your control notification handler code here
+	CYdObjWrapper* pObjWrapper = m_pSheet->GetCurObjWrapper();
+	ASSERT(pObjWrapper);
+	CYDObjectRef* pObjRef = pObjWrapper->m_pObjRef;
+	ASSERT(pObjRef);
+	CDlgVaultLevelConfig dlg;
+	dlg.m_pVault = pObjRef;
+	dlg.DoModal();
 }
