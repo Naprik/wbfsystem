@@ -141,6 +141,17 @@ HRESULT CQuestionRecordStruct::ComputeMark(double* _dbMark)
 	{
 		return hr;
 	}
+	if (m_QTypeID == 8)//ÔÄ¶ÁÑ¡´ÊÌî¿Õ
+	{
+		CString useranswer = *(lstStdAnswer.begin());
+		lstStdAnswer.clear();
+		for (int i=0; i<useranswer.GetLength(); ++i)
+		{
+			CString answer(useranswer.GetAt(i));
+			lstStdAnswer.push_back(answer);
+		}
+	}
+	float submark = m_fMark/lstStdAnswer.size();
 	std::list<CString>::const_iterator itrStd = lstStdAnswer.begin();
 	std::list<CString>::const_iterator itrUser = m_listUserAnswers.begin();
 	for(;itrStd != lstStdAnswer.end() && itrUser != m_listUserAnswers.end();
@@ -150,7 +161,7 @@ HRESULT CQuestionRecordStruct::ComputeMark(double* _dbMark)
 		if((*itrStd).CompareNoCase(*itrUser) == 0)
 		{
 			++m_yescount;
-			*_dbMark = m_fMark;
+			*_dbMark += submark;
 		}
 	}
 	
