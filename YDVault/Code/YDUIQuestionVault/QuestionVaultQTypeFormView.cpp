@@ -429,6 +429,7 @@ void CQuestionVaultQTypeFormView::ReadonlyPage(BOOL bReadonly)
 {
 	GetDlgItem(IDC_BUTTON_ADD)->EnableWindow(!bReadonly);
 	GetDlgItem(IDC_BUTTON_REMOVE)->EnableWindow(!bReadonly);
+	GetDlgItem(IDC_BUTTON_FACTORINFO_CONIFG)->EnableWindow(!bReadonly);
 }
 
 BOOL CQuestionVaultQTypeFormView::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName,

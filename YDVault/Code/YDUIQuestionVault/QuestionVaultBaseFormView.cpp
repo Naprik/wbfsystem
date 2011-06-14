@@ -64,6 +64,7 @@ void CQuestionVaultBaseFormView::ReadonlyPage(BOOL bReadonly)
 {
 	((CEdit*)(GetDlgItem(IDC_EDIT_NAME)))->SetReadOnly(bReadonly);
 	((CEdit*)(GetDlgItem(IDC_EDIT_DESC)))->SetReadOnly(bReadonly);
+	GetDlgItem(IDC_BUTTON_VAULT_LEVEL_CONFIG)->EnableWindow(!bReadonly);
 }
 
 HRESULT CQuestionVaultBaseFormView::UpdateProp(BOOL bUpdate) 
