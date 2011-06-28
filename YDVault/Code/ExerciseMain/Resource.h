@@ -109,8 +109,8 @@
 #define IDD_DIALOG1                     338
 #define IDD_DIALOG_RENAME               338
 #define IDD_DLG_EM_CFG_QUESTION_2       339
-#define IDB_BITMAP3                     340
 #define IDB_BITMAP_MAINTREE             340
+#define IDD_DLG_PERSIONINFO_VIEW        341
 #define IDC_TREE_EM_QUESTION            1000
 #define IDC_BTN_EM_PREV                 1001
 #define IDC_BTN_EM_NEXT                 1002
@@ -131,6 +131,7 @@
 #define IDC_TREE_EM_EXAM_QUESTION       1012
 #define IDC_BTN_EM_RENAME               1012
 #define IDC_CMB_QVAULT                  1012
+#define IDC_CMB_GENDER                  1012
 #define IDC_BTN_EM_EXAM_PREV            1013
 #define IDC_BTN_EM_EXAM_BEGIN           1014
 #define IDC_BTN_EM_EXAM_NEXT            1015
@@ -172,6 +173,15 @@
 #define IDC_BTN_OK                      1044
 #define IDC_BTN_CANCEL                  1045
 #define IDC_EDIT_QMARK                  1046
+#define IDC_EDIT_ID                     1046
+#define IDC_EDIT_LEVEL                  1047
+#define IDC_EDIT_DEP                    1048
+#define IDC_EDIT_PHONE                  1049
+#define IDC_EDIT_EMAIL                  1050
+#define IDC_LIST_EXAM                   1050
+#define IDC_EDIT_QQ                     1051
+#define IDC_LIST_EXERCISE               1051
+#define IDC_EDIT_AGE                    1052
 #define IDP_AFXBARRES_IMAGE_IS_REQUIRED 16001
 #define IDP_AFXBARRES_TEXT_IS_REQUIRED  16002
 #define IDC_AFXBARRES_CLEAR             16003
@@ -467,6 +477,11 @@
 #define IDS_AFXBARRES_MORE              17107
 #define IDS_AFXBARRES_GALLERY_ROW1_FMT  17108
 #define IDS_AFXBARRES_GALLERY_ROW2_FMT  17109
+#define IDD_YDMAIN_BLEW_VIEW            30010
+#define IDD_DLG_PERSIONINFO_HISTORY     30011
+#define ID_BLEW_PROPERTY_SAVE           30155
+#define ID_BLEW_PROPERTY_UPDATE         30156
+#define ID_BLEW_PROPERTY_CANCEL         30157
 #define ID_WRITE_PASTEASHYPERLINK       32770
 #define ID_32771                        32771
 #define ID_32772                        32772
@@ -490,14 +505,16 @@
 #define ID_EM_LOAD_EXERCISE             32790
 #define ID_EM_SET_EXERCISE_CFG          32791
 #define ID_EM_SET_EXAM_CFG              32792
+#define ID_32793                        32793
+#define ID_EM_LOADVAULT                 32794
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        341
-#define _APS_NEXT_COMMAND_VALUE         32793
-#define _APS_NEXT_CONTROL_VALUE         1045
+#define _APS_NEXT_RESOURCE_VALUE        343
+#define _APS_NEXT_COMMAND_VALUE         32795
+#define _APS_NEXT_CONTROL_VALUE         1051
 #define _APS_NEXT_SYMED_VALUE           314
 #endif
 #endif
