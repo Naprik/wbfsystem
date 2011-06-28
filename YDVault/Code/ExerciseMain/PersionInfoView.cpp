@@ -111,7 +111,7 @@ HRESULT CPersionInfoView::UpdateProp(BOOL bUpdate)
 	}
 	else
 	{
-		assert(FALSE);
+		ASSERT(FALSE);
 	}
 
 	return S_OK;
