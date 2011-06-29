@@ -50,6 +50,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExerciseMain", "ExerciseMai
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MainUIBase", "MainUIBase\MainUIBase.vcxproj", "{CA5B97E0-14D3-49F8-9657-2577DE567AD6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DBUpdate", "DBUpdate\DBUpdate.vcxproj", "{A6E0778D-CC9E-474D-B424-5A26B5019FFB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CA5B97E0-14D3-49F8-9657-2577DE567AD6} = {CA5B97E0-14D3-49F8-9657-2577DE567AD6}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -136,6 +141,10 @@ Global
 		{CA5B97E0-14D3-49F8-9657-2577DE567AD6}.Debug|Win32.Build.0 = Debug|Win32
 		{CA5B97E0-14D3-49F8-9657-2577DE567AD6}.Release|Win32.ActiveCfg = Release|Win32
 		{CA5B97E0-14D3-49F8-9657-2577DE567AD6}.Release|Win32.Build.0 = Release|Win32
+		{A6E0778D-CC9E-474D-B424-5A26B5019FFB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A6E0778D-CC9E-474D-B424-5A26B5019FFB}.Debug|Win32.Build.0 = Debug|Win32
+		{A6E0778D-CC9E-474D-B424-5A26B5019FFB}.Release|Win32.ActiveCfg = Release|Win32
+		{A6E0778D-CC9E-474D-B424-5A26B5019FFB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
