@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="gb2312"?>
+<YDVAULT>
+	<DBUpdate desc="2011-06-18升级" sql="CREATE TABLE Table2 (Id LONG, MyText TEXT) " >
+	</DBUpdate>
+</YDVAULT>
