@@ -726,7 +726,7 @@ HRESULT CYdStudentRef::Update()
 	}
 	return S_OK;
 }
-HRESULT CYdStudentRef::OracleSave()
+/*HRESULT CYdStudentRef::OracleSave()
 {
 	HRESULT hr = E_FAIL;
 	hr = OracleSaveID();
@@ -832,4 +832,4 @@ HRESULT CYdStudentRef::AddNewRecord()
 		return hr;
 	}
 	return S_OK;
-}
+}*/

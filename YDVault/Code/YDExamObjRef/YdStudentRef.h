@@ -34,11 +34,11 @@ public:
 	virtual HRESULT Update();
 	virtual HRESULT Remove();
 protected:
-	CYDObjectRef* CreateObject();
-	virtual HRESULT OracleSave();
+	CYDObjectRef* CreateObject(); 
+	/*virtual HRESULT OracleSave();
 	virtual HRESULT SQLServerSave();
 	virtual HRESULT AccessSave();
-	virtual HRESULT AddNewRecord();
+	virtual HRESULT AddNewRecord();*/
 
 private:
 	HRESULT GetStudentByConditionFromDept(int _iPage, 

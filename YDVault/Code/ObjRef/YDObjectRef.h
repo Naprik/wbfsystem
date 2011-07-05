@@ -68,6 +68,10 @@ protected:
 	virtual HRESULT OracleSave();
 	virtual HRESULT SQLServerSave();
 	virtual HRESULT AccessSave();
+	//当有BLOB_OBJECT字段时(如存储图像字段)在新增的时候会调用该函数
+	virtual HRESULT AddNewRecordByBlobOject();
+	//判断是否有图像字段
+	virtual HRESULT IsHasBlobObject(VARIANT_BOOL* _bHas);
 	//不同的数据库，在保存的时候，得到m_uObjID方式不同
 	virtual HRESULT OracleSaveID();
 	virtual HRESULT SQLServerSaveID();

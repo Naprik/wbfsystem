@@ -366,23 +366,72 @@ HRESULT CYDObjectRef::GetProp(UINT _iIndex,BSTR* _bstrName,VARIANT* _val)
 HRESULT CYDObjectRef::Update()
 {
 	HRESULT hr = E_FAIL;
-	DATABASE_TYPE uDBtype = m_pDb->GetDBType();
-	if (uDBtype == ORACLE)
+	VARIANT_BOOL bHasBlobObject = VARIANT_FALSE;
+	hr = IsHasBlobObject(&bHasBlobObject);
+	if(FAILED(hr))
 	{
-		return OracleUpdate();
+		return hr;
 	}
-	else if (uDBtype == SQLSERVER)
+
+	if(bHasBlobObject)
 	{
-		return SQLServerUpdate();
-	}
-	else if(uDBtype == ACCESS)
-	{
-		return AccessUpdate();
+		_RecordsetPtr pRecordset = NULL;
+		hr = GetCurRecord(pRecordset);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		ASSERT(pRecordset);
+		for (std::list<CYDPropDef*>::const_iterator itrProp =m_lstPropDef.begin(); itrProp != m_lstPropDef.end(); ++itrProp)
+		{
+			CString strPropName = (*itrProp)->m_strPropName;
+			_variant_t valProp;
+			hr = GetPropVal(_bstr_t(strPropName),&valProp);
+			if(FAILED(hr))
+			{
+				return hr;
+			}
+			if((*itrProp)->m_uDataType == VT_BLOB_OBJECT)
+			{
+				//对象Image图像，要特殊处理
+				if(valProp.vt != VT_EMPTY)
+				{
+					pRecordset->GetFields()->GetItem(_variant_t(strPropName))->AppendChunk(valProp);
+				}
+			}
+			else
+			{
+				pRecordset->PutCollect(CComVariant(strPropName),valProp);
+			}
+
+		}
+		hr = pRecordset->Update();
+		if(FAILED(hr))
+		{
+			return hr;
+		}
 	}
 	else
 	{
-		ASSERT(FALSE);
+		DATABASE_TYPE uDBtype = m_pDb->GetDBType();
+		if (uDBtype == ORACLE)
+		{
+			return OracleUpdate();
+		}
+		else if (uDBtype == SQLSERVER)
+		{
+			return SQLServerUpdate();
+		}
+		else if(uDBtype == ACCESS)
+		{
+			return AccessUpdate();
+		}
+		else
+		{
+			ASSERT(FALSE);
+		}
 	}
+
 	return S_OK;
 }
 
@@ -610,7 +659,22 @@ HRESULT CYDObjectRef::OracleSave()
 	{
 		return hr;
 	}
+	VARIANT_BOOL bHasBlobObject = VARIANT_FALSE;
+	hr = IsHasBlobObject(&bHasBlobObject);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
 
+	if(bHasBlobObject)
+	{
+		hr = AddNewRecordByBlobOject();
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		return S_OK;
+	}
  	CString strSQL = _T("INSERT INTO ");
  	strSQL += m_strDBName;
  	strSQL += _T(" (OBJID,  ");
@@ -672,67 +736,80 @@ HRESULT CYDObjectRef::OracleSave()
 	{
 		return hr;
 	}	
-//	hr = UpdateBlob();
-	if (FAILED(hr))
-	{
-		return hr;
-	}
 	return S_OK;
 }
 
 HRESULT CYDObjectRef::SQLServerSave()
 {
 	HRESULT hr = E_FAIL;
-	
-	CString strSQL = _T("INSERT INTO ");
-	strSQL += m_strDBName;
-	strSQL += _T(" (  ");
-	BOOL bFirst = TRUE;
-	for (std::list<CYDPropDef*>::const_iterator itrProp =m_lstPropDef.begin(); itrProp != m_lstPropDef.end(); ++itrProp)
-	{
-		if(bFirst)
-		{
-			bFirst = FALSE;
-		}
-		else
-		{
-			strSQL += _T(", ");
-		}
-		strSQL += (*itrProp)->m_strPropName;
-	}
-	strSQL += _T(" ) VALUES(  ");
-	bFirst = TRUE;
-	for (std::list<CYDPropDef*>::const_iterator itrProp =m_lstPropDef.begin(); itrProp != m_lstPropDef.end(); ++itrProp)
-	{
-		if(bFirst)
-		{
-			bFirst = FALSE;
-		}
-		else
-		{
-			strSQL += _T(", ");
-		}
-		strSQL += _T("? ");
-	}
-	strSQL += _T(")");
-
-	hr = m_pDb->InitializeSQL(_bstr_t(strSQL));
+	VARIANT_BOOL bHasBlobObject = VARIANT_FALSE;
+	hr = IsHasBlobObject(&bHasBlobObject);
 	if(FAILED(hr))
 	{
 		return hr;
 	}
 
-	hr = FillParamDB();
-	if(FAILED(hr))
+	if(bHasBlobObject)
 	{
-		return hr;
+		hr = AddNewRecordByBlobOject();
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+	}
+	else
+	{
+		CString strSQL = _T("INSERT INTO ");
+		strSQL += m_strDBName;
+		strSQL += _T(" (  ");
+		BOOL bFirst = TRUE;
+		for (std::list<CYDPropDef*>::const_iterator itrProp =m_lstPropDef.begin(); itrProp != m_lstPropDef.end(); ++itrProp)
+		{
+			if(bFirst)
+			{
+				bFirst = FALSE;
+			}
+			else
+			{
+				strSQL += _T(", ");
+			}
+			strSQL += (*itrProp)->m_strPropName;
+		}
+		strSQL += _T(" ) VALUES(  ");
+		bFirst = TRUE;
+		for (std::list<CYDPropDef*>::const_iterator itrProp =m_lstPropDef.begin(); itrProp != m_lstPropDef.end(); ++itrProp)
+		{
+			if(bFirst)
+			{
+				bFirst = FALSE;
+			}
+			else
+			{
+				strSQL += _T(", ");
+			}
+			strSQL += _T("? ");
+		}
+		strSQL += _T(")");
+
+		hr = m_pDb->InitializeSQL(_bstr_t(strSQL));
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+
+		hr = FillParamDB();
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+	
+		hr = m_pDb->ExecuteSQL();
+		if(FAILED(hr))
+		{
+			return hr;
+		}
 	}
 	
-	hr = m_pDb->ExecuteSQL();
-	if(FAILED(hr))
-	{
-		return hr;
-	}	
 	hr = SQLServerSaveID();
 	if(FAILED(hr))
 	{
@@ -750,43 +827,62 @@ HRESULT CYDObjectRef::AccessSave()
 	{
 		return hr;
 	}
-	CString strSQL = _T("INSERT INTO ");
-	strSQL += m_strDBName;
-	strSQL += _T(" ( OBJID ");
-	for (std::list<CYDPropDef*>::const_iterator itrProp =m_lstPropDef.begin(); itrProp != m_lstPropDef.end(); ++itrProp)
-	{
-		strSQL += _T(", ");
-		strSQL += (*itrProp)->m_strPropName;
-	}
-	strSQL += _T(" ) VALUES(?  ");
-	for (std::list<CYDPropDef*>::const_iterator itrProp =m_lstPropDef.begin(); itrProp != m_lstPropDef.end(); ++itrProp)
-	{
-		strSQL += _T(", ");
-		strSQL += _T("? ");
-	}
-	strSQL += _T(")");
-
-	hr = m_pDb->InitializeSQL(_bstr_t(strSQL));
-	if(FAILED(hr))
-	{
-		return hr;
-	}
-	hr = FillIDParamDB();
-	if(FAILED(hr))
-	{
-		return hr;
-	}
-	hr = FillParamDB();
+	VARIANT_BOOL bHasBlobObject = VARIANT_FALSE;
+	hr = IsHasBlobObject(&bHasBlobObject);
 	if(FAILED(hr))
 	{
 		return hr;
 	}
 
-	hr = m_pDb->ExecuteSQL();
-	if(FAILED(hr))
+	if(bHasBlobObject)
 	{
-		return hr;
-	}	
+		hr = AddNewRecordByBlobOject();
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+	}
+	else
+	{
+		CString strSQL = _T("INSERT INTO ");
+		strSQL += m_strDBName;
+		strSQL += _T(" ( OBJID ");
+		for (std::list<CYDPropDef*>::const_iterator itrProp =m_lstPropDef.begin(); itrProp != m_lstPropDef.end(); ++itrProp)
+		{
+			strSQL += _T(", ");
+			strSQL += (*itrProp)->m_strPropName;
+		}
+		strSQL += _T(" ) VALUES(?  ");
+		for (std::list<CYDPropDef*>::const_iterator itrProp =m_lstPropDef.begin(); itrProp != m_lstPropDef.end(); ++itrProp)
+		{
+			strSQL += _T(", ");
+			strSQL += _T("? ");
+		}
+		strSQL += _T(")");
+
+		hr = m_pDb->InitializeSQL(_bstr_t(strSQL));
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		hr = FillIDParamDB();
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		hr = FillParamDB();
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+
+		hr = m_pDb->ExecuteSQL();
+		if(FAILED(hr))
+		{
+			return hr;
+		}	
+	}
+
 	
 
 	return S_OK;
@@ -1469,4 +1565,81 @@ HRESULT CYDObjectRef::GetCurRecord(_RecordsetPtr& _pRecord)
 	ASSERT(pRecord->GetRecordCount() == 1);
 	_pRecord = pRecord;
 		return S_OK;
+}
+
+
+HRESULT CYDObjectRef::AddNewRecordByBlobOject()
+{
+	HRESULT hr = E_FAIL;
+	CComVariant valID;
+	valID.vt = VT_I4;
+	valID.lVal = m_uObjID;
+	CString strSQL = _T("Select * From ");
+	strSQL += m_strDBName;
+	_RecordsetPtr pRecordset = NULL;
+	pRecordset.CreateInstance("ADODB.Recordset");
+	CComVariant valConnection;
+	valConnection.vt = VT_DISPATCH;
+	_ConnectionPtr pConnection = m_pDb->GetConnection();
+	hr = pConnection->QueryInterface(&valConnection.pdispVal);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	hr = pRecordset->Open(CComVariant(strSQL),valConnection,
+		adOpenStatic,adLockOptimistic,adCmdText);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	hr = pRecordset->AddNew();
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	for (std::list<CYDPropDef*>::const_iterator itrProp =m_lstPropDef.begin(); itrProp != m_lstPropDef.end(); ++itrProp)
+	{
+		CString strPropName = (*itrProp)->m_strPropName;
+		_variant_t valProp;
+		hr = GetPropVal(_bstr_t(strPropName),&valProp);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		if((*itrProp)->m_uDataType == VT_BLOB_OBJECT)
+		{
+			//对象Image图像，要特殊处理
+			if(valProp.vt != VT_EMPTY && valProp.vt != VT_NULL)
+			{
+				pRecordset->GetFields()->GetItem(_variant_t(strPropName))->AppendChunk(valProp);
+			}
+		}
+		else
+		{
+			pRecordset->PutCollect(CComVariant(strPropName),valProp);
+		}
+
+	}
+	pRecordset->PutCollect(L"ObjID",&valID);
+	hr = pRecordset->Update();
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	return S_OK;
+}
+
+HRESULT CYDObjectRef::IsHasBlobObject(VARIANT_BOOL* _bHas)
+{
+	HRESULT hr = E_FAIL;
+	*_bHas = VARIANT_FALSE;
+	for (std::list<CYDPropDef*>::const_iterator itrProp =m_lstPropDef.begin(); itrProp != m_lstPropDef.end(); ++itrProp)
+	{
+		if((*itrProp)->m_uDataType == VT_BLOB_OBJECT)
+		{
+			*_bHas = VARIANT_TRUE;
+			break;
+		}
+	}
+	return S_OK;
 }
