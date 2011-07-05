@@ -36,5 +36,5 @@ public:
 	CListBox m_lstContent;
 	CDatabaseEx* m_pDatabase;
 private:
-	BOOL ExecuteSQL(CString _strSQL);
+	BOOL ExecuteSQL(CString _strSQL,CString &_strError);
 };

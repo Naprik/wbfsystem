@@ -28,7 +28,7 @@ HRESULT CDBUpdateFromXml::Load()
 		reader.LoadFile((BSTR)(LPCTSTR)strXml);
 		CXmlNodeList nodes;
 		reader.ReadNodeListByTagName(_T("DBUpdate"),nodes);
-		ASSERT(nodes.GetLength() == 1);
+	//	ASSERT(nodes.GetLength() == 1);
 		for(long i = 0; i < nodes.GetLength(); i++)
 		{
 			CXmlNode node;

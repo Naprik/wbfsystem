@@ -104,6 +104,7 @@ BOOL CDBUpdateDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+	m_lstContent.SetHorizontalExtent(MAX_PATH*2);//设置水平滚动条 
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -173,6 +174,8 @@ void CDBUpdateDlg::OnBnClickedButtonUpdateDb()
 	{
 		return;
 	}
+	int iMaxHorizontalExt = 0;
+	CString strMaxResult;
 	for(std::list<std::pair<CString,CString> >::const_iterator itr = DBUpdateFromXml.m_lstUpdateSQL.begin();
 		itr != DBUpdateFromXml.m_lstUpdateSQL.end();++itr)
 	{
@@ -180,21 +183,32 @@ void CDBUpdateDlg::OnBnClickedButtonUpdateDb()
 		m_lstContent.AddString((*itr).first);
 		CString strResult;
 		strResult.Format(_T("执行%s"),(*itr).second);
-		if(ExecuteSQL((*itr).second))
+		CString strError;
+		if(ExecuteSQL((*itr).second,strError))
 		{
 			strResult += _T("成功！");
 		}
 		else
 		{
-			strResult += _T("失败！");
+			strResult += _T("失败,错误描述：");
+			strResult += strError;
+		}
+		if(strResult.GetLength() > iMaxHorizontalExt)
+		{
+			iMaxHorizontalExt = strResult.GetLength();
+			strMaxResult = strResult;
 		}
 		m_lstContent.AddString(strResult);
 	}
 	m_lstContent.AddString(_T("升级结束！\n"));
+	CPaintDC   dc(this); 
+	CSize   sz; 
+	sz=dc.GetTextExtent(strMaxResult); 
+	m_lstContent.SetHorizontalExtent(sz.cx);
 }
 
 
-BOOL CDBUpdateDlg::ExecuteSQL(CString _strSQL)
+BOOL CDBUpdateDlg::ExecuteSQL(CString _strSQL,CString &_strError)
 {
 	try
 	{
@@ -216,8 +230,15 @@ BOOL CDBUpdateDlg::ExecuteSQL(CString _strSQL)
 			return FALSE;
 		}
 	}
+	catch (_com_error &e)
+	{
+		_strError = (const TCHAR*)e.Description();
+		return FALSE;
+		
+	}
 	catch (...) 
 	{
+		_strError = _T("未知的异常");
 		return FALSE;
 	}
 	return TRUE;
