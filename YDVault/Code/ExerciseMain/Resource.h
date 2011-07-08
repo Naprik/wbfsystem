@@ -4,6 +4,8 @@
 //
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             100
+#define IDS_STRING101                   101
+#define IDS_RIBBON_LOAD_VAULT           101
 #define IDB_MAIN                        112
 #define IDB_BUTTONS                     113
 #define IDB_FILELARGE                   114

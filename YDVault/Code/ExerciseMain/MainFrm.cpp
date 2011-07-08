@@ -158,6 +158,8 @@ void CMainFrame::InitializeRibbon()
  	ASSERT(bNameValid);
  	pMainPanel->Add(new CMFCRibbonButton(ID_EM_NEW_EXAM, strTemp, 2, 2));
 	ASSERT(bNameValid);
+	bNameValid = strTemp.LoadString(IDS_RIBBON_LOAD_VAULT);
+	ASSERT(bNameValid);
  	pMainPanel->Add(new CMFCRibbonButton(ID_EM_LOADVAULT, strTemp, 8, 8));
  	
 	bNameValid = strTemp.LoadString(IDS_RIBBON_EXIT);
