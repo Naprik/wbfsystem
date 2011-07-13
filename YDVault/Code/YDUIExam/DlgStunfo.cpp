@@ -414,7 +414,7 @@ extern CString GetExePath();
 void CDlgStunfo::OnBtnSelPic() 
 {
 	CString strFilter = L"All Files (*.bmp)|*.bmp||";
-  	CFileDialog dlg(TRUE, NULL, L"*.bmp", NULL, strFilter);
+	CFileDialog dlg(TRUE, NULL, L"*.bmp", NULL, strFilter);
 
 	if ( dlg.DoModal() == IDOK)
 	{

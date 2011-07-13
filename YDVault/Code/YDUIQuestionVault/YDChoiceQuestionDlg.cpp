@@ -30,6 +30,7 @@ CYDChoiceQuestionDlg::CYDChoiceQuestionDlg(CWnd* pParent /*=NULL*/)
 	, m_strCreator(_T(""))
 	, m_strCreateDate(_T(""))
 	, m_strAnswerDesc(_T(""))
+	, m_bCheckSelPic(FALSE)
 {
 	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
 	ASSERT(pDB);
@@ -57,6 +58,7 @@ void CYDChoiceQuestionDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST_CQ_KPALL, m_listCtrlKpAll);
 	DDX_Control(pDX, IDC_LIST_CQ_KPRELATED, m_listCtrlKpRelated);
 	DDX_Text(pDX, IDC_EDIT_CQ_ANSWER_DESC, m_strAnswerDesc);
+	DDX_Check(pDX, IDC_CHECK_SEL_PIC, m_bCheckSelPic);
 }
 
 
@@ -66,6 +68,7 @@ BEGIN_MESSAGE_MAP(CYDChoiceQuestionDlg, CYDQuestionDlg)
 	ON_BN_CLICKED(IDC_BUTTON_CQ_MODIFY, &CYDChoiceQuestionDlg::OnBnClickedButtonCqModify)
 	ON_BN_CLICKED(IDC_BUTTON_CQ_ADDKP, &CYDChoiceQuestionDlg::OnBnClickedButtonCqAddkp)
 	ON_BN_CLICKED(IDC_BUTTON_CQ_REMOVEKP, &CYDChoiceQuestionDlg::OnBnClickedButtonCqRemovekp)
+	ON_BN_CLICKED(IDC_CHECK_SEL_PIC, &CYDChoiceQuestionDlg::OnBnClickedCheckSelPic)
 END_MESSAGE_MAP()
 
 
@@ -409,6 +412,8 @@ HRESULT CYDChoiceQuestionDlg::UpdateQuestionRef(CYDChoiceQuestionRef* _pRef)
 	{
 		return hr;
 	}
+	//Í¼ÏñµÄÊý¾Ý
+
 	hr = UpdateIndicator(_pRef,&m_GridIndicator);
 	if(FAILED(hr))
 	{
@@ -1042,4 +1047,24 @@ INT_PTR CYDChoiceQuestionDlg::DoModal()
 	// TODO: Add your specialized code here and/or call the base class
 	CExtDllState state;
 	return CYDQuestionDlg::DoModal();
+}
+
+
+void CYDChoiceQuestionDlg::OnBnClickedCheckSelPic()
+{
+	// TODO: Add your control notification handler code here
+	UpdateData();
+	if(!m_bCheckSelPic)
+	{
+		return;
+	}
+	if (m_uType == OP_NEW)
+	{
+	}
+	else
+	{
+		CYDChoiceQuestionRef* pRef = (CYDChoiceQuestionRef*)m_pObjWrapper->m_pObjRef;
+		ASSERT(pRef);
+	}
+	
 }

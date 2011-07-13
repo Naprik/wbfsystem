@@ -54,6 +54,11 @@ private:
 	HRESULT CreateMediaRef(CYDMediaRef* &_pRef);
 	HRESULT CreateMediaFile(CYDMediaRef* _pRef);
 	HRESULT RemoveMediaFile(CYDMediaRef* _pRef);
+	HRESULT GetPhotoData(VARIANT* _pVal);
+	HRESULT ReadPhotoBuf(CString _strfile);
+	void	DestroyPhoto();
+	HBITMAP			BufferToHBITMAP();
+	void			DrawUserPhoto(int x,int y,CDC* pDC);
 	std::list<CYdObjWrapper*>	m_lstAddKPs;
 	std::list<CYdObjWrapper*>	m_lstDeleteKPs;
 
@@ -61,6 +66,10 @@ private:
 
 	std::list<CYdObjWrapper*>   m_lstMedia;//所属的Media
 	BOOL						m_bModifyMedia;//是否修改过音频
+	//下面是图片要用的变量
+	HBITMAP			m_hPhotoBitmap;
+	char			*m_pBMPBuffer;
+	DWORD			m_dwFileLen;
 public:
 	afx_msg void OnBnClickedButtonModifyQuestion();
 	afx_msg void OnBnClickedButtonDelQuestion();
@@ -75,4 +84,7 @@ public:
 	CString m_strMediaFile;
 
 	virtual INT_PTR DoModal();
+	afx_msg void OnBnClickedButtonAddPic();
+	afx_msg void OnPaint();
+	afx_msg void OnBnClickedButtonEmptyPic();
 };

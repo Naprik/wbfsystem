@@ -30,6 +30,9 @@ CYDReadQuestionDlg::CYDReadQuestionDlg(CWnd* pParent /*=NULL*/)
 {
 	m_pCQListOperate = NULL;
 	m_bModifyMedia = FALSE;
+	m_hPhotoBitmap = NULL;
+	m_pBMPBuffer = NULL;
+	m_dwFileLen = 0;
 }
 
 CYDReadQuestionDlg::~CYDReadQuestionDlg()
@@ -37,6 +40,7 @@ CYDReadQuestionDlg::~CYDReadQuestionDlg()
 	CPtrAutoClean<CListCtrlOperate> clr(m_pCQListOperate);
 	CListAutoClean<CYdObjWrapper> clean1(m_lstAddKPs);
 	CListAutoClean<CYdObjWrapper> clr2(m_lstMedia);
+	DestroyPhoto();
 }
 
 void CYDReadQuestionDlg::DoDataExchange(CDataExchange* pDX)
@@ -63,6 +67,9 @@ BEGIN_MESSAGE_MAP(CYDReadQuestionDlg, CYDQuestionDlg)
 	ON_BN_CLICKED(IDC_BUTTON_REMOVEKP, &CYDReadQuestionDlg::OnBnClickedButtonRemovekp)
 	ON_BN_CLICKED(IDC_BUTTON_SEL_FILE, &CYDReadQuestionDlg::OnBnClickedButtonSelFile)
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST_CHOICE_QUESTION, &CYDReadQuestionDlg::OnNMDblclkListQuestion)
+	ON_BN_CLICKED(IDC_BUTTON_ADD_PIC, &CYDReadQuestionDlg::OnBnClickedButtonAddPic)
+	ON_WM_PAINT()
+	ON_BN_CLICKED(IDC_BUTTON_EMPTY_PIC, &CYDReadQuestionDlg::OnBnClickedButtonEmptyPic)
 END_MESSAGE_MAP()
 
 
@@ -236,8 +243,9 @@ void CYDReadQuestionDlg::OnBnClickedButtonCqAdd()
 		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
 		return ;
 	}
+	DestroyPhoto();
 	UpdateData(FALSE);
-
+	Invalidate();
 	m_pCQListOperate->ClearDataCache();//删除list中的对象
 
 	AfxMessageBox(L"新建成功！继续新增题目或完成题目录入");
@@ -409,8 +417,23 @@ HRESULT CYDReadQuestionDlg::UpdateQuestionArea()
 			return hr;
 		}
 		m_strCreateDate = CDataHandler::VariantToString(var);
-	}
+		CComVariant valPhoto;
+		hr = pRef->GetPropVal(FIELD_ARTICLEQUESTION_IMAGETITLE,&valPhoto);
+		if(valPhoto.vt == (VT_ARRAY | VT_UI1))
+		{
+			//说明有图像的数据
+			m_dwFileLen = valPhoto.parray->rgsabound[0].cElements;
+			if(m_pBMPBuffer = new char[m_dwFileLen+1])
+			{
+				char *pBuf = NULL;
+				SafeArrayAccessData(valPhoto.parray,(void **)&pBuf);
+				memcpy(m_pBMPBuffer,pBuf,m_dwFileLen);				///复制数据到缓冲区m_pBMPBuffer
+				SafeArrayUnaccessData (valPhoto.parray);
+				m_hPhotoBitmap = BufferToHBITMAP();	
+			}
 
+		}
+	}
 	UpdateData(FALSE);
 	return S_OK;
 }
@@ -539,7 +562,7 @@ HRESULT CYDReadQuestionDlg::UpdateQuestionRef(CYDArticleQuestionRef* _pRef)
 {
 	HRESULT hr = E_FAIL;
 	CComVariant valArticle(m_strArticle);
-	hr = _pRef->SetPropVal(L"ARTICLE",&valArticle);
+	hr = _pRef->SetPropVal(FIELD_ARTICLEQUESTION_ARTICLE,&valArticle);
 	if(FAILED(hr))
 	{
 		return hr;
@@ -553,7 +576,7 @@ HRESULT CYDReadQuestionDlg::UpdateQuestionRef(CYDArticleQuestionRef* _pRef)
 		{
 			return hr;
 		}
-		hr = _pRef->SetPropVal(L"TYPEID",&valTypeID);
+		hr = _pRef->SetPropVal(FIELD_ARTICLEQUESTION_TYPEID,&valTypeID);
 		if(FAILED(hr))
 		{
 			return hr;
@@ -564,7 +587,7 @@ HRESULT CYDReadQuestionDlg::UpdateQuestionRef(CYDArticleQuestionRef* _pRef)
 		{
 			return hr;
 		}
-		hr = _pRef->SetPropVal(L"CREATOR",&valCreator);
+		hr = _pRef->SetPropVal(FIELD_ARTICLEQUESTION_CREATOR,&valCreator);
 		if(FAILED(hr))
 		{
 			return hr;
@@ -575,7 +598,7 @@ HRESULT CYDReadQuestionDlg::UpdateQuestionRef(CYDArticleQuestionRef* _pRef)
 		{
 			return hr;
 		}
-		hr = _pRef->SetPropVal(L"CREATEDATE",&valCrateDate);
+		hr = _pRef->SetPropVal(FIELD_ARTICLEQUESTION_CREATEDATE,&valCrateDate);
 		if(FAILED(hr))
 		{
 			return hr;
@@ -584,7 +607,7 @@ HRESULT CYDReadQuestionDlg::UpdateQuestionRef(CYDArticleQuestionRef* _pRef)
 	CComVariant valHardLevel;
 	valHardLevel.vt = VT_I4;
 	valHardLevel.lVal = m_iHardLevel == 0 ? EASY : HARD;
-	hr = _pRef->SetPropVal(L"HARDLEVEL",&valHardLevel);
+	hr = _pRef->SetPropVal(FIELD_ARTICLEQUESTION_HARDLEVEL,&valHardLevel);
 	if(FAILED(hr))
 	{
 		return hr;
@@ -592,7 +615,18 @@ HRESULT CYDReadQuestionDlg::UpdateQuestionRef(CYDArticleQuestionRef* _pRef)
 	CComVariant valQNum;
 	valQNum.vt = VT_I4;
 	valQNum.lVal = m_lstChoiceQuestion.GetItemCount();
-	hr = _pRef->SetPropVal(L"QNUM",&valQNum);
+	hr = _pRef->SetPropVal(FIELD_ARTICLEQUESTION_QNUM,&valQNum);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	CComVariant varBMP;
+	hr = GetPhotoData(&varBMP);
+	if (FAILED(hr))
+	{
+		return hr;
+	}
+	hr = _pRef->SetPropVal(FIELD_ARTICLEQUESTION_IMAGETITLE, &varBMP);
 	if(FAILED(hr))
 	{
 		return hr;
@@ -1253,4 +1287,159 @@ INT_PTR CYDReadQuestionDlg::DoModal()
 	// TODO: Add your specialized code here and/or call the base class
 	CExtDllState state;
 	return CYDQuestionDlg::DoModal();
+}
+
+
+void CYDReadQuestionDlg::OnBnClickedButtonAddPic()
+{
+	// TODO: Add your control notification handler code here
+	CString strFilter = L"All Files (*.bmp)|*.bmp||";
+	CFileDialog dlg(TRUE, NULL, L"*.bmp", NULL, strFilter);
+
+	if ( dlg.DoModal() == IDOK)
+	{
+		CString strPicPath =  dlg.GetPathName();
+		strPicPath.Replace(L"\\", L"\\\\");
+		ReadPhotoBuf(strPicPath);
+		m_hPhotoBitmap=(HBITMAP)::LoadImage(NULL,strPicPath,IMAGE_BITMAP,180,200,LR_LOADFROMFILE);  
+		Invalidate();
+	}	
+}
+
+HRESULT CYDReadQuestionDlg::ReadPhotoBuf(CString _strfile)
+{
+	DestroyPhoto();
+	if(_strfile.IsEmpty())
+	{
+		return S_OK;
+	}
+	CFile file;
+	if( !file.Open( _strfile, CFile::modeRead) )
+		return S_FALSE;
+	m_dwFileLen = (DWORD)file.GetLength();
+	m_pBMPBuffer = new char[m_dwFileLen + 1];
+	if(!m_pBMPBuffer)
+	{
+		return S_FALSE;
+	}
+	if(file.Read(m_pBMPBuffer,m_dwFileLen) != m_dwFileLen)
+	{
+		return S_FALSE;
+	}
+	return S_OK;
+}
+
+HRESULT CYDReadQuestionDlg::GetPhotoData(VARIANT* _pVal)
+{
+	HRESULT hr = E_FAIL;
+
+	//VARIANT			varBLOB;
+	SAFEARRAY		*psa;
+	SAFEARRAYBOUND	rgsabound[1];
+	char			*pBuf = m_pBMPBuffer;
+	if(pBuf)
+	{    
+		rgsabound[0].lLbound = 0;
+		rgsabound[0].cElements = m_dwFileLen;
+		psa = SafeArrayCreate(VT_UI1, 1, rgsabound);
+		for (long i = 0; i < (long)m_dwFileLen; i++)
+			SafeArrayPutElement (psa, &i, pBuf++);
+		_pVal->vt = VT_ARRAY | VT_UI1;
+		_pVal->parray = psa;
+	}
+	return S_OK;
+}
+
+void CYDReadQuestionDlg::DestroyPhoto()
+{
+	if(m_hPhotoBitmap)
+	{
+		DeleteObject(m_hPhotoBitmap);
+		m_hPhotoBitmap = NULL;
+	}
+	if(m_pBMPBuffer)
+	{
+		delete m_pBMPBuffer;
+		m_pBMPBuffer = NULL;
+	}
+}
+
+/////////////////在屏幕上显示图像///////////////////
+void CYDReadQuestionDlg::DrawUserPhoto(int x, int y, CDC *pDC)
+{
+	if(!m_hPhotoBitmap) return;
+	BITMAP   Bitmap; 
+	int   n=GetObject(m_hPhotoBitmap,sizeof(BITMAP),(LPSTR)&Bitmap); 
+	// bitmap.GetBitmap(pBitmap); 
+	int   wWidth=Bitmap.bmWidth   ; 
+	int   wHeight=Bitmap.bmHeight; 
+
+	HBITMAP OldBitmap;
+	CDC MemDC;
+	MemDC.CreateCompatibleDC(pDC);
+	OldBitmap=(HBITMAP)MemDC.SelectObject(m_hPhotoBitmap);
+	pDC->SetStretchBltMode(COLORONCOLOR);
+	CRect rectBK;
+	GetDlgItem(IDC_STATIC_PIC)->GetWindowRect(&rectBK);
+	// TODO:  Add extra initialization here
+	ScreenToClient(&rectBK);
+	rectBK.top += 30;
+	rectBK.left += 10;
+	rectBK.right -= 10;
+	rectBK.bottom -= 10;
+	pDC->StretchBlt(x,y,rectBK.Width(),rectBK.Height(), &MemDC,0,0,wWidth,wHeight,SRCCOPY); 
+//	pDC->BitBlt(x,y,150,180,&MemDC,0,0,SRCCOPY);
+	MemDC.SelectObject(OldBitmap);
+}
+///////////将内存中的BMP文件内容转换到HBITMAP///////
+HBITMAP CYDReadQuestionDlg::BufferToHBITMAP()
+{
+	HBITMAP				hBmp;
+	LPSTR				hDIB,lpBuffer = m_pBMPBuffer;
+	LPVOID				lpDIBBits;
+	BITMAPFILEHEADER	bmfHeader;
+	DWORD				bmfHeaderLen;
+
+	bmfHeaderLen = sizeof(bmfHeader);
+	strncpy((LPSTR)&bmfHeader,(LPSTR)lpBuffer,bmfHeaderLen);
+	//	if (bmfHeader.bfType != ((WORD) ('M' << 8) | 'B')) return NULL;
+	if (bmfHeader.bfType != (*(WORD*)"BM")) return NULL;//我copy《Windows程序设计》上的做法。
+	hDIB = lpBuffer + bmfHeaderLen;
+	BITMAPINFOHEADER &bmiHeader = *(LPBITMAPINFOHEADER)hDIB ;
+	BITMAPINFO &bmInfo = *(LPBITMAPINFO)hDIB ;
+	/*	int nColors = bmiHeader.biClrUsed ? bmiHeader.biClrUsed : 1 << bmiHeader.biBitCount; 
+	if( bmInfo.bmiHeader.biBitCount > 8 )
+	lpDIBBits = (LPVOID)((LPDWORD)(bmInfo.bmiColors + bmInfo.bmiHeader.biClrUsed) + 
+	((bmInfo.bmiHeader.biCompression == BI_BITFIELDS) ? 3 : 0));
+	else
+	lpDIBBits = (LPVOID)(bmInfo.bmiColors + nColors);
+	*///原来的代码。
+	lpDIBBits=(lpBuffer)+((BITMAPFILEHEADER *)lpBuffer)->bfOffBits;//这行功能和上面被注释掉的代码相同，容易理解。
+	CClientDC dc(this);
+	hBmp = CreateDIBitmap(dc.m_hDC,&bmiHeader,CBM_INIT,lpDIBBits,&bmInfo,DIB_RGB_COLORS);
+	return hBmp;
+}
+
+void CYDReadQuestionDlg::OnPaint()
+{
+	CPaintDC dc(this); // device context for painting
+	// TODO: Add your message handler code here
+	// Do not call CYDQuestionDlg::OnPaint() for painting messages
+	CRect rectBK;
+	GetDlgItem(IDC_STATIC_PIC)->GetWindowRect(&rectBK);
+	// TODO:  Add extra initialization here
+	ScreenToClient(&rectBK);
+	rectBK.top += 30;
+	rectBK.left += 10;
+	rectBK.right -= 10;
+	rectBK.bottom -= 10;
+	DrawUserPhoto(rectBK.left,rectBK.top,&dc);
+}
+
+
+void CYDReadQuestionDlg::OnBnClickedButtonEmptyPic()
+{
+	// TODO: Add your control notification handler code here
+	DestroyPhoto();
+	Invalidate();
 }

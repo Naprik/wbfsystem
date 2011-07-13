@@ -85,4 +85,7 @@ public:
 										//不为空表示阅读题在数据库中已经存在
 	CString m_strAnswerDesc;
 	virtual INT_PTR DoModal();
+	afx_msg void OnBnClickedCheckSelPic();
+	BOOL m_bCheckSelPic;
+	CComVariant m_valPhoto;//图像的数据
 };
