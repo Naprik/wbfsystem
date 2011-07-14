@@ -70,6 +70,7 @@ private:
 	HBITMAP			m_hPhotoBitmap;
 	char			*m_pBMPBuffer;
 	DWORD			m_dwFileLen;
+	TITLEMODE		m_TitleMode;//当前题目的模式，0：文本 1：图形 2：混合
 public:
 	afx_msg void OnBnClickedButtonModifyQuestion();
 	afx_msg void OnBnClickedButtonDelQuestion();

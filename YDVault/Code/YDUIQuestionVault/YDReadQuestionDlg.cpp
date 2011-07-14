@@ -33,6 +33,7 @@ CYDReadQuestionDlg::CYDReadQuestionDlg(CWnd* pParent /*=NULL*/)
 	m_hPhotoBitmap = NULL;
 	m_pBMPBuffer = NULL;
 	m_dwFileLen = 0;
+	m_TitleMode = TITLEMODE_TEXT;
 }
 
 CYDReadQuestionDlg::~CYDReadQuestionDlg()
@@ -244,6 +245,7 @@ void CYDReadQuestionDlg::OnBnClickedButtonCqAdd()
 		return ;
 	}
 	DestroyPhoto();
+	m_TitleMode = TITLEMODE_TEXT;
 	UpdateData(FALSE);
 	Invalidate();
 	m_pCQListOperate->ClearDataCache();//删除list中的对象
@@ -431,7 +433,7 @@ HRESULT CYDReadQuestionDlg::UpdateQuestionArea()
 				SafeArrayUnaccessData (valPhoto.parray);
 				m_hPhotoBitmap = BufferToHBITMAP();	
 			}
-
+			m_TitleMode = TITLEMODE_IMAGE;//代表当前是图像
 		}
 	}
 	UpdateData(FALSE);
@@ -622,6 +624,12 @@ HRESULT CYDReadQuestionDlg::UpdateQuestionRef(CYDArticleQuestionRef* _pRef)
 	}
 	CComVariant varBMP;
 	hr = GetPhotoData(&varBMP);
+	if (FAILED(hr))
+	{
+		return hr;
+	}
+	CComVariant valTitleMode(m_TitleMode);
+	hr = _pRef->SetPropVal(FIELD_ARTICLEQUESTION_TITLEMODE,&valTitleMode);
 	if (FAILED(hr))
 	{
 		return hr;
@@ -1303,6 +1311,7 @@ void CYDReadQuestionDlg::OnBnClickedButtonAddPic()
 		ReadPhotoBuf(strPicPath);
 		m_hPhotoBitmap=(HBITMAP)::LoadImage(NULL,strPicPath,IMAGE_BITMAP,180,200,LR_LOADFROMFILE);  
 		Invalidate();
+		m_TitleMode = TITLEMODE_IMAGE;
 	}	
 }
 
@@ -1442,4 +1451,5 @@ void CYDReadQuestionDlg::OnBnClickedButtonEmptyPic()
 	// TODO: Add your control notification handler code here
 	DestroyPhoto();
 	Invalidate();
+	m_TitleMode = TITLEMODE_TEXT;
 }

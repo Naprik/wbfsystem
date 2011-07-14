@@ -295,3 +295,10 @@ public:
 
 const int cInfraRedRate = 2400;//红外的波特率是2400
 const int cBlueRedRate = 9600;//蓝牙的波特率是9600
+
+enum TITLEMODE
+{
+	TITLEMODE_TEXT,// 0:文本
+	TITLEMODE_IMAGE,//1:图像
+	TITLEMODE_MIX  //2:混合
+};
