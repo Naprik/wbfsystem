@@ -167,3 +167,4 @@ HRESULT CQuestionRecordStruct::ComputeMark(double* _dbMark)
 	
 	return S_OK;
 }
+

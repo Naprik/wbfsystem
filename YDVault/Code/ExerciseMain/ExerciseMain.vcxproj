@@ -123,6 +123,7 @@
   <ItemGroup>
     <ClCompile Include="ArticleDlg.cpp" />
     <ClCompile Include="ArticleListenDlgh.cpp" />
+    <ClCompile Include="ArticleWithImageDlg.cpp" />
     <ClCompile Include="BasicView.cpp" />
     <ClCompile Include="BelowBar.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
@@ -190,6 +191,7 @@
   <ItemGroup>
     <ClInclude Include="ArticleDlg.h" />
     <ClInclude Include="ArticleListenDlgh.h" />
+    <ClInclude Include="ArticleWithImageDlg.h" />
     <ClInclude Include="BasicView.h" />
     <ClInclude Include="BelowBar.h" />
     <ClInclude Include="ChildFrm.h" />

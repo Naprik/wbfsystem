@@ -72,6 +72,12 @@ BOOL CExerciseMainDlg::CreateArticleDlg()
 	m_pArticleDlg->m_pRecord = NULL;
 	m_pArticleDlg->Create(CArticleDlg::IDD, this);
 	ReLocation(m_pArticleDlg);
+
+	m_pArticleWithImageDlg = new CArticleWithImageDlg();
+	m_pArticleWithImageDlg->m_pRecord = NULL;
+	m_pArticleWithImageDlg->Create(CArticleWithImageDlg::IDD, this);
+	ReLocation(m_pArticleWithImageDlg);
+
 	return TRUE;
 }
 
@@ -572,7 +578,8 @@ HRESULT CExerciseMainDlg::ShowSelItem(HTREEITEM _hItem)
 					m_pActiveDlg->PersistData();
 					m_log.Save();
 				}
-
+				TITLEMODE titlemode = TITLEMODE_TEXT;
+				pReocrd->m_pQuestion->GetTitleMode(&titlemode);
 				CQuestionDlg* pSwitchDlg = NULL;
 				if (pReocrd->m_QTypeID == 1)//作文
 				{
@@ -580,7 +587,14 @@ HRESULT CExerciseMainDlg::ShowSelItem(HTREEITEM _hItem)
 				}
 				else if (pReocrd->m_QTypeID == 2 || pReocrd->m_QTypeID == 4)//阅读理解 完形填空
 				{
-					pSwitchDlg = m_pArticleDlg;
+					if (TITLEMODE_TEXT == titlemode)
+					{
+						pSwitchDlg = m_pArticleDlg;
+					}
+					else if (TITLEMODE_IMAGE == titlemode)
+					{
+						pSwitchDlg = m_pArticleWithImageDlg;
+					}
 				}
 				else if (pReocrd->m_QTypeID == 3)//短文听力
 				{

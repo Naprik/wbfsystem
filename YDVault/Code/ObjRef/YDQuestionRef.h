@@ -33,6 +33,7 @@ public:
 	virtual HRESULT GetVaultID(OBJID* vault);
 	virtual HRESULT SetFtp(CFtpRef* ftp);
 	virtual HRESULT UpdateUsedCount(int usedcount);
+	virtual HRESULT GetTitleMode(TITLEMODE* titlemode);
 protected:
 	virtual HRESULT CreateFactorInfoItem();
 public:

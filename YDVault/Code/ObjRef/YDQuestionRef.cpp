@@ -451,3 +451,15 @@ HRESULT CYDQuestionRef::GetStandardAnswer(std::list<CString> &_lstStdAnswer)
 	_lstStdAnswer.push_back(str);
 	return S_OK;
 }
+
+HRESULT CYDQuestionRef::GetTitleMode(TITLEMODE* titlemode)
+{
+	long mode = 0;
+	HRESULT hr = GetPropVal(FIELD_ARTICLEQUESTION_TITLEMODE, &mode);
+	if (FAILED(hr))
+	{
+		return hr;
+	}
+	*titlemode = (TITLEMODE)mode;
+	return S_OK;
+}

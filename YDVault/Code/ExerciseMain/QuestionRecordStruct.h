@@ -27,6 +27,7 @@ public:
 	HRESULT Load(CXmlNode& _node);
 	HRESULT Save(CXmlWriter& _writer);
 	HRESULT ComputeMark(double* _dbMark);//计算这个题目的成绩
+
 private:
 	HRESULT LoadUserAnswer(CXmlNode& _node);
 	HRESULT SaveUserAnswer(CXmlWriter& _writer);

@@ -12,6 +12,7 @@
 #include "ExerciseQuestionRecord.h"
 #include "QuestionDlg.h"
 #include "ArticleListenDlgh.h"
+#include "ArticleWithImageDlg.h"
 
 // CExerciseMainDlg dialog
 
@@ -51,13 +52,14 @@ private:
 	CImageList			m_TreeNodeImages;
 
 	CQuestionDlg*		m_pArticleDlg;
+	CQuestionDlg*		m_pArticleWithImageDlg;
 	CQuestionDlg*		m_pListenDlg;
 	CQuestionDlg*		m_pDefaultDlg;
 	CQuestionDlg*		m_pWriteDlg;
 	CQuestionDlg*		m_pChoiceDlg;
 	CQuestionDlg*		m_pArticleListenDlg;
 
-	CQuestionDlg*			m_pActiveDlg;
+	CQuestionDlg*		m_pActiveDlg;
 
 	CExerciseQuestionRecord	m_log;
 	BOOL				m_isupdateuser;
