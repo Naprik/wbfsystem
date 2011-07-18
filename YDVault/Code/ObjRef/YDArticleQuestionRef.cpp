@@ -678,3 +678,15 @@ HRESULT CYDArticleQuestionRef::GetStandardAnswer(std::list<CString> &_lstStdAnsw
 	}
 	return S_OK;
 }
+
+HRESULT CYDArticleQuestionRef::GetTitleMode(TITLEMODE* titlemode)
+{
+	CComVariant mode;
+	HRESULT hr = GetPropVal(FIELD_ARTICLEQUESTION_TITLEMODE, &mode);
+	if (FAILED(hr))
+	{
+		return hr;
+	}
+	*titlemode = (TITLEMODE)CDataHandler::VariantToLong(mode);
+	return S_OK;
+}

@@ -33,6 +33,7 @@ CExerciseMainDlg::CExerciseMainDlg(CWnd* pParent /*=NULL*/)
 	m_pWriteDlg = NULL;
 	m_pChoiceDlg = NULL;
 	m_pArticleListenDlg = NULL;
+	m_pArticleWithImageDlg = NULL;
 	m_isupdateuser = FALSE;
 }
 
@@ -41,6 +42,8 @@ CExerciseMainDlg::~CExerciseMainDlg()
 	CListAutoClean<CYDQuestionRef> clr(m_lstQuestions);
 	delete m_pArticleDlg;
 	m_pArticleDlg = NULL;
+	delete m_pArticleWithImageDlg;
+	m_pArticleWithImageDlg = NULL;
 	delete  m_pDefaultDlg;
 	m_pDefaultDlg = NULL;
 
@@ -610,11 +613,25 @@ HRESULT CExerciseMainDlg::ShowSelItem(HTREEITEM _hItem)
 				}
 				else if (pReocrd->m_QTypeID == 7)//¿ìËÙÔÄ¶Á
 				{
-					pSwitchDlg = m_pArticleDlg;
+					if (TITLEMODE_TEXT == titlemode)
+					{
+						pSwitchDlg = m_pArticleDlg;
+					}
+					else if (TITLEMODE_IMAGE == titlemode)
+					{
+						pSwitchDlg = m_pArticleWithImageDlg;
+					}
 				}
 				else if (pReocrd->m_QTypeID == 8)//ÔÄ¶ÁÑ¡´ÊÌî¿Õ
 				{
-					pSwitchDlg = m_pArticleDlg;
+					if (TITLEMODE_TEXT == titlemode)
+					{
+						pSwitchDlg = m_pArticleDlg;
+					}
+					else if (TITLEMODE_IMAGE == titlemode)
+					{
+						pSwitchDlg = m_pArticleWithImageDlg;
+					}
 				}
 				else if (pReocrd->m_QTypeID == 9)//ÌýÁ¦Ìî¿Õ
 				{
@@ -631,7 +648,14 @@ HRESULT CExerciseMainDlg::ShowSelItem(HTREEITEM _hItem)
 				}
 				else if (pReocrd->m_QTypeID == 12)//¸Ä´í
 				{
-					pSwitchDlg = m_pArticleDlg;
+					if (TITLEMODE_TEXT == titlemode)
+					{
+						pSwitchDlg = m_pArticleDlg;
+					}
+					else if (TITLEMODE_IMAGE == titlemode)
+					{
+						pSwitchDlg = m_pArticleWithImageDlg;
+					}
 				}
 				else
 				{

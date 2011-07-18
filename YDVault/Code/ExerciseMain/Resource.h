@@ -114,11 +114,15 @@
 #define IDB_BITMAP_MAINTREE             340
 #define IDD_DLG_PERSIONINFO_VIEW        341
 #define IDC_TREE_EM_QUESTION            1000
+#define IDC_SCROLLBAR1                  1000
 #define IDC_BTN_EM_PREV                 1001
+#define IDC_SCROLLBAR2                  1001
 #define IDC_BTN_EM_NEXT                 1002
 #define IDC_BTN_EM_BEGIN                1003
 #define IDC_BTN_EM_STOP                 1004
 #define IDC_BTN_EM_ABORT                1005
+#define IDC_STATIC1                     1005
+#define IDC_COMMONDIALOG1               1006
 #define IDC_RICHEDIT21                  1007
 #define IDC_RICHEDIT_ARTICAL            1007
 #define IDC_RICHEDIT_ARTICLE            1007
@@ -515,7 +519,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        343
+#define _APS_NEXT_RESOURCE_VALUE        344
 #define _APS_NEXT_COMMAND_VALUE         32795
 #define _APS_NEXT_CONTROL_VALUE         1051
 #define _APS_NEXT_SYMED_VALUE           314

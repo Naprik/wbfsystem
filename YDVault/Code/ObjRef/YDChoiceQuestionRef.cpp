@@ -245,3 +245,15 @@ HRESULT CYDChoiceQuestionRef::PersistToMSWord(int* pIndex,
 	}
 	return S_OK;
 }
+
+HRESULT CYDChoiceQuestionRef::GetTitleMode(TITLEMODE* titlemode)
+{
+	long mode = 0;
+	HRESULT hr = GetPropVal(FIELD_ARTICLEQUESTION_TITLEMODE, &mode);
+	if (FAILED(hr))
+	{
+		return hr;
+	}
+	*titlemode = (TITLEMODE)mode;
+	return S_OK;
+}

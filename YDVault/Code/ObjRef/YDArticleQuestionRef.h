@@ -21,6 +21,7 @@ public:
 	bool ToString(CString* pStr);
 	virtual HRESULT GetStandardAnswer(CString &_str);
 	virtual HRESULT GetStandardAnswer(std::list<CString> &_lstStdAnswer);
+	virtual HRESULT GetTitleMode(TITLEMODE* titlemode);
 
 	HRESULT PersistToMSWord(int* pIndex, CWordAppHelper* pWord, CWordAppHelper* pWordAnswer, const CString& strFolder);
 

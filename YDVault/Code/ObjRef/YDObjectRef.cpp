@@ -198,7 +198,7 @@ HRESULT CYDObjectRef::Restore(BOOL bReload)
 		hr = m_pDb->GetField(_variant_t(strPropName),val);
 		if(FAILED(hr))
 		{
-			return hr;
+			return hr; 
 		}
 		m_mapProp.insert(MapProp::value_type(strPropName,val));
 	}

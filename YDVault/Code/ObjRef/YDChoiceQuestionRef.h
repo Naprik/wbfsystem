@@ -15,7 +15,7 @@ public:
 	HRESULT PersistToMSWord(int* pIndex, CWordAppHelper* pWord, CWordAppHelper* pWordAnswer, const CString& strFolder);
 
 	virtual HRESULT GetLabel(CString* pStr);
-
+	virtual HRESULT GetTitleMode(TITLEMODE* titlemode);
 	HRESULT GetOptionList(std::list<CString>* lst);
 	HRESULT SetOptionList(std::list<CString>* lst);
 
