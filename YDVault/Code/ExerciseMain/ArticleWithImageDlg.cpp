@@ -226,6 +226,13 @@ void CArticleWithImageDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrol
 		case SB_THUMBTRACK:
 		sourcey = nPos;
 		break;
+		case SB_LINEUP:
+        sourcey -= 1 ;
+        break ;
+        case SB_LINEDOWN:
+        sourcey += 1 ;
+        break ;
+
 	}
 
 //ScrollWindow(0,-(x-xOrig));
@@ -249,6 +256,12 @@ void CArticleWithImageDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrol
 		case SB_THUMBTRACK:
 		sourcex= nPos;
 		break;
+		case SB_LINELEFT:
+        sourcex -= 1 ;
+        break ;
+        case SB_LINERIGHT:
+        sourcex += 1 ;
+        break ;
 	}	
 	m_hbar.SetScrollPos(sourcex);
 	//Invalidate();
