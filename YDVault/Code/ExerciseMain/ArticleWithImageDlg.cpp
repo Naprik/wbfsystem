@@ -17,6 +17,7 @@ CArticleWithImageDlg::CArticleWithImageDlg(CWnd* pParent /*=NULL*/)
 
 {
 	m_pBMPBuffer = NULL;
+	m_hPhotoBitmap = NULL;
 }
 
 CArticleWithImageDlg::~CArticleWithImageDlg()
@@ -100,14 +101,13 @@ void CArticleWithImageDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 				m_size.cy=rectStaticClient.Size().cy;
 				m_size.cx = rectStaticClient.Width();    // zero based
 				m_size.cy = rectStaticClient.Height();    // zero based
-
 				m_st1.ClientToScreen( &rectStaticClient );
 				ScreenToClient( &rectStaticClient);
         
 				m_pt.x = rectStaticClient.left;
 				m_pt.y = rectStaticClient.top;
-				GetObject(m_hPhotoBitmap, sizeof(BITMAP), &m_bmInfo);
-	
+				GetObject( m_hPhotoBitmap , sizeof(BITMAP), &m_bmInfo );
+				(HBITMAP)SelectObject(m_dcMem, m_hPhotoBitmap );
 				offsetx= m_pt.x;
 				offsety=m_pt.y;
 				m_vbar.MoveWindow(offsetx+m_size.cx,offsety,18,m_size.cy);
@@ -122,31 +122,44 @@ void CArticleWithImageDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 				if(m_bmInfo.bmWidth<=m_size.cx)
 				{
 					if((m_size.cx-m_bmInfo.bmWidth)==0)
+					{
 						offsetx= m_pt.x;
+					}
 					else
+					{
 						offsetx= m_pt.x+((m_size.cx-m_bmInfo.bmWidth)/2);
+					}
 					m_vbar.MoveWindow(offsetx+m_bmInfo.bmWidth,offsety,18,m_size.cy);
 					m_hbar.ShowWindow(false);
 				}
 				else
+				{
 					m_hbar.ShowWindow(true);
+				}
 				m_hbar.SetScrollInfo(&horz);
 				vert.cbSize = sizeof(SCROLLINFO);
 				vert.fMask = SIF_ALL;
 				vert.nMin = 0;
 				vert.nMax = m_bmInfo.bmHeight-(m_size.cy);
 				vert.nPage = 0;
+				vert.nTrackPos=0;
 				if(m_bmInfo.bmHeight<=m_size.cy)
 				{
 					if((m_size.cy-m_bmInfo.bmHeight)==0)
+					{
 						offsety= m_pt.y;
+					}
 					else
+					{
 						offsety= m_pt.y+((m_size.cy-m_bmInfo.bmHeight)/2);
+					}
 					m_hbar.MoveWindow(offsetx,offsety+m_bmInfo.bmHeight,m_size.cx,18);
 					m_vbar.ShowWindow(false);
 				}
 				else
+				{
 					m_vbar.ShowWindow(true);
+				}
 				m_vbar.SetScrollInfo(&vert);
 
 				InvalidateRect(&rectStaticClient);
@@ -158,7 +171,7 @@ void CArticleWithImageDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 		//m_Area.ShowWindow(SW_SHOW);
 		m_Area.ShowQuestion();
 		
- 		UpdateData(FALSE);
+// 		UpdateData(FALSE);
  	}
 }
 
@@ -167,7 +180,6 @@ HRESULT CArticleWithImageDlg::PersistData()
 	m_pRecord->m_listUserAnswers.clear();
 	m_Area.GetStuAnswers(&(m_pRecord->m_listUserAnswers));	
 	
-
 	return S_OK;
 }
 void CArticleWithImageDlg::OnPaint() 
