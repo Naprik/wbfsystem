@@ -128,7 +128,6 @@
     <ClCompile Include="BelowBar.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ChoiceDlg.cpp" />
-    <ClCompile Include="commondialog.cpp" />
     <ClCompile Include="DefaultDlg.cpp" />
     <ClCompile Include="DlgCfgExamTime.cpp" />
     <ClCompile Include="DlgExsiceMark.cpp" />
@@ -197,7 +196,6 @@
     <ClInclude Include="BelowBar.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ChoiceDlg.h" />
-    <ClInclude Include="commondialog.h" />
     <ClInclude Include="DefaultDlg.h" />
     <ClInclude Include="DlgCfgExamTime.h" />
     <ClInclude Include="DlgExsiceMark.h" />

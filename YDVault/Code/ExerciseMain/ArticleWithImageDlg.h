@@ -6,7 +6,7 @@
 
 #include "QuestionDlg.h"
 #include "DlgQuestionArea.h"
-#include "commondialog.h"
+
 // CArticleDlg dialog
 
 class CArticleWithImageDlg : public CQuestionDlg
@@ -42,7 +42,6 @@ public:
 private:
 	CDlgQuestionArea	m_Area;
 	CRect				m_rect;
-	CCommonDialog1		m_com;
 	CRect				rectStaticClient;
 	SCROLLINFO			horz,vert;
 	BOOL	flag, erase;

@@ -32,7 +32,6 @@ void CArticleWithImageDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC1, m_st1);
 	DDX_Control(pDX, IDC_SCROLLBAR2, m_vbar);
 	DDX_Control(pDX, IDC_SCROLLBAR1, m_hbar);
-	DDX_Control(pDX, IDC_COMMONDIALOG1, m_com);
 }
 
 
