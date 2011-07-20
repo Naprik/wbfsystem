@@ -137,6 +137,22 @@ HRESULT CSelectorEngine::GetQuestionsFromCfg(CSelectQuestionCfgMgr* pCfgMgr,
 						return hr;
 					}
 					p->SetPropVal(L"CREATEDATE", &varVal);
+					//野割Image
+					hr = theApp.m_pDatabase->GetField(FIELD_ARTICLEQUESTION_IMAGETITLE, varVal);
+					if (FAILED(hr))
+					{
+						return hr;
+					}
+					p->SetPropVal(FIELD_ARTICLEQUESTION_IMAGETITLE, &varVal);
+
+					//野割mode
+					hr = theApp.m_pDatabase->GetField(FIELD_ARTICLEQUESTION_TITLEMODE, varVal);
+					if (FAILED(hr))
+					{
+						return hr;
+					}
+					p->SetPropVal(FIELD_ARTICLEQUESTION_TITLEMODE, &varVal);
+
 
 					//野割Mark
 					varVal.Clear();
@@ -217,7 +233,21 @@ HRESULT CSelectorEngine::GetQuestionsFromCfg(CSelectQuestionCfgMgr* pCfgMgr,
 						return hr;
 					}
 					p->SetPropVal(L"QNUM", &varVal);
+					//野割Image
+					hr = theApp.m_pDatabase->GetField(FIELD_CHOICEQUESTION_IMAGETITLE, varVal);
+					if (FAILED(hr))
+					{
+						return hr;
+					}
+					p->SetPropVal(FIELD_CHOICEQUESTION_IMAGETITLE, &varVal);
 
+					//野割mode
+					hr = theApp.m_pDatabase->GetField(FIELD_CHOICEQUESTION_TITLEMODE, varVal);
+					if (FAILED(hr))
+					{
+						return hr;
+					}
+					p->SetPropVal(FIELD_CHOICEQUESTION_TITLEMODE, &varVal);
 					//野割Mark
 					varVal.Clear();
 					varVal = pcfg->m_dMark;

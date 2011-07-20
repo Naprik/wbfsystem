@@ -392,9 +392,9 @@ HRESULT CYDQuestionRef::UpdateUsedCount(int usedcount)
 {
 	HRESULT hr = E_FAIL;
 	
-	CString strsqlformat = L"update " + m_strDBName + L" set USEDCOUNT=%d";
+	CString strsqlformat = L"update " + m_strDBName + L" set USEDCOUNT=%d where objid=%d" ;
 	CString strsql;
-	strsql.Format(strsqlformat, usedcount);
+	strsql.Format(strsqlformat, usedcount, m_uObjID);
 	m_pDb->InitializeSQL(_bstr_t(strsql));
 	hr = m_pDb->ExecuteSQL();
 	if(FAILED(hr))
