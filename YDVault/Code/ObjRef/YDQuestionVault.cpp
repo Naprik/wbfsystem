@@ -660,14 +660,18 @@ HRESULT CYDQuestionVault::CreateParamter(UINT _idQuestionType,
 										 std::list<CPropQueryContidition*> *_lstCondition)
 {
 	HRESULT hr = E_FAIL;
-	for(std::list<CPropQueryContidition*>::const_iterator itr = _lstCondition->begin();
-		itr != _lstCondition->end();++itr)
+	if(_lstCondition != NULL)
 	{
-		hr = (*itr)->CreateParamter(m_pDb);
-		if (FAILED(hr))
+		for(std::list<CPropQueryContidition*>::const_iterator itr = _lstCondition->begin();
+			itr != _lstCondition->end();++itr)
 		{
-			return hr;
+			hr = (*itr)->CreateParamter(m_pDb);
+			if (FAILED(hr))
+			{
+				return hr;
+			}
 		}
+
 	}
 	_variant_t vtParamIDType((long)_idQuestionType);
 	hr = m_pDb->AddParameter(L"ID_TYPE", 
