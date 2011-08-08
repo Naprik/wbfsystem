@@ -251,10 +251,61 @@ void CQuestionVaultQTypeFormView::OnBnClickedButtonRemove()
 		return;
 	}
 	HRESULT hr = E_FAIL;
+	//要判断当前选中的题型下面有没有题目，如果有不能删除
 	POSITION pos = m_lstQTypeExist.GetFirstSelectedItemPosition();
+	while(pos)
+	{
+		int nItem = m_lstQTypeExist.GetNextSelectedItem(pos);
+		CYDLinkRef* pLinkRef = (CYDLinkRef*)m_lstQTypeExist.GetItemData(nItem);
+		ASSERT(pLinkRef != NULL);
+		CYDObjectRef* pVault = NULL;
+		CYDObjectRef* pType =NULL;
+		hr = pLinkRef->GetObjRef(pVault,pType);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+			return ;
+		}
+		ASSERT(pVault);
+		ASSERT(pType);
+		OBJID uQTypeID = 0;
+		hr = pType->GetID(&uQTypeID);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+			return ;
+		}
+		
+		CYDQuestionVault* pVaultObj = (CYDQuestionVault*)pVault;
+		ASSERT(pVaultObj);
+		long lCount = 0;
+		hr = pVaultObj->GetQuestionByTypeIDConditionCount(uQTypeID,
+														NULL,
+														&lCount);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+			return ;
+		}
+		if(lCount > 0 )
+		{
+			CString strTypeName;
+			hr = pType->GetPropVal(L"Name",strTypeName);
+			if(FAILED(hr))
+			{
+				DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+				return ;
+			}
+			CString strMsg;
+			strMsg.Format(_T("当前题库下%s题型下面的题目不为空，不能移除！"),strTypeName);
+			AfxMessageBox(strMsg);
+			return ;
+		}
+	}
 	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
 	ASSERT(pDB);
 	CDBTransactionRef TransRef(pDB,TRUE);
+	pos = m_lstQTypeExist.GetFirstSelectedItemPosition();
 	while(pos)
 	{
 		int nItem = m_lstQTypeExist.GetNextSelectedItem(pos);
