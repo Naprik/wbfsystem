@@ -272,6 +272,8 @@ void CDataHandler::TrimString(CString& str)
 		str.Delete(0);
 	while(!str.IsEmpty()&&str[str.GetLength()-1]==_T(' '))
 		str.Delete(str.GetLength()-1);
+	str.TrimLeft();
+	str.TrimRight();
 }
 
 /**********************************************

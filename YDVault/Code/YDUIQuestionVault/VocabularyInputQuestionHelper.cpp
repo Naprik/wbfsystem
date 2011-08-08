@@ -151,6 +151,7 @@ HRESULT CVocabularyInputQuestionHelper::IsNewQuestionCaption(CString _strText,BO
 				//代表是一个新的题目
 				_IsCaption = TRUE;
 				_strCaption = _strText.Right(_strText.GetLength() - i-1);
+				CDataHandler::TrimString(_strCaption);
 				return S_OK;
 			}
 		}
@@ -182,7 +183,9 @@ HRESULT CVocabularyInputQuestionHelper::IsQuestionOption(CString _strText,BOOL &
 				CString strOption = arr.GetAt(j);
 				CString strOptionName;//A B C D等
 				strOptionName.Format(_T("%c"),strOption.GetAt(1));
+				CDataHandler::TrimString(strOptionName);
 				CString strOptionVal = strOption.Right(strOption.GetLength() - 4);//选项值
+				CDataHandler::TrimString(strOptionVal);
 				//要按照选项名进行排序
 				BOOL bInsert = FALSE;
 				for(std::list<std::pair<CString,CString> >::iterator itr = _lstOption.begin();
@@ -221,6 +224,7 @@ HRESULT CVocabularyInputQuestionHelper::IsQuestionAnswer(CString _strText,BOOL &
 		//代表是答案
 		_IsAnswer = TRUE;
 		_strAnswer = _strText.Right(_strText.GetLength() - 3);
+		CDataHandler::TrimString(_strAnswer);
 	}
 	
 	return S_OK;
