@@ -701,31 +701,35 @@ HRESULT CYDQuestionVault::CreateConditionSQL(CString _strDBName,
 	_strSQL += _T(" ( SELECT OBJID FROM ");
 	_strSQL += _strDBName;
 	BOOL bFirst = TRUE;
-	for(std::list<CPropQueryContidition*>::const_iterator itr = _lstCondition->begin();
-		itr != _lstCondition->end();++itr)
+	if(_lstCondition != NULL)
 	{
-		CString strItrSQL;
-		hr = (*itr)->CreateContidition(strItrSQL);
-		if (FAILED(hr))
+		for(std::list<CPropQueryContidition*>::const_iterator itr = _lstCondition->begin();
+			itr != _lstCondition->end();++itr)
 		{
-			return hr;
-		}
-		if(strItrSQL.IsEmpty())
-		{
-			continue;
-		}
-		if(bFirst)
-		{
-			_strSQL += _T(" WHERE ");
-			bFirst = FALSE;
-		}
-		else
-		{
-			_strSQL += _T(" AND ");
-		}
+			CString strItrSQL;
+			hr = (*itr)->CreateContidition(strItrSQL);
+			if (FAILED(hr))
+			{
+				return hr;
+			}
+			if(strItrSQL.IsEmpty())
+			{
+				continue;
+			}
+			if(bFirst)
+			{
+				_strSQL += _T(" WHERE ");
+				bFirst = FALSE;
+			}
+			else
+			{
+				_strSQL += _T(" AND ");
+			}
 
-		_strSQL += strItrSQL;
+			_strSQL += strItrSQL;
+		}
 	}
+	
 	_strSQL += _T(") A RIGHT JOIN ");
 	_strSQL += _T(" ( select OBJID AS LINKID,ID_B FROM ");
 	_strSQL += DB_VAULTQUESTION;
