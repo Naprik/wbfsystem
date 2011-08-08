@@ -242,6 +242,7 @@ HRESULT CVocabularyInputQuestionHelper::IsQuestionFactor(CString _strText,BOOL &
 		return S_FALSE;
 	}
 	CString strFirst = arr.GetAt(0);
+	CDataHandler::TrimString(strFirst);
 	//要移除序号后判断是否为指标名
 	strFirst = strFirst.Right(strFirst.GetLength() -3);
 	//判断是否为当前题型的指标名
@@ -258,6 +259,7 @@ HRESULT CVocabularyInputQuestionHelper::IsQuestionFactor(CString _strText,BOOL &
 	}
 	_IsFactor = TRUE;
 	CString strFactorVal = arr.GetAt(1);
+	CDataHandler::TrimString(strFactorVal);
 	_lstFactor.push_back(std::make_pair(strFirst,strFactorVal));
 	return S_OK;
 }
