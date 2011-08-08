@@ -914,11 +914,98 @@ void CQuestionTreeView::OnQuestionVaultClassificationDel()
 	{
 		return ;
 	}
+	CYdObjWrapper* pObjWrapper = (CYdObjWrapper*)m_wndQuestionView.GetItemData(hItem);
+	ASSERT(pObjWrapper);
+	ASSERT(pObjWrapper->m_pObjRef);
+	CString strDBName;
+	pObjWrapper->m_pObjRef->GetDBName(strDBName);
+	if(strDBName.CompareNoCase(DB_QVAULTCLASSIFICATION) == 0)
+	{
+		//删除题库大类,判断题库大类下是否有题库或子题库大类，如果有不能删除
+		CYDQuestionVaultClassification* pQVC = (CYDQuestionVaultClassification*)pObjWrapper->m_pObjRef;
+		CString strName;
+		hr = pQVC->GetPropVal(L"Name",strName);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+			return ;
+		}
+		ASSERT(pQVC != NULL);
+		{
+			//所有的字试题库大类
+			std::list<CYDQuestionVaultClassification*> lstChild;
+			CListAutoClean<CYDQuestionVaultClassification> clr(lstChild);
+			hr = pQVC->GetChildQVClassification(&lstChild);
+			if(FAILED(hr))
+			{
+				DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+				return ;
+			}
+			if(lstChild.size() > 0)
+			{
+				CString strMsg;
+				strMsg.Format(_T("当前题库大类%s下面有子题库大类，不能删除！"),strName);
+				AfxMessageBox(strMsg);
+				return ;
+			}
+		}
+		{
+			//所有的字试题
+			std::list<CYDQuestionVault*> lstChildQVault;
+			CListAutoClean<CYDQuestionVault> clr(lstChildQVault);
+			hr = pQVC->GetAllQVault(&lstChildQVault);
+			if(FAILED(hr))
+			{
+				DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+				return ;
+			}
+			if(lstChildQVault.size() > 0 )
+			{
+				CString strMsg;
+				strMsg.Format(_T("当前题库大类%s下面有子题库，不能删除！"),strName);
+				AfxMessageBox(strMsg);
+				return ;
+			}
+
+		}
+	}
+	else if(strDBName.CompareNoCase(DB_QUESTIONVAULT) == 0)
+	{
+		//删除题库,判断题库下面是否有关联的体型，如果有不能删除
+		CYDQuestionVault* pQV = (CYDQuestionVault*)pObjWrapper->m_pObjRef;
+		ASSERT(pQV);
+		CString strName;
+		hr = pQV->GetPropVal(L"Name",strName);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+			return ;
+		}
+		std::list<CYDQuestionType*> lstChildQType;
+		CListAutoClean<CYDQuestionType> clr(lstChildQType);
+		hr= pQV->GetAllQuestionType(&lstChildQType);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+			return ;
+		}
+		if(lstChildQType.size() > 0 )
+		{
+			CString strMsg;
+			strMsg.Format(_T("当前题库大类%s下面有关联题型，不能删除！"),strName);
+			AfxMessageBox(strMsg);
+			return ;
+		}
+	}
+	else
+	{
+		ASSERT(FALSE);
+		return ;
+	}
 	CPdemWait	wait(_T("正在删除..."));
 	wait.BeginWait();
 
-	CYdObjWrapper* pObjWrapper = (CYdObjWrapper*)m_wndQuestionView.GetItemData(hItem);
-	ASSERT(pObjWrapper);
+	
 	AfxGetMainWnd()->SendMessage(WM_YD_CLOSE_PROP,(WPARAM)pObjWrapper);
 	hr = pObjWrapper->Remove();
 	if(FAILED(hr))
