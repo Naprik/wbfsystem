@@ -149,7 +149,6 @@
     </ClCompile>
     <ClCompile Include="VocabularyInputQuestionHelper.cpp" />
     <ClCompile Include="YDChoiceQuestionDlg.cpp" />
-    <ClCompile Include="YDCompositionQuestionDlg.cpp" />
     <ClCompile Include="YDReadQuestionDlg.cpp" />
     <ClCompile Include="YDTranslationQuestionDlg.cpp" />
     <ClCompile Include="YDUIQuestionVault.cpp" />
@@ -187,7 +186,6 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="VocabularyInputQuestionHelper.h" />
     <ClInclude Include="YDChoiceQuestionDlg.h" />
-    <ClInclude Include="YDCompositionQuestionDlg.h" />
     <ClInclude Include="YDReadQuestionDlg.h" />
     <ClInclude Include="YDTranslationQuestionDlg.h" />
     <ClInclude Include="DlgYDVaultFactorInfoConfig.h" />

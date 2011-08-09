@@ -17,7 +17,6 @@
 #include "../YDFormUIBase/YDQuestionDlg.h"
 #include "../YDUIQuestionVault/YDChoiceQuestionDlg.h"
 #include "../YDUIQuestionVault/YDReadQuestionDlg.h"
-#include "../YDUIQuestionVault/YDCompositionQuestionDlg.h"
 #include "../YDUIQuestionVault/YDTranslationQuestionDlg.h"
 #include "../ObjRef/PropQueryContidition.h"
 #include "QuestionViewDlg.h"

@@ -5,7 +5,6 @@
 #include "../Base/DataHandler.h"
 #include "YDChoiceQuestionDlg.h"
 #include "YDReadQuestionDlg.h"
-#include "YDCompositionQuestionDlg.h"
 #include "YDTranslationQuestionDlg.h"
 #include "../Include/ShowErr.h"
 #include "../Base/AutoClean.h"
