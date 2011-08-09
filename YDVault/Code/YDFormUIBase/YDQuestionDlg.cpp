@@ -205,31 +205,44 @@ HRESULT CYDQuestionDlg::CreateIndicator(CYDObjectRef* _pQuestionRef,CBCGPGridCtr
 		{
 			return hr;
 		}
-		CComVariant val;
-		hr = _pQuestionRef->GetPropVal(CComBSTR(strFieldName),&val);
-			if(FAILED(hr))
-		{
-			return hr;
-		}
-		if(helper.IsNumberFieldName(strFieldName))
-		{
-			//数值型，如果val为空，要将其修改为0,否则在Grid中不能输入值
-			long lVal = CDataHandler::VariantToLong(val);
-			val = lVal;
-		}
-		else 
-		{
-			//字符串型
-			CString strVal = CDataHandler::VariantToString(val);
-			CDataHandler::StringToVariant(strVal,VT_BSTR,&val);
-		}
 		CBCGPGridRow* pRow = _pGrid->CreateRow(_pGrid->GetColumnCount());
 		//题型
 		pRow->GetItem(cColPropName)->SetValue(CComVariant(strFactorName));
 		pRow->GetItem(cColPropName)->Enable(FALSE);
 		pRow->GetItem(cColPropName)->SetBackgroundColor( RGB(110,180,200));
+		CComVariant val;
+		if(_pQuestionRef != NULL)
+		{
+			hr = _pQuestionRef->GetPropVal(CComBSTR(strFieldName),&val);
+			if(FAILED(hr))
+			{
+				return hr;
+			}
+			if(helper.IsNumberFieldName(strFieldName))
+			{
+				//数值型，如果val为空，要将其修改为0,否则在Grid中不能输入值
+				long lVal = CDataHandler::VariantToLong(val);
+				val = lVal;
+			}
+			else 
+			{
+				//字符串型
+				CString strVal = CDataHandler::VariantToString(val);
+				CDataHandler::StringToVariant(strVal,VT_BSTR,&val);
+			}
+		}
+		else
+		{
+			if(strFieldName.Left(1) == _T('D'))
+			{
+				val = (long)1;
+			}
+			else
+			{
+				val = L"";
+			}
+		}
 		pRow->GetItem(cColPropVal)->SetValue(val);
-
 		_pGrid->AddRow(pRow);
 	}
 	return S_OK;

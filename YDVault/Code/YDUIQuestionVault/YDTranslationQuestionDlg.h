@@ -2,6 +2,7 @@
 #include "../YDFormUIBase/YDQuestionDlg.h"
 #include "resource.h"
 #include "afxcmn.h"
+#include "../UIBase/BCGPKeyGridCtrl.h"
 
 // CYDTranslationQuestionDlg dialog
 class CYDChoiceQuestionRef;
@@ -43,6 +44,7 @@ private:
 private:
 	std::list<CYdObjWrapper*>	m_lstAddKPs;
 	std::list<CYdObjWrapper*>	m_lstDeleteKPs;
+	CBCGPKeyGridCtrl			m_GridIndicator;
 
 public:
 	int m_iHardLevel;

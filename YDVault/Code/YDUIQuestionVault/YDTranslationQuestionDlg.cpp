@@ -210,6 +210,10 @@ BOOL CYDTranslationQuestionDlg::ValidateData(OPERATION op)
 		AfxMessageBox(_T("答案不能为空！"),MB_OK|MB_ICONINFORMATION);
 		return FALSE;
 	}
+	if(!ValidateIndicator(&m_GridIndicator))
+	{
+		return FALSE;
+	}
 	return TRUE;
 }
 
@@ -256,6 +260,8 @@ HRESULT CYDTranslationQuestionDlg::CreateLinkRef(CYDLinkRef* &_pLinkRef)
 HRESULT CYDTranslationQuestionDlg::UpdateQuestionArea()
 {
 	HRESULT hr = E_FAIL;
+	m_GridIndicator.RemoveAll();
+
 	if (m_uType == OP_NEW)
 	{
 		m_strArticle =_T("");
@@ -270,6 +276,11 @@ HRESULT CYDTranslationQuestionDlg::UpdateQuestionArea()
 		while(m_listCtrlKpRelated.GetItemCount() > 0)
 		{
 			m_listCtrlKpRelated.DeleteItem(0);
+		}
+		hr = CreateIndicator(NULL,&m_GridIndicator);
+		if (FAILED(hr))
+		{
+			return hr;
 		}
 	}
 	else
@@ -325,6 +336,11 @@ HRESULT CYDTranslationQuestionDlg::UpdateQuestionArea()
 			return hr;
 		}
 		m_strCreateDate = CDataHandler::VariantToString(var);
+		hr = CreateIndicator(pRef,&m_GridIndicator);
+		if (FAILED(hr))
+		{
+			return hr;
+		}
 	}
 
 	UpdateData(FALSE);
@@ -400,6 +416,11 @@ HRESULT CYDTranslationQuestionDlg::UpdateQuestionRef(CYDChoiceQuestionRef* _pRef
 	{
 		return hr;
 	}
+	hr = UpdateIndicator(_pRef,&m_GridIndicator);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
 
 	return S_OK;
 }
@@ -432,6 +453,13 @@ BOOL CYDTranslationQuestionDlg::OnInitDialog()
 		GetDlgItem(IDC_BUTTON_ADDKP)->EnableWindow(FALSE);
 		GetDlgItem(IDC_BUTTON_REMOVEKP)->EnableWindow(FALSE);
 		EnableQuestionArea(FALSE);
+	}
+	//指标
+	hr = CreateIndicatorGridCtrl(IDC_STATIC_INDICATOR,&m_GridIndicator);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+		return FALSE;
 	}
 	hr = UpdateQuestionArea();
 	if(FAILED(hr))

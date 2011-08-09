@@ -1,7 +1,7 @@
 #pragma once
 #include "../YDFormUIBase/YDQuestionDlg.h"
 #include "afxcmn.h"
-
+#include "../UIBase/BCGPKeyGridCtrl.h"
 
 // CYDReadQuestionDlg dialog
 class CYDArticleQuestionRef;
@@ -59,8 +59,10 @@ private:
 	void	DestroyPhoto();
 	HBITMAP			BufferToHBITMAP();
 	void			DrawUserPhoto(int x,int y,CDC* pDC);
+	BOOL ValidateData(OPERATION op);
 	std::list<CYdObjWrapper*>	m_lstAddKPs;
 	std::list<CYdObjWrapper*>	m_lstDeleteKPs;
+	CBCGPKeyGridCtrl			m_GridIndicator;
 
 	std::list<CYdObjWrapper*>	m_lstDeleteQuestions;
 

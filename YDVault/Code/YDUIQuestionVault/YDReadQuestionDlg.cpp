@@ -16,6 +16,7 @@
 #include "../ObjRef/YDMediaRef.h"
 #include "../ObjRef/YDQuestionType.h"
 #include "../FtpBase/FtpRef.h"
+#include "Resource.h"
 // CYDReadQuestionDlg dialog
 
 IMPLEMENT_DYNAMIC(CYDReadQuestionDlg, CYDQuestionDlg)
@@ -125,6 +126,13 @@ BOOL CYDReadQuestionDlg::OnInitDialog()
 		EnableQuestionArea(FALSE);
 
 	}
+	//指标
+	hr = CreateIndicatorGridCtrl(IDC_STATIC_INDICATOR,&m_GridIndicator);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+		return FALSE;
+	}
 	hr = UpdateQuestionArea();
 	if(FAILED(hr))
 	{
@@ -150,16 +158,11 @@ void CYDReadQuestionDlg::OnBnClickedButtonCqAdd()
 	// TODO: Add your control notification handler code here
 	CListAutoClean<CYdObjWrapper> clean1(m_lstAddKPs);
 	UpdateData();
-	if(m_strArticle.IsEmpty())
+	if(!ValidateData(OP_NEW))
 	{
-		AfxMessageBox(_T("阅读文章内容不能为空！"),MB_OK|MB_ICONINFORMATION);
 		return;
 	}
-	if (m_lstChoiceQuestion.GetItemCount() <= 0)
-	{
-		AfxMessageBox(_T("问题不能为空！"),MB_OK|MB_ICONINFORMATION);
-		return;
-	}
+
 	HRESULT hr = E_FAIL;
 	//保存一个阅读理解题
 	CYDArticleQuestionRef* pRef = NULL;
@@ -337,6 +340,7 @@ void CYDReadQuestionDlg::OnBnClickedButtonDelQuestion()
 HRESULT CYDReadQuestionDlg::UpdateQuestionArea()
 {
 	HRESULT hr = E_FAIL;
+	m_GridIndicator.RemoveAll();
 	if (m_uType == OP_NEW)
 	{
 		m_strArticle =_T("");
@@ -356,6 +360,11 @@ HRESULT CYDReadQuestionDlg::UpdateQuestionArea()
 			m_listCtrlKpRelated.DeleteItem(0);
 		}
 		m_strMediaFile = _T("");
+		hr = CreateIndicator(NULL,&m_GridIndicator);
+		if (FAILED(hr))
+		{
+			return hr;
+		}
 	}
 	else
 	{
@@ -434,6 +443,11 @@ HRESULT CYDReadQuestionDlg::UpdateQuestionArea()
 				m_hPhotoBitmap = BufferToHBITMAP();	
 			}
 			m_TitleMode = TITLEMODE_IMAGE;//代表当前是图像
+		}
+		hr = CreateIndicator(pRef,&m_GridIndicator);
+		if (FAILED(hr))
+		{
+			return hr;
 		}
 	}
 	UpdateData(FALSE);
@@ -639,6 +653,11 @@ HRESULT CYDReadQuestionDlg::UpdateQuestionRef(CYDArticleQuestionRef* _pRef)
 	{
 		return hr;
 	}
+	hr = UpdateIndicator(_pRef,&m_GridIndicator);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
 	return S_OK;
 }
 void CYDReadQuestionDlg::OnBnClickedButtonCqModify()
@@ -646,14 +665,8 @@ void CYDReadQuestionDlg::OnBnClickedButtonCqModify()
 	// TODO: Add your control notification handler code here
 	CListAutoClean<CYdObjWrapper> clean1(m_lstAddKPs);
 	UpdateData();
-	if(m_strArticle.IsEmpty())
+	if(!ValidateData(OP_EDIT))
 	{
-		AfxMessageBox(_T("阅读文章内容不能为空！"),MB_OK|MB_ICONINFORMATION);
-		return;
-	}
-	if (m_lstChoiceQuestion.GetItemCount() <= 0)
-	{
-		AfxMessageBox(_T("问题不能为空！"),MB_OK|MB_ICONINFORMATION);
 		return;
 	}
 	ASSERT(m_pObjWrapper);
@@ -1005,7 +1018,7 @@ HRESULT CYDReadQuestionDlg::GetMediaType(MEDIATYPE* _pMType)
 	HRESULT hr= E_FAIL;
 	*_pMType = M_MP3;
 	return S_OK;
-	if(((CButton*)GetDlgItem(IDC_RADIO_PICTURE))->GetCheck())
+	/*if(((CButton*)GetDlgItem(IDC_RADIO_PICTURE))->GetCheck())
 	{
 		*_pMType = M_IMAGE;
 	}
@@ -1020,7 +1033,7 @@ HRESULT CYDReadQuestionDlg::GetMediaType(MEDIATYPE* _pMType)
 	else 
 	{
 		ASSERT(FALSE);
-	}
+	}*/
 	return S_OK;
 }
 
@@ -1452,4 +1465,23 @@ void CYDReadQuestionDlg::OnBnClickedButtonEmptyPic()
 	DestroyPhoto();
 	Invalidate();
 	m_TitleMode = TITLEMODE_TEXT;
+}
+
+BOOL CYDReadQuestionDlg::ValidateData(OPERATION op)
+{
+	if(m_strArticle.IsEmpty())
+	{
+		AfxMessageBox(_T("阅读文章内容不能为空！"),MB_OK|MB_ICONINFORMATION);
+		return FALSE;
+	}
+	if (m_lstChoiceQuestion.GetItemCount() <= 0)
+	{
+		AfxMessageBox(_T("问题不能为空！"),MB_OK|MB_ICONINFORMATION);
+		return FALSE;
+	}
+	if(!ValidateIndicator(&m_GridIndicator))
+	{
+		return FALSE;
+	}
+	return TRUE;
 }

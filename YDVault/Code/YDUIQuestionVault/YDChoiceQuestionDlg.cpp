@@ -671,7 +671,7 @@ HRESULT CYDChoiceQuestionDlg::UpdateQuestionArea()
 		GetQuestionType(&iQType);
 		if (iQType == QTYPE_VOCABULARY)//—°‘ÒÃ‚
 		{
-			hr = CreateIndicator(m_pCQ,&m_GridIndicator);
+			hr = CreateIndicator(NULL,&m_GridIndicator);
 			if (FAILED(hr))
 			{
 				return hr;
