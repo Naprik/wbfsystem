@@ -125,6 +125,7 @@ public:
 	CString m_strAverageMark;
 	afx_msg void OnBnClickedBtnShowchart();
 	afx_msg void OnBnClickedBtnShowlist();
+	afx_msg void OnBnClickedButtonInputFromXml();
 };
 
 

@@ -17,7 +17,9 @@
 #include "../base\DataHandler.h"
 #include "ShowChartDlg.h"
 #include "ShowListDlg.h"
-
+#include "../Base\Xml.h"
+#include "InputStudentAnswerRecord.h"
+#include "DlgInputStudentAnswerRecord.h"
 // CFormQueryMark
 
 CQueryMarkInfo::CQueryMarkInfo()
@@ -112,6 +114,7 @@ BEGIN_MESSAGE_MAP(CFormQueryMark, CYdFormView)
 	ON_BN_CLICKED(IDC_BTN_DM_QMARK_OUTPUT, &CFormQueryMark::OnBnClickedBtnDmQmarkOutput)
 	ON_BN_CLICKED(IDC_BTN_SHOWCHART, &CFormQueryMark::OnBnClickedBtnShowchart)
 	ON_BN_CLICKED(IDC_BTN_SHOWLIST, &CFormQueryMark::OnBnClickedBtnShowlist)
+	ON_BN_CLICKED(IDC_BUTTON_INPUT_FROM_XML, &CFormQueryMark::OnBnClickedButtonInputFromXml)
 END_MESSAGE_MAP()
 
 
@@ -1458,4 +1461,79 @@ void CFormQueryMark::OnBnClickedBtnShowlist()
 	CShowListDlg dlg;
 	dlg.m_pLstQueryMarkInfo = &m_lstQueryMarkInfo;
 	dlg.DoModal();
+}
+
+
+void CFormQueryMark::OnBnClickedButtonInputFromXml()
+{
+	// TODO: Add your control notification handler code here
+	CFileDialog dlg(TRUE,NULL,NULL,OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT,_T("Xml文件(*.xml)|*.xml|所有文件(*.*)|*.*||"));
+	if(dlg.DoModal() != IDOK)
+	{
+		return ;
+	}
+	CString strFileName = dlg.GetPathName();
+	CPdemWait	wait(_T("请稍候，正在读取配置文件..."),FALSE,100,0);
+	wait.BeginWait();
+	std::list<CInputStudentAnswerRecord*> lstRecord;
+	CListAutoClean<CInputStudentAnswerRecord> clr(lstRecord);
+	try
+	{
+		CXmlReader reader;
+		reader.LoadFile((BSTR)(LPCTSTR)strFileName);
+		CXmlNodeList nodesInput;
+		reader.ReadNodeListByTagName(_T("Input"),nodesInput);
+		ASSERT(nodesInput.GetLength() == 1);
+		CXmlNode nodeInput;
+		nodesInput.GetNode(0,nodeInput);
+		CXmlNodeList nodes;
+		nodeInput.GetChilds(nodes);
+		for(long i = 0; i < nodes.GetLength(); i++)
+		{
+			CXmlNode node;
+			nodes.GetNode(i, node);
+			CComBSTR bstrNodeName = node.GetNodeName();
+			if(CDataHandler::BSTRCompare(bstrNodeName,L"Student") == 0)
+			{
+				CInputStudentAnswerRecord* pRecord = new CInputStudentAnswerRecord();
+				CComBSTR bstrStuID;
+				node.ReadAttributeByNoCase(L"StuID",&bstrStuID);
+				pRecord->m_strStuID = (const TCHAR*)bstrStuID;
+				CComBSTR bstrExamTime;
+				node.ReadAttributeByNoCase(L"ExamTime",&bstrExamTime);
+				pRecord->m_ExamTime.ParseDateTime((const TCHAR*)bstrExamTime);
+				CComBSTR bstrSubjectID;
+				node.ReadAttributeByNoCase(L"ExamSubjectID",&bstrSubjectID);
+				pRecord->m_strSubjectID = (const TCHAR*)bstrSubjectID;
+				CComBSTR bstrPaperID;
+				node.ReadAttributeByNoCase(L"ExamPaperID",&bstrPaperID);
+				pRecord->m_strExamPaperID = (const TCHAR*)bstrPaperID;
+				CComBSTR bstrAnswer = node.GetNodeValue();
+				pRecord->m_strStuAnswer = (const TCHAR*)bstrAnswer;
+				lstRecord.push_back(pRecord);
+			}
+			else
+			{
+				ASSERT(FALSE);
+			}
+		}
+	}
+	catch (CXmlException* e) 
+	{
+		e->ReportError();
+		e->Delete();
+		CString strMsg;
+		strMsg.Format(_T("文件%s格式不正确"),strFileName);
+		AfxMessageBox(strMsg);
+		return ;
+	}
+	wait.Close();
+	if(lstRecord.size() <= 0)
+	{
+		AfxMessageBox(_T("没有读取到记录信息！"));
+		return;
+	}
+	CDlgInputStudentAnswerRecord dlg1;
+	dlg1.m_plstRecord = &lstRecord;
+	dlg1.DoModal();
 }

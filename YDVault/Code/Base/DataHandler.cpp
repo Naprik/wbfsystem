@@ -102,6 +102,13 @@ BOOL CDataHandler::StringToVariant(const CString& str,VARTYPE vt,VARIANT* var)
 	return TRUE;
 }
 
+BOOL CDataHandler::OleDateTimeToVariant(const COleDateTime& dt,VARIANT* _val)
+{
+	_val->vt = VT_DATE;
+	_val->date = dt;
+	return TRUE;
+}
+
 CString CDataHandler::VariantToString(const CComVariant& var)
 {
 	CString str(_T(""));

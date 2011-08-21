@@ -15,6 +15,7 @@ public:
 	//string to variant transform
 	static BOOL StringToVariant(/*[in]*/const CString& str,/*[in]*/VARTYPE vt,/*[out]*/VARIANT* var);
 	static int StringToInt(/*[in]*/const CString& str);
+	static BOOL OleDateTimeToVariant(const COleDateTime& dt,VARIANT* _val);
 
 	// BSTR±È½Ï
 	static int BSTRCompare(BSTR strA, BSTR strB, BOOL bCaseSens = FALSE);

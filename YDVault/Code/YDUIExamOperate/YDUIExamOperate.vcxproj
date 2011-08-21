@@ -125,6 +125,7 @@
     <ClCompile Include="DlgExamBlueDetail.cpp" />
     <ClCompile Include="DlgExamstat.cpp" />
     <ClCompile Include="DlgFM.cpp" />
+    <ClCompile Include="DlgInputStudentAnswerRecord.cpp" />
     <ClCompile Include="DlgOnlineBeginExam.cpp" />
     <ClCompile Include="DlgOnlineRolling.cpp" />
     <ClCompile Include="DlgPaper.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="FormPaperAnsys.cpp" />
     <ClCompile Include="FormQueryMark.cpp" />
     <ClCompile Include="InitInfoXml.cpp" />
+    <ClCompile Include="InputStudentAnswerRecord.cpp" />
     <ClCompile Include="InvigilateInfo.cpp" />
     <ClCompile Include="mschart_paperansys.cpp" />
     <ClCompile Include="picture.cpp" />
@@ -259,6 +261,7 @@
     <ClInclude Include="DlgExamBlueDetail.h" />
     <ClInclude Include="DlgExamstat.h" />
     <ClInclude Include="DlgFM.h" />
+    <ClInclude Include="DlgInputStudentAnswerRecord.h" />
     <ClInclude Include="DlgOnlineBeginExam.h" />
     <ClInclude Include="DlgOnlineRolling.h" />
     <ClInclude Include="DlgPaper.h" />
@@ -287,6 +290,7 @@
     <ClInclude Include="FormPaperAnsys.h" />
     <ClInclude Include="FormQueryMark.h" />
     <ClInclude Include="InitInfoXml.h" />
+    <ClInclude Include="InputStudentAnswerRecord.h" />
     <ClInclude Include="InvigilateInfo.h" />
     <ClInclude Include="mschart_paperansys.h" />
     <ClInclude Include="picture.h" />
