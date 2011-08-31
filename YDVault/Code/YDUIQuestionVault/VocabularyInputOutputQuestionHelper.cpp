@@ -1,8 +1,11 @@
 #include "StdAfx.h"
-#include "VocabularyInputQuestionHelper.h"
+#include "VocabularyInputOutputQuestionHelper.h"
 #include "../Base/DataHandler.h"
 #include "../Base/AutoClean.h"
 #include "DlgVocabularyInputPreview.h"
+#include "../ObjRef/YDObjectRef.h"
+#include "../ObjRef\YDChoiceQuestionRef.h"
+#include "../ObjHelper\FactorInfoHelper.h"
 
 HRESULT CVocabularyQuestion::Load(Paragraphs &_paragraphs,long _index)
 {
@@ -29,17 +32,17 @@ HRESULT CVocabularyQuestion::Load(Paragraphs &_paragraphs,long _index)
 }
 
 
-CVocabularyInputQuestionHelper::CVocabularyInputQuestionHelper(CYDObjectRef* _pVault,CYDObjectRef* _pType)
-	:CInputQuestionHelper(_pVault,_pType)
+CVocabularyInputOutputQuestionHelper::CVocabularyInputOutputQuestionHelper(CYDObjectRef* _pVault,CYDObjectRef* _pType)
+	:CInputOutputQuestionHelper(_pVault,_pType)
 {
 }
 
 
-CVocabularyInputQuestionHelper::~CVocabularyInputQuestionHelper(void)
+CVocabularyInputOutputQuestionHelper::~CVocabularyInputOutputQuestionHelper(void)
 {
 }
 
-HRESULT CVocabularyInputQuestionHelper::ExeInputFile(CString _strFile)
+HRESULT CVocabularyInputOutputQuestionHelper::ExeInputFile(CString _strFile)
 {
 	HRESULT hr = E_FAIL;
 	hr = CreateWord(_strFile);
@@ -137,7 +140,115 @@ HRESULT CVocabularyInputQuestionHelper::ExeInputFile(CString _strFile)
 	return S_OK;
 }
 
-HRESULT CVocabularyInputQuestionHelper::IsNewQuestionCaption(CString _strText,BOOL &_IsCaption,CString &_strCaption)
+HRESULT CVocabularyInputOutputQuestionHelper::ExeOutputFile(CString _strFile,std::list<CYDObjectRef*> *_plstObj)
+{
+	HRESULT hr = E_FAIL;
+	hr = CreateBlankWord();
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+//	Paragraph   paragraph;//用来表示文档中某一段
+	//paragraph=m_paragraphs.GetFirst();//得到第一段 
+	//Range   rg=paragraph.GetRange(); 
+	//输出格式如下
+	/*41. He asked us to _____ them in carrying through their plan. 
+		[A] provide	[C] assist 
+		[B] arouse	[D] persist 
+		答案：A   
+		[1]进度	11
+		[2]难度	3
+		
+	*/
+	ASSERT(m_pVault);
+	ASSERT(m_pType);
+	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
+	ASSERT(pDB);
+	std::list<CYDObjectRef*> lstFactorInfo;
+	CListAutoClean<CYDObjectRef> clr(lstFactorInfo);
+	CFactorInfoHelper helper;
+	hr = helper.GetFactorInfoByVaultQType(pDB,(CYDObjectRef*)m_pVault,m_pType,&lstFactorInfo);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	Selection oSel = m_oWordApp.GetSelection();
+	int index = 1;
+	for(auto itr = _plstObj->begin();itr != _plstObj->end();++itr)
+	{
+		CString strChoiceTitle;
+		hr = (*itr)->GetPropVal(FIELD_CHOICEQUESTION_TITLE,strChoiceTitle);
+		CString strIndexTitle;
+		strIndexTitle.Format(_T("%d.%s"),index,strChoiceTitle);
+		oSel.TypeText(strIndexTitle);
+		oSel.TypeParagraph();
+		std::list<CString> lstChoices;
+		CYDChoiceQuestionRef* pRef = (CYDChoiceQuestionRef*)(*itr);
+		hr = pRef->GetOptionList(&lstChoices);
+		if (FAILED(hr))
+		{
+			return hr;
+		}
+		//选择项
+		TCHAR chXuhao = _T('A');
+		for(auto itrChoice = lstChoices.begin();itrChoice != lstChoices.end();++itrChoice)
+		{
+			CString strChoice;
+			strChoice.Format(_T("[%c]%s"),chXuhao++,(*itrChoice));
+			oSel.TypeText(strChoice);
+			oSel.TypeParagraph();
+		}
+		//答案
+		CString strAnswer;
+		hr = pRef->GetPropVal(FIELD_CHOICEQUESTION_ANSWER,strAnswer);
+		oSel.TypeText(_T("答案：")+strAnswer);
+		oSel.TypeParagraph();
+
+		//指标
+		int indexFactor = 1;
+		for(auto itrFactorInfo = lstFactorInfo.begin();
+			itrFactorInfo != lstFactorInfo.end();++itrFactorInfo)
+		{
+			CString strFactorName;
+			hr = (*itrFactorInfo)->GetPropVal(FIELD_YDFACTORINFOITEM_FACTORNAME,strFactorName);
+			if(FAILED(hr))
+			{
+				return hr;
+			}
+			CString strFieldName;
+			hr = (*itrFactorInfo)->GetPropVal(FIELD_YDFACTORINFOITEM_FIELDNAME,strFieldName);
+			if(FAILED(hr))
+			{
+				return hr;
+			}
+			CString strFieldVal;
+			hr = pRef->GetPropVal((CComBSTR)strFieldName,strFieldVal);
+			if(FAILED(hr))
+			{
+				return hr;
+			}
+			if(!strFieldVal.IsEmpty())
+			{
+				//插入一个指标
+				CString strFactor;
+				strFactor.Format(_T("[%d]%s\t%s"),indexFactor++,strFactorName,strFieldVal);
+				oSel.TypeText(strFactor);
+				oSel.TypeParagraph();
+			}
+		}
+		oSel.TypeParagraph();
+		index++;
+	}
+
+	hr = SaveWord(_strFile);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	return S_OK;
+}
+
+HRESULT CVocabularyInputOutputQuestionHelper::IsNewQuestionCaption(CString _strText,BOOL &_IsCaption,CString &_strCaption)
 {
 	HRESULT hr = E_FAIL;
 	_IsCaption = FALSE;
@@ -160,7 +271,7 @@ HRESULT CVocabularyInputQuestionHelper::IsNewQuestionCaption(CString _strText,BO
 	return S_OK;
 }
 
-HRESULT CVocabularyInputQuestionHelper::IsQuestionOption(CString _strText,BOOL &_IsOption,std::list<std::pair<CString,CString> > &_lstOption)
+HRESULT CVocabularyInputOutputQuestionHelper::IsQuestionOption(CString _strText,BOOL &_IsOption,std::list<std::pair<CString,CString> > &_lstOption)
 {
 	HRESULT hr = E_FAIL;
 	_strText.TrimLeft();
@@ -211,7 +322,7 @@ HRESULT CVocabularyInputQuestionHelper::IsQuestionOption(CString _strText,BOOL &
 	return S_OK;
 }
 
-HRESULT CVocabularyInputQuestionHelper::IsQuestionAnswer(CString _strText,BOOL &_IsAnswer,CString &_strAnswer)
+HRESULT CVocabularyInputOutputQuestionHelper::IsQuestionAnswer(CString _strText,BOOL &_IsAnswer,CString &_strAnswer)
 {
 	HRESULT hr = E_FAIL;
 	_strText.TrimLeft();
@@ -230,7 +341,7 @@ HRESULT CVocabularyInputQuestionHelper::IsQuestionAnswer(CString _strText,BOOL &
 	return S_OK;
 }
 
-HRESULT CVocabularyInputQuestionHelper::IsQuestionFactor(CString _strText,BOOL &_IsFactor,std::list<std::pair<CString,CString> > &_lstFactor)
+HRESULT CVocabularyInputOutputQuestionHelper::IsQuestionFactor(CString _strText,BOOL &_IsFactor,std::list<std::pair<CString,CString> > &_lstFactor)
 {
 	//指标的格式如下
 	//[1]题目难度	15

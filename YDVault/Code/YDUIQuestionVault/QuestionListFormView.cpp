@@ -22,7 +22,7 @@
 #include "QuestionViewDlg.h"
 #include "../UIBase\ListXlsoutput.h"
 #include "DlgYDVaultQuestionFactorInfoConfig.h"
-#include "VocabularyInputQuestionHelper.h"
+#include "VocabularyInputOutputQuestionHelper.h"
 // CQuestionListFormView
 
 
@@ -69,6 +69,7 @@ BEGIN_MESSAGE_MAP(CQuestionListFormView, CYdFormView)
 	ON_BN_CLICKED(IDC_BUTTON_QL_OUTPUT, &CQuestionListFormView::OnBnClickedButtonQlOutput)
 	ON_BN_CLICKED(IDC_BUTTON_QL_CONFIG_FACTORINFO, &CQuestionListFormView::OnBnClickedButtonQlConfigFactorinfo)
 	ON_BN_CLICKED(IDC_BUTTON_QL_INPUT, &CQuestionListFormView::OnBnClickedButtonQlInput)
+	ON_BN_CLICKED(IDC_BUTTON_QL_OUTPUT_RTF, &CQuestionListFormView::OnBnClickedButtonQlOutputRtf)
 END_MESSAGE_MAP()
 
 
@@ -1107,17 +1108,72 @@ void CQuestionListFormView::OnBnClickedButtonQlInput()
 		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
 		return;
 	}
-	CInputQuestionHelper* pHelper = NULL;
+	CInputOutputQuestionHelper* pHelper = NULL;
 	if(qType == QTYPE_VOCABULARY)
 	{
-		pHelper = new CVocabularyInputQuestionHelper(pVault,pType);
+		pHelper = new CVocabularyInputOutputQuestionHelper(pVault,pType);
 	}
 	ASSERT(pHelper);
-	CPtrAutoClean<CInputQuestionHelper> clr(pHelper);
+	CPtrAutoClean<CInputOutputQuestionHelper> clr(pHelper);
 	hr = pHelper->ExeInputFile(dlg.GetPathName());
 	if(FAILED(hr))
 	{
 		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
 		return;
 	}
+}
+
+
+void CQuestionListFormView::OnBnClickedButtonQlOutputRtf()
+{
+	// TODO: Add your control notification handler code here
+	CYDQuestionType* pType = NULL;
+	HRESULT hr = E_FAIL;
+	hr = GetQuestionType(pType);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+		return;
+	}
+	CComVariant varType;
+	hr = pType->GetPropVal(FIELD_QUESTIONTYPE_TYPE, &varType);
+	QTYPE qType = QTYPE(CDataHandler::VariantToLong(varType));
+	if(qType != QTYPE_VOCABULARY)
+	{
+		AfxMessageBox(_T("暂不支持该类型题目导出！"));
+		return;
+	}
+	CFileDialog dlg(FALSE,NULL,NULL,OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT,_T("Rtf文件(*.rtf)|*.rtf|所有文件(*.*)|*.*||"));
+	if(dlg.DoModal() != IDOK)
+	{
+		return ;
+	}
+	CYDQuestionVault* pVault = NULL;
+	hr = GetQuestionVault(pVault);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+		return;
+	}
+	CInputOutputQuestionHelper* pHelper = NULL;
+	if(qType == QTYPE_VOCABULARY)
+	{
+		pHelper = new CVocabularyInputOutputQuestionHelper(pVault,pType);
+	}
+	ASSERT(pHelper);
+	std::list<CYDObjectRef*> lstQuestion;
+	for(int i = 0; i < m_lstQuestion.GetItemCount();i++)
+	{
+		CYdObjWrapper* pObjWrapper = (CYdObjWrapper*)m_lstQuestion.GetItemData(i);
+		ASSERT(pObjWrapper);
+		lstQuestion.push_back(pObjWrapper->m_pObjRef);
+	}
+	CPtrAutoClean<CInputOutputQuestionHelper> clr(pHelper);
+	hr = pHelper->ExeOutputFile(dlg.GetPathName(),&lstQuestion);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+		return;
+	}
+	AfxMessageBox(_T("导出成功！"));
 }

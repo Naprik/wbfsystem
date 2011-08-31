@@ -1,5 +1,5 @@
 #pragma once
-#include "inputquestionhelper.h"
+#include "inputOutputquestionhelper.h"
 #include <list>
 
 //导入选择题
@@ -17,14 +17,15 @@ public:
 	HRESULT Load(Paragraphs &_paragraphs,long _index);
 };
 
-class CVocabularyInputQuestionHelper :
-	public CInputQuestionHelper
+class CVocabularyInputOutputQuestionHelper :
+	public CInputOutputQuestionHelper
 {
 public:
-	CVocabularyInputQuestionHelper(CYDObjectRef* _pVault,CYDObjectRef* _pType);
-	~CVocabularyInputQuestionHelper(void);
+	CVocabularyInputOutputQuestionHelper(CYDObjectRef* _pVault,CYDObjectRef* _pType);
+	~CVocabularyInputOutputQuestionHelper(void);
 public:
 	virtual HRESULT ExeInputFile(CString _strFile);
+	virtual HRESULT ExeOutputFile(CString _strFile,std::list<CYDObjectRef*> *_plstObj);
 private:
 	//判断_strText是选择题的标题，如果是，则_strCaption返回标题
 	HRESULT IsNewQuestionCaption(CString _strText,BOOL &_IsCaption,CString &_strCaption);

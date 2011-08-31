@@ -1,7 +1,7 @@
 #pragma once
 #include "../UIBase/BCGPKeyGridCtrl.h"
 
-#include "VocabularyInputQuestionHelper.h"
+#include "VocabularyInputOutputQuestionHelper.h"
 
 class CBCGPKeyGridCtrl;
 class CFactorInfoHelper;
