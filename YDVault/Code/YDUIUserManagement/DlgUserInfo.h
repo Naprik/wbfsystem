@@ -40,4 +40,5 @@ public:
 	afx_msg void OnBnClickedCheckOperate();
 	BOOL m_bBlueTooth;
 	BOOL m_bRedOut;
+	BOOL m_bLogin;
 };

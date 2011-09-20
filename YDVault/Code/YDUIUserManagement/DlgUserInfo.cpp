@@ -23,6 +23,7 @@ CDlgUserInfo::CDlgUserInfo(CWnd* pParent /*=NULL*/)
 	, m_bDataMaintain(FALSE)
 	, m_bBlueTooth(FALSE)
 	, m_bRedOut(FALSE)
+	, m_bLogin(FALSE)
 {
 	m_TypeOperation = OP_NEW;
 	m_pUser = NULL;
@@ -43,6 +44,7 @@ void CDlgUserInfo::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_CHECK_DATAMAINTAIN, m_bDataMaintain);
 	DDX_Check(pDX, IDC_CHECK_BLUE_TOOTH, m_bBlueTooth);
 	DDX_Check(pDX, IDC_CHECK_RED_OUT, m_bRedOut);
+	DDX_Check(pDX, IDC_CHECK_LOGIN, m_bLogin);
 }
 
 
@@ -136,7 +138,7 @@ BOOL CDlgUserInfo::OnInitDialog()
 		hr = helper.ConvertByVal(lAuthority,m_bVault,m_bPaper,
 								m_bOperate,
 								m_bBlueTooth,m_bRedOut,
-								m_bDataMaintain);
+								m_bDataMaintain, m_bLogin);
 		if(FAILED(hr))
 		{
 			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
@@ -229,7 +231,7 @@ void CDlgUserInfo::OnBnClickedOk()
 	long lAuthority = 0;
 	hr = helper.CreateVal(m_bVault,m_bPaper,m_bOperate,
 						 m_bBlueTooth,m_bRedOut,
-							m_bDataMaintain,lAuthority);
+							m_bDataMaintain,m_bLogin, lAuthority);
 	if(FAILED(hr))
 	{
 		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);

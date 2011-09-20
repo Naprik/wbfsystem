@@ -22,6 +22,8 @@
 #define IDC_CHECK_BLUE_TOOTH            20009
 #define IDC_CHECK_BLUE_TOOTH2           20010
 #define IDC_CHECK_RED_OUT               20010
+#define IDC_CHECK1                      20011
+#define IDC_CHECK_LOGIN                 20011
 
 // Next default values for new objects
 // 
@@ -29,7 +31,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        20003
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         20010
+#define _APS_NEXT_CONTROL_VALUE         20012
 #define _APS_NEXT_SYMED_VALUE           20000
 #endif
 #endif

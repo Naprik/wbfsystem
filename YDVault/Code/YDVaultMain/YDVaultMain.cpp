@@ -21,7 +21,7 @@
 #include "../YDUIUserManagement\StaticYdUser.h"
 #include "../YDUIUserManagement\DlgModifyPwd.h"
 #include "../YdCom\StaticYdComApp.h"
-
+#include "../YDUIUserManagement/AuthorityHelper.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -142,6 +142,19 @@ BOOL CYDVaultMainApp::InitInstance()
 	dlg.m_pDatabase = m_pDatabase;
 	if(dlg.DoModal() != IDOK)
 	{
+		return FALSE;
+	}
+	VARIANT_BOOL bRight = VARIANT_FALSE;
+	CAuthorityHelper helper;
+	hr = helper.CheckSecurity(SECURITY_LOGIN, &bRight);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_OK|MB_ICONQUESTION);
+		return FALSE;
+	}
+	if(!bRight)
+	{
+		AfxMessageBox(_T("当前用户没有登录题库的权限！"));
 		return FALSE;
 	}
 	CMFCToolTipInfo ttParams;

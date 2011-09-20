@@ -274,7 +274,8 @@ enum SECURITY_TYPE
 	SECURITY_OPERATE		= 2,//考试操作
 	SECURITY_BLUE_TOOTH     = 3,/*蓝牙*/
 	SECURITY_REDOUT         = 4,/*红外*/
-	SECURITY_DATAMAINTAIN	= 5//数据维护
+	SECURITY_DATAMAINTAIN	= 5,//数据维护
+	SECURITY_LOGIN			= 6	//练习系统登录试题库
 };
 
 class COpenObjExParam //发送消息WM_YD_OPEN_OBJECT_EX的参数结构体

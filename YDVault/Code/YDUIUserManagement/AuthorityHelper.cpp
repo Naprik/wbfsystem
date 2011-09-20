@@ -19,7 +19,8 @@ HRESULT CAuthorityHelper::ConvertByVal(long _lAuthority,
 					 BOOL& _bOperate,/*考试操作*/
 					 BOOL& _bBlue,/*蓝牙*/
 					 BOOL& _bRedOut,/*红外*/
-					 BOOL& _bDataMaintain/*数据维护*/)
+					 BOOL& _bDataMaintain/*数据维护*/,
+					 BOOL& _bLogin)
 {
 	HRESULT hr = E_FAIL;
 	if((1 << SECURITY_VAULT) & _lAuthority )
@@ -70,6 +71,14 @@ HRESULT CAuthorityHelper::ConvertByVal(long _lAuthority,
 	{
 		_bDataMaintain = FALSE;
 	}
+	if((1 << SECURITY_LOGIN) & _lAuthority)
+	{
+		_bLogin = TRUE;
+	}
+	else
+	{
+		_bLogin = FALSE;
+	}
 	return S_OK;
 }
 //生成权限值
@@ -79,6 +88,7 @@ HRESULT CAuthorityHelper::CreateVal(BOOL _bVault,/*试题库管理*/
 				  BOOL& _bBlue,/*蓝牙*/
 				  BOOL& _bRedOut,/*红外*/
 				  BOOL _bDataMaintain/*数据维护*/,
+				  BOOL& _bLogin,
 				  long& _lAuthority)
 {
 	HRESULT hr = E_FAIL;
@@ -107,6 +117,10 @@ HRESULT CAuthorityHelper::CreateVal(BOOL _bVault,/*试题库管理*/
 	{
 		_lAuthority |= (1<<SECURITY_DATAMAINTAIN);
 	}
+	if(_bLogin)
+	{
+		_lAuthority |= (1<<SECURITY_LOGIN);
+	}
 	return S_OK;
 }
 
@@ -122,10 +136,12 @@ HRESULT CAuthorityHelper::ConvertString(long _lAuthority,
 	BOOL bBlueTooth = FALSE;
 	BOOL bRedOut = FALSE;
 	BOOL bDataMaintain = FALSE;
+	BOOL bLogin = FALSE;
+	
 	hr = ConvertByVal(_lAuthority,bVault,bPaper,
 						bOperate,
-						bBlueTooth,bRedOut,
-						bDataMaintain);
+						bBlueTooth,bRedOut, 
+						bDataMaintain, bLogin);
 	if(FAILED(hr))
 	{
 		return hr;
@@ -153,6 +169,10 @@ HRESULT CAuthorityHelper::ConvertString(long _lAuthority,
 	if(bDataMaintain)
 	{
 		_strVal += _T("数据维护;");
+	}
+	if(bLogin)
+	{
+		_strVal += _T("登录试题库");
 	}
 	return S_OK;
 }
