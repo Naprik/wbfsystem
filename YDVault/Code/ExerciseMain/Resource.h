@@ -113,6 +113,8 @@
 #define IDD_DLG_EM_CFG_QUESTION_2       339
 #define IDB_BITMAP_MAINTREE             340
 #define IDD_DLG_PERSIONINFO_VIEW        341
+#define IDD_DIALOG3                     344
+#define IDD_DLG_STDANSWER_DETIAL        344
 #define IDC_TREE_EM_QUESTION            1000
 #define IDC_SCROLLBAR1                  1000
 #define IDC_BTN_EM_PREV                 1001
@@ -171,6 +173,7 @@
 #define IDC_LIST1                       1038
 #define IDC_LIST_LOG                    1038
 #define IDC_LIST_FACTORS                1038
+#define IDC_LIST_STD_ANSWER_DETIAL      1038
 #define IDC_EDIT_MARK                   1039
 #define IDC_EDIT_NAME                   1040
 #define IDC_CMB_QTYPE                   1041
@@ -519,7 +522,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        344
+#define _APS_NEXT_RESOURCE_VALUE        345
 #define _APS_NEXT_COMMAND_VALUE         32795
 #define _APS_NEXT_CONTROL_VALUE         1051
 #define _APS_NEXT_SYMED_VALUE           314

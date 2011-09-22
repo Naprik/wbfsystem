@@ -439,6 +439,30 @@ HRESULT CYDQuestionRef::GetStandardAnswer(CString &_str)
 	return S_OK;
 }
 
+HRESULT CYDQuestionRef::GetStandardAnswer(std::pair<CString,CString> &_stdAnswer)
+{
+	CString strStdAnswer;
+	GetStandardAnswer(strStdAnswer);
+	CString strDesc;
+	HRESULT hr = GetPropVal(FIELD_CHOICEQUESTION_ANSWERDESC, strDesc);
+	if (FAILED(hr))
+	{
+		return hr;
+	}
+	_stdAnswer.first = strStdAnswer;
+	_stdAnswer.second = strDesc;
+	return S_OK;
+}
+
+HRESULT CYDQuestionRef::GetStandardAnswer(std::list<std::pair<CString,CString>> &_lstStdAnswer)
+{
+	std::pair<CString, CString> stdAnswer;
+	GetStandardAnswer(stdAnswer);
+	_lstStdAnswer.push_back(stdAnswer);
+
+	return S_OK;
+}
+
 HRESULT CYDQuestionRef::GetStandardAnswer(std::list<CString> &_lstStdAnswer)
 {
 	HRESULT hr = E_FAIL;

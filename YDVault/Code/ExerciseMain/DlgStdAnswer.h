@@ -2,8 +2,25 @@
 #include "SelectorEngine.h"
 #include "wmpplayer4.h"
 #include "../UIBase/BCGPKeyGridCtrl.h"
-
+#include "StdAnswerDetialDlg.h"
 // CDlgStdAnswer dialog
+
+class CStdAnswerBCGPGridCtrl :
+	public CBCGPKeyGridCtrl
+{
+public:
+	DECLARE_DYNAMIC(CStdAnswerBCGPGridCtrl)
+	CStdAnswerBCGPGridCtrl(void);
+	~CStdAnswerBCGPGridCtrl(void);
+protected:
+	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
+	DECLARE_MESSAGE_MAP()
+
+};
+
+
+
+
 
 class CDlgStdAnswer : public CDialog
 {
@@ -24,7 +41,7 @@ public:
 	virtual BOOL OnInitDialog();
 	CLISTQUESTION*	m_pListQuestion;
 private:
-	CBCGPKeyGridCtrl	m_listGrid;
+	CStdAnswerBCGPGridCtrl	m_listGrid;
 	CWMPPlayer4	    m_WMPlay;
 	HRESULT InsertList(CYDQuestionRef* _pQuestionRef,
 					  CBCGPGridRow* _pParentRow,

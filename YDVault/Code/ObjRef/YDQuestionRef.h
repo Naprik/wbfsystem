@@ -17,6 +17,8 @@ public:
 	virtual bool ToString(CString* pStr);
 	virtual HRESULT GetStandardAnswer(CString &_str);
 	virtual HRESULT GetStandardAnswer(std::list<CString> &_lstStdAnswer);
+	virtual HRESULT GetStandardAnswer(std::list<std::pair<CString,CString>> &_lstStdAnswer);
+	virtual HRESULT GetStandardAnswer(std::pair<CString,CString>&_stdAnswer);
 
 	virtual HRESULT PersistToMSWord(int* pIndex, CWordAppHelper* pWord, CWordAppHelper* pWordAnswer, const CString& strFolder);
 

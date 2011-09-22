@@ -9,12 +9,42 @@
 #include "wmpcontrols.h"
 
 
+IMPLEMENT_DYNAMIC(CStdAnswerBCGPGridCtrl,CBCGPKeyGridCtrl)
+CStdAnswerBCGPGridCtrl::CStdAnswerBCGPGridCtrl(void)
+{
+}
+
+CStdAnswerBCGPGridCtrl::~CStdAnswerBCGPGridCtrl(void)
+{
+}
+
+BEGIN_MESSAGE_MAP(CStdAnswerBCGPGridCtrl, CBCGPKeyGridCtrl)
+	ON_WM_LBUTTONDBLCLK()
+END_MESSAGE_MAP()
+void CStdAnswerBCGPGridCtrl::OnLButtonDblClk(UINT nFlags, CPoint point) 
+{
+	CBCGPGridCtrl::OnLButtonDblClk(nFlags,point);
+	CBCGPGridRow* pGridRow =  GetCurSel();
+	if(pGridRow == NULL)
+	{
+		return;
+	}
+	CYDQuestionRef* pRef = (CYDQuestionRef*)pGridRow->GetData();
+	if (pRef != NULL)
+	{
+		CStdAnswerDetialDlg dlg;
+		dlg.m_pQuestionRef = pRef;
+		dlg.DoModal();
+	}
+}
+
 // CDlgStdAnswer dialog
 
 const int cColQuestionType = 0;//题型
 const int cColQuestionNo   = 1;//题号
 const int cColQuestionAnswer = 2;//答案
 const int cColQuestionMultiMedia = 3;//多媒体
+
 
 IMPLEMENT_DYNAMIC(CDlgStdAnswer, CDialog)
 

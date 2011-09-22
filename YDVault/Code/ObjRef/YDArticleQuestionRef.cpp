@@ -679,6 +679,30 @@ HRESULT CYDArticleQuestionRef::GetStandardAnswer(std::list<CString> &_lstStdAnsw
 	return S_OK;
 }
 
+HRESULT CYDArticleQuestionRef::GetStandardAnswer(std::list<std::pair<CString,CString>> &_lstStdAnswer)
+{
+	HRESULT hr = E_FAIL;
+	std::list<CYDQuestionRef*> lstQuestion;
+	CListAutoClean<CYDQuestionRef> clr(lstQuestion);
+	hr = GetChildQueston(&lstQuestion);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	for(std::list<CYDQuestionRef*>::const_iterator itr = lstQuestion.begin();
+		itr != lstQuestion.end();++itr)
+	{
+		std::pair<CString, CString> stdAnswer;
+		hr = (*itr)->GetStandardAnswer(stdAnswer);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		_lstStdAnswer.push_back(stdAnswer);
+	}
+	return S_OK;
+}
+
 HRESULT CYDArticleQuestionRef::GetTitleMode(TITLEMODE* titlemode)
 {
 	CComVariant mode;
