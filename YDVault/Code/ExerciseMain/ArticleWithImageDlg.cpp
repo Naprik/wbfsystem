@@ -59,9 +59,9 @@ BOOL CArticleWithImageDlg::OnInitDialog()
 	m_Area.GetWindowRect(&rectSelf);
 	m_rect.left = rect.left;
 	m_rect.top = rect.top;
-	m_rect.right = rect.left + rectSelf.Width();
-	m_rect.bottom = rect.top + rectSelf.Height();
-	m_Area.MoveWindow(rect.left, rect.top, rectSelf.Width(), rectSelf.Height());
+	m_rect.right = rect.left + rect.Width();
+	m_rect.bottom = rect.top + rect.Height();
+	m_Area.MoveWindow(rect.left, rect.top, rect.Width(), rect.Height());
 	m_Area.ShowWindow(SW_SHOW);
 	CClientDC dc(this);
 	m_dcMem.CreateCompatibleDC( &dc );

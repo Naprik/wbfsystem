@@ -132,7 +132,7 @@ void CDlgQuestionArea::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar
 		SetScrollInfo(SB_VERT,&scrollinfo,SIF_ALL);  
 		break;   
 	}
-
+	
 	CDialog::OnVScroll(nSBCode, nPos, pScrollBar);
 }
 
@@ -150,7 +150,8 @@ BOOL CDlgQuestionArea::ShowQuestion()
 	CleanDlg();
 	SendMessage ( WM_VSCROLL, SB_TOP, 0) ;
 	CYDArticleQuestionRef* pArticle = dynamic_cast<CYDArticleQuestionRef*>(m_pRecord->m_pQuestion);
-
+	int nVMax = 0;
+	int nHMax = 0;
 	std::list<CString>::const_iterator itrAns = m_pRecord->m_listUserAnswers.begin();
 	if (m_pRecord->m_QTypeID == 8 ||
 		m_pRecord->m_QTypeID == 9 ||
@@ -232,6 +233,12 @@ BOOL CDlgQuestionArea::ShowQuestion()
 			LONG top = m_MainRect.top + rectSelf.Height() * (uIndex -1);
 			pItemDlg->MoveWindow(m_MainRect.left, top, rectSelf.Width(), rectSelf.Height());
 			pItemDlg->ShowWindow(SW_SHOW);
+
+			nVMax += rectSelf.Height();
+			if (nHMax < rectSelf.Width())
+			{
+				nHMax = rectSelf.Width();
+			}
 			m_lstDlgChoice.push_back(pItemDlg);
 		}
 		if (bClean)
@@ -241,6 +248,23 @@ BOOL CDlgQuestionArea::ShowQuestion()
 	}
 	
 	UpdateData(FALSE);
+
+	SCROLLINFO si;
+	si.fMask = SIF_ALL;
+    si.nMin = 0;
+    si.nMax = m_MainRect.Height();
+    si.nPos = 0;
+	si.nPage = nVMax / m_MainRect.Height() + 1;
+
+    SetScrollInfo (SB_VERT, &si, TRUE);
+
+	si.fMask = SIF_ALL;
+    si.nMin = 0;
+	si.nMax = m_MainRect.Width();
+    si.nPos = 0;
+	si.nPage = nHMax / m_MainRect.Width();
+
+    SetScrollInfo (SB_HORZ, &si, TRUE);
 
 	return TRUE;
 }
@@ -265,5 +289,70 @@ HRESULT CDlgQuestionArea::GetStuAnswers(std::list<CString>* pListAns)
 void CDlgQuestionArea::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
 	
-	CDialog::OnHScroll(nSBCode, nPos, pScrollBar);
-}
+	SCROLLINFO	scrollinfo; 
+	GetScrollInfo(SB_HORZ,&scrollinfo,SIF_ALL); 
+	switch   (nSBCode) 
+	{ 
+	case   SB_LEFT: 
+		ScrollWindow((scrollinfo.nPos-scrollinfo.nMin)*10,0); 
+		scrollinfo.nPos	=	scrollinfo.nMin; 
+		SetScrollInfo(SB_HORZ,&scrollinfo,SIF_ALL); 
+		break; 
+	case   SB_RIGHT: 
+		ScrollWindow((scrollinfo.nPos-scrollinfo.nMax)*10,0); 
+		scrollinfo.nPos	=	scrollinfo.nMax; 
+		SetScrollInfo(SB_HORZ,&scrollinfo,SIF_ALL); 
+		break; 
+	case   SB_LINELEFT: 
+		scrollinfo.nPos	-=	1; 
+		if   (scrollinfo.nPos <scrollinfo.nMin) 
+		{ 
+		scrollinfo.nPos	=	scrollinfo.nMin; 
+		break; 
+		} 
+		SetScrollInfo(SB_HORZ,&scrollinfo,SIF_ALL); 
+		ScrollWindow(10,0); 
+		break; 
+	case   SB_LINERIGHT: 
+		scrollinfo.nPos	+=	1; 
+		if   (scrollinfo.nPos> scrollinfo.nMax) 
+		{ 
+		scrollinfo.nPos	=	scrollinfo.nMax; 
+		break; 
+		} 
+		SetScrollInfo(SB_HORZ,&scrollinfo,SIF_ALL); 
+		ScrollWindow(-10,0); 
+	break; 
+	case   SB_PAGELEFT: 
+		scrollinfo.nPos	-=	5; 
+		if   (scrollinfo.nPos <scrollinfo.nMin) 
+		{ 
+		scrollinfo.nPos	=	scrollinfo.nMin; 
+		break; 
+		} 
+		SetScrollInfo(SB_HORZ,&scrollinfo,SIF_ALL); 
+		ScrollWindow(10*5,0); 
+	break; 
+		case   SB_PAGERIGHT: 
+		scrollinfo.nPos	+=	5; 
+		if   (scrollinfo.nPos> scrollinfo.nMax) 
+		{ 
+		scrollinfo.nPos	=	scrollinfo.nMax; 
+		break; 
+		} 
+		SetScrollInfo(SB_HORZ,&scrollinfo,SIF_ALL); 
+		ScrollWindow(-10*5,0); 
+	break; 
+		case   SB_THUMBPOSITION: 
+		break; 
+		case   SB_THUMBTRACK: 
+		ScrollWindow((scrollinfo.nPos-nPos)*10,0); 
+		scrollinfo.nPos	=	nPos; 
+		SetScrollInfo(SB_HORZ,&scrollinfo,SIF_ALL); 
+		break; 
+	case   SB_ENDSCROLL: 
+		break; 
+	} 
+
+	CDialog::OnHScroll(nSBCode,   nPos,   pScrollBar); 
+} 

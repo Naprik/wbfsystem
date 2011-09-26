@@ -53,7 +53,7 @@ BOOL CArticleListenDlg::OnInitDialog()
 	pTmpWnd->GetWindowRect(&rect);
 	ScreenToClient(&rect);
 	m_Area.GetWindowRect(&rectSelf);
-	m_Area.MoveWindow(rect.left, rect.top, rectSelf.Width(), rectSelf.Height());
+	m_Area.MoveWindow(rect.left, rect.top, rect.Width(), rect.Height());
 	m_Area.ShowWindow(SW_SHOW);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE

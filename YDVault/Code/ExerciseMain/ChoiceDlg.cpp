@@ -47,9 +47,9 @@ BOOL CChoiceDlg::OnInitDialog()
 	m_Area.GetWindowRect(&rectSelf);
 	m_rect.left = rect.left;
 	m_rect.top = rect.top;
-	m_rect.right = rect.left + rectSelf.Width();
-	m_rect.bottom = rect.top + rectSelf.Height();
-	m_Area.MoveWindow(rect.left, rect.top, rectSelf.Width(), rectSelf.Height());
+	m_rect.right = rect.left + rect.Width();
+	m_rect.bottom = rect.top + rect.Height();
+	m_Area.MoveWindow(rect.left, rect.top, rect.Width(), rect.Height());
 	m_Area.ShowWindow(SW_SHOW);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE

@@ -68,7 +68,7 @@ public:
 	afx_msg void OnBnClickedBtnEmStdanswer();
 public:
 	afx_msg void OnNMClickTreeEmQuestion(NMHDR *pNMHDR, LRESULT *pResult);
-
+//	afx_msg void CExerciseMainDlg::OnCustomDraw(NMHDR *pNMHDR, LRESULT *pResult); 
 private:
 	BOOL CreateArticleDlg();
 	BOOL CreateListenDlg();

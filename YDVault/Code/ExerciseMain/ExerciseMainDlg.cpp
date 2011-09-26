@@ -16,6 +16,7 @@
 #include "DlgExsiceMark.h"
 #include "DlgReName.h"
 #include "StudentLevelUpdateUtil.h"
+#include <WinUser.h>
 
 #include "../YDUIUserManagement/StaticYdUser.h"
 #include "../ObjRef/YDUserRef.h"
@@ -162,6 +163,7 @@ void CExerciseMainDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BTN_EM_STUANSWER, m_btnStuAnswer);
 	DDX_Control(pDX, IDC_BTN_EM_CLOSE, m_btnFinish);
 	DDX_Control(pDX, IDC_TREE_EM_QUESTION, m_tree);
+
 }
 
 
@@ -173,10 +175,72 @@ BEGIN_MESSAGE_MAP(CExerciseMainDlg, CDialog)
 	ON_BN_CLICKED(IDC_BTN_EM_NEXT, &CExerciseMainDlg::OnBnClickedBtnEmNext)
 	ON_BN_CLICKED(IDC_BTN_EM_CLOSE, &CExerciseMainDlg::OnBnClickedBtnEmClose)
 	ON_BN_CLICKED(IDC_BTN_EM_RENAME, &CExerciseMainDlg::OnBnClickedBtnEmRename)
+//	ON_NOTIFY_REFLECT(NM_CUSTOMDRAW, OnCustomDraw )
 END_MESSAGE_MAP()
 
 
 // CExerciseMainDlg message handlers
+//void CExerciseMainDlg::OnCustomDraw(NMHDR *pNMHDR, LRESULT *pResult)            
+//{
+//	LPNMHDR pNmhdr = (LPNMHDR)pNMHDR;   
+// 
+//	if(m_tree.m_hWnd != pNmhdr->hwndFrom)
+//		return;
+// 
+//	LPNMTVCUSTOMDRAW pCustomDraw = (LPNMTVCUSTOMDRAW)pNMHDR;
+//	switch (pCustomDraw->nmcd.dwDrawStage)
+//	{
+//	case CDDS_PREPAINT:
+//		// Need to process this case and set pResult to CDRF_NOTIFYITEMDRAW, 
+//		// otherwise parent will never receive CDDS_ITEMPREPAINT notification. (GGH) 
+//		*pResult = CDRF_NOTIFYITEMDRAW;
+//		return;
+//     
+//	case CDDS_ITEMPREPAINT:
+//		if(this->IsWindowEnabled()==1)
+//		{
+//			if ((pCustomDraw->nmcd.uItemState & (CDIS_FOCUS))==0
+//			&&(pCustomDraw->nmcd.uItemState & (CDIS_SELECTED))==CDIS_SELECTED) // selected
+//			{ 
+//				pCustomDraw->clrTextBk=RGB(255, 255, 255);
+//				pCustomDraw->clrText = RGB(0, 0, 0);
+//			}
+//			*pResult = CDRF_NOTIFYPOSTPAINT;
+//			return;
+//		}
+//		else
+//		{
+//			*pResult = CDRF_DODEFAULT ;
+//			return;
+//		}
+//	case CDDS_ITEMPOSTPAINT:
+//		if(this->IsWindowEnabled()==1)
+//		{
+//			if ((pCustomDraw->nmcd.uItemState & (CDIS_FOCUS))==0
+//			&&(pCustomDraw->nmcd.uItemState & (CDIS_SELECTED))==CDIS_SELECTED) // selected
+//			{
+//				CRect   rcText;  
+//				HTREEITEM hItem=(HTREEITEM) pCustomDraw->nmcd.dwItemSpec;
+//				m_tree.GetItemRect(hItem,   &rcText,   true); 
+//				CPen penBlue(PS_SOLID ,1,RGB(0, 0, 255));
+//				CDC* pDC=CDC::FromHandle(pCustomDraw->nmcd.hdc); 
+//				CBrush* pBrush=CBrush::FromHandle((HBRUSH)GetStockObject(NULL_BRUSH));
+//				CBrush* pOldBrush = pDC->SelectObject(pBrush);
+//				CPen* pOldPen = pDC->SelectObject(&penBlue);
+//				pDC->Rectangle(&rcText);
+//				pDC->SelectObject(pOldBrush);
+//				pDC->SelectObject(pOldPen);
+//			}
+//			*pResult = CDRF_SKIPDEFAULT;
+//			return;
+//		}
+//		else
+//		{
+//			*pResult = CDRF_DODEFAULT ;
+//			return;
+//		}
+//	 }
+//}
 
 BOOL CExerciseMainDlg::OnInitDialog()
 {
