@@ -104,6 +104,14 @@ HRESULT CSelectorEngine::GetQuestionsFromCfg(CSelectQuestionCfgMgr* pCfgMgr,
 					}
 					p->SetPropVal(L"ANSWER", &varVal);
 					varVal.Clear();
+					//野割answerdesc
+					hr = theApp.m_pDatabase->GetField(L"ANSWERDESC", varVal);
+					if (FAILED(hr))
+					{
+						return hr;
+					}
+					p->SetPropVal(L"ANSWERDESC", &varVal);
+					varVal.Clear();
 					//野割usedcount
 					hr = theApp.m_pDatabase->GetField(L"USEDCOUNT", varVal);
 					if (FAILED(hr))
