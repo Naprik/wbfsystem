@@ -412,7 +412,12 @@ BOOL CExerciseMainDlg::OnInitDialog()
 		trans.Commit();
 		wait.StepIt();
 	}
-
+	if (m_lstQuestions.size() <= 0)
+	{
+		AfxMessageBox(L"没有获取到题目供当前练习使用！");
+		OnOK();
+	}
+	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -746,34 +751,37 @@ HRESULT CExerciseMainDlg::ShowSelItem(HTREEITEM _hItem)
 void CExerciseMainDlg::OnBnClickedBtnEmClose()
 {
 	// TODO: Add your control notification handler code here
-	if (m_pActiveDlg != NULL)
+	if (m_lstQuestions.size() > 0)
 	{
-		m_pActiveDlg->PersistData();
-		m_log.Save();
-	}
-	CDlgExsiceMark dlg;
-	dlg.m_pQuestionRecord = &m_log;
-	dlg.DoModal();
-
-	if (!m_isupdateuser)
-	{
-		OBJID vaultid;
-		HRESULT hr = (*m_lstQuestions.begin())->GetVaultID(&vaultid);
-		CString level;
-		CStudentLevelUpdateUtil::Instance()->GetStudentLevel(vaultid, dlg.m_accuracy, &level);
-		CYDUserRef* puser = NULL;
-		CStaticYdUser::Instance()->GetCurUser(puser);
-		puser->SetPropVal(FIELD_YDUSER_LEVEL, &CComVariant(level));
-		AfxGetMainWnd()->SendMessage(WM_YD_UPDATE_PERSIONINFO, (WPARAM)(&TREE_NODE_USER_INFO),0);
-		CDBTransactionRef trans(theApp.m_pDatabase, TRUE);
-		hr = puser->Update();
-		if (FAILED(hr))
+		if (m_pActiveDlg != NULL)
 		{
-			return;
+			m_pActiveDlg->PersistData();
+			m_log.Save();
 		}
-		trans.Commit();
-		m_isupdateuser = TRUE;
-	}
+		CDlgExsiceMark dlg;
+		dlg.m_pQuestionRecord = &m_log;
+		dlg.DoModal();
+
+		if (!m_isupdateuser)
+		{
+			OBJID vaultid;
+			HRESULT hr = (*m_lstQuestions.begin())->GetVaultID(&vaultid);
+			CString level;
+			CStudentLevelUpdateUtil::Instance()->GetStudentLevel(vaultid, dlg.m_accuracy, &level);
+			CYDUserRef* puser = NULL;
+			CStaticYdUser::Instance()->GetCurUser(puser);
+			puser->SetPropVal(FIELD_YDUSER_LEVEL, &CComVariant(level));
+			AfxGetMainWnd()->SendMessage(WM_YD_UPDATE_PERSIONINFO, (WPARAM)(&TREE_NODE_USER_INFO),0);
+			CDBTransactionRef trans(theApp.m_pDatabase, TRUE);
+			hr = puser->Update();
+			if (FAILED(hr))
+			{
+				return;
+			}
+			trans.Commit();
+			m_isupdateuser = TRUE;
+		}
+		}
 }
 
 void CExerciseMainDlg::OnBnClickedBtnEmRename()
