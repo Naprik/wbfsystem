@@ -56,6 +56,8 @@ CChildFrame::~CChildFrame()
 BOOL CChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO: Modify the Window class or styles here by modifying the CREATESTRUCT cs
+	/*cs.style=cs.style&~(WS_MAXIMIZEBOX);  
+	cs.style=cs.style&~(WS_MINIMIZEBOX);*/
 	if( !CMDIChildWndEx::PreCreateWindow(cs) )
 		return FALSE;
 
@@ -355,63 +357,68 @@ void CChildFrame::OnUpdatePropertyCancel(CCmdUI* pCmdUI)
 void CChildFrame::OnClose()
 {
 	// TODO: Add your message handler code here and/or call default
-	HRESULT hr = E_FAIL;
-	CView* pView = GetActiveView();
-	if(pView == NULL) return;
-	CObjPropertySheet* pSheet = NULL;
-	_ASSERT(pView->GetSafeHwnd()!=NULL);
-	if(pView->IsKindOf(RUNTIME_CLASS(CYdFormView)))
-	{
-		CYdFormView* pYDFormView = (CYdFormView*)pView;
-		hr = pYDFormView->Close();
-		if (hr == S_FALSE)
-		{
-			return;
-		}
-		pSheet = ((CYdFormView*)pView)->GetPropertySheet();
-	}
-	if(pSheet != NULL)
-	{
-		CObjPropSheetManager* pSheetManager = (CObjPropSheetManager*)AfxGetMainWnd()->SendMessage(WM_YD_GET_PROPSHEETMANAGER);
-		ASSERT(pSheetManager);
-		CYdObjWrapper* pObjWrapper = pSheet->GetCurObjWrapper();
-//		ASSERT(pObjWrapper != NULL);
-		hr = pSheetManager->Remove(pSheet);
-		if(SUCCEEDED(hr))
-		{
-			if (hr == S_FALSE)
-			{
-				return;
-			}
-		}
-		else
-		{
-			DISPLAY_YDERROR(hr,MB_OK|MB_ICONSTOP);
-			return;
-		}
-		if (pObjWrapper)
-		{
-			UINT uID = 0;
-			hr = pObjWrapper->m_pObjRef->GetID(&uID);
-			if(FAILED(hr))
-			{
-				DISPLAY_YDERROR(hr,MB_OK|MB_ICONSTOP);
-				return;
-			}
-			if(uID == 0)
-			{
-				//说明是新建的，要将树上的节点删除
-				if(pObjWrapper->m_pRelatedWnd != NULL)
-				{
-					CTreeCtrl* pTreeCtrl = (CTreeCtrl*)pObjWrapper->m_pRelatedWnd;
-					HTREEITEM hItem = (HTREEITEM)pObjWrapper->m_hRelatedItem;
-					ASSERT(pTreeCtrl != NULL && hItem != NULL);
-					pTreeCtrl->DeleteItem(hItem);
-				}
-			}
-		}
-	}
-	CMDIChildWndEx::OnClose();
+//	HRESULT hr = E_FAIL;
+//	CView* pView = GetActiveView();
+//	if(pView == NULL) return;
+//	CObjPropertySheet* pSheet = NULL;
+//	_ASSERT(pView->GetSafeHwnd()!=NULL);
+//	if(pView->IsKindOf(RUNTIME_CLASS(CYdFormView)))
+//	{
+//		CYdFormView* pYDFormView = (CYdFormView*)pView;
+//		hr = pYDFormView->Close();
+//		if (hr == S_FALSE)
+//		{
+//			return;
+//		}
+//		pSheet = ((CYdFormView*)pView)->GetPropertySheet();
+//	}
+//	if(pSheet != NULL)
+//	{
+//		CObjPropSheetManager* pSheetManager = (CObjPropSheetManager*)AfxGetMainWnd()->SendMessage(WM_YD_GET_PROPSHEETMANAGER);
+//		ASSERT(pSheetManager);
+//		if (pSheetManager == NULL)
+//		{
+//			return;
+//		}
+//
+//		CYdObjWrapper* pObjWrapper = pSheet->GetCurObjWrapper();
+////		ASSERT(pObjWrapper != NULL);
+//		hr = pSheetManager->Remove(pSheet);
+//		if(SUCCEEDED(hr))
+//		{
+//			if (hr == S_FALSE)
+//			{
+//				return;
+//			}
+//		}
+//		else
+//		{
+//			DISPLAY_YDERROR(hr,MB_OK|MB_ICONSTOP);
+//			return;
+//		}
+//		if (pObjWrapper)
+//		{
+//			UINT uID = 0;
+//			hr = pObjWrapper->m_pObjRef->GetID(&uID);
+//			if(FAILED(hr))
+//			{
+//				DISPLAY_YDERROR(hr,MB_OK|MB_ICONSTOP);
+//				return;
+//			}
+//			if(uID == 0)
+//			{
+//				//说明是新建的，要将树上的节点删除
+//				if(pObjWrapper->m_pRelatedWnd != NULL)
+//				{
+//					CTreeCtrl* pTreeCtrl = (CTreeCtrl*)pObjWrapper->m_pRelatedWnd;
+//					HTREEITEM hItem = (HTREEITEM)pObjWrapper->m_hRelatedItem;
+//					ASSERT(pTreeCtrl != NULL && hItem != NULL);
+//					pTreeCtrl->DeleteItem(hItem);
+//				}
+//			}
+//		}
+//	}
+//	CMDIChildWndEx::OnClose();
 }
 
 HRESULT CChildFrame::UpdateRelatedTree(CYdObjWrapper* _pObjWrapper)
@@ -450,4 +457,12 @@ void CChildFrame::ActivateFrame(int nCmdShow)
 	nCmdShow = SW_SHOWMAXIMIZED;
 
 	CMDIChildWndEx::ActivateFrame(nCmdShow);
+}
+
+
+BOOL CChildFrame::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle , const RECT& rect , CMDIFrameWnd* pParentWnd , CCreateContext* pContext)
+{
+	// TODO: Add your specialized code here and/or call the base class
+	dwStyle   =   (dwStyle   &(   ~WS_SYSMENU))   |   WS_MAXIMIZEBOX     ; 
+	return CMDIChildWndEx::Create(lpszClassName, lpszWindowName, dwStyle, rect, pParentWnd, pContext);
 }
