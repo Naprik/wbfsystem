@@ -56,8 +56,6 @@ CChildFrame::~CChildFrame()
 BOOL CChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO: Modify the Window class or styles here by modifying the CREATESTRUCT cs
-	/*cs.style=cs.style&~(WS_MAXIMIZEBOX);  
-	cs.style=cs.style&~(WS_MINIMIZEBOX);*/
 	if( !CMDIChildWndEx::PreCreateWindow(cs) )
 		return FALSE;
 
@@ -463,6 +461,6 @@ void CChildFrame::ActivateFrame(int nCmdShow)
 BOOL CChildFrame::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle , const RECT& rect , CMDIFrameWnd* pParentWnd , CCreateContext* pContext)
 {
 	// TODO: Add your specialized code here and/or call the base class
-	dwStyle   =   (dwStyle   &(   ~WS_SYSMENU))   |   WS_MAXIMIZEBOX     ; 
+	dwStyle = (dwStyle&(~WS_SYSMENU))|WS_MAXIMIZEBOX; 
 	return CMDIChildWndEx::Create(lpszClassName, lpszWindowName, dwStyle, rect, pParentWnd, pContext);
 }
