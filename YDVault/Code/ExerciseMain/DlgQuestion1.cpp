@@ -48,7 +48,7 @@ BOOL CDlgQuestion1::OnInitDialog()
 	CString str;
 	m_pQuestion->GetPropVal(TEXT("title"), str);
 	CString strTilte;
-	strTilte.Format(TEXT("%d. %s"), m_index, str);
+	strTilte.Format(TEXT("(%d.%d) %s"),  m_mainIndex, m_index, str);
 	pText->SetWindowText(strTilte);
 	CRect rectText;
 	CRect rectMain;

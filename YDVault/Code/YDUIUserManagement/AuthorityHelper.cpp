@@ -193,16 +193,29 @@ HRESULT CAuthorityHelper::CheckSecurity(SECURITY_TYPE _type,VARIANT_BOOL* _bRigh
 	{
 		return hr;
 	}
-	CComVariant valAuthority;
-	hr = pCurUserRef->GetPropVal(FIELD_YDUSER_AUTHORITY,&valAuthority);
+	VARIANT_BOOL bAdmin = VARIANT_FALSE;
+	hr = pCurUserRef->IsSysUser(&bAdmin);
 	if(FAILED(hr))
 	{
 		return hr;
 	}
-	long lAuthority = CDataHandler::VariantToLong(valAuthority);
-	if((1 << _type) & lAuthority)
+	if (bAdmin)
 	{
 		*_bRight = TRUE;
+	}
+	else
+	{
+		CComVariant valAuthority;
+		hr = pCurUserRef->GetPropVal(FIELD_YDUSER_AUTHORITY,&valAuthority);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		long lAuthority = CDataHandler::VariantToLong(valAuthority);
+		if((1 << _type) & lAuthority)
+		{
+			*_bRight = TRUE;
+		}
 	}
 	return S_OK;
 }

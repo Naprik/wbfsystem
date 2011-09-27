@@ -163,6 +163,7 @@ BOOL CDlgQuestionArea::ShowQuestion()
 		{
 			CQuestionAreaItem* pItemDlg = new CDlgQuestion0();	
 			pItemDlg->m_index = i+1;
+			pItemDlg->m_mainIndex = m_pRecord->m_QNo;
 			pItemDlg->m_pQuestion = NULL;
 			if (itrAns != m_pRecord->m_listUserAnswers.end())
 			{
@@ -205,6 +206,7 @@ BOOL CDlgQuestionArea::ShowQuestion()
 			{
 				pItemDlg = new CDlgQuestion1();	
 				pItemDlg->m_index = uIndex;
+				pItemDlg->m_mainIndex = m_pRecord->m_QNo;
 				pItemDlg->m_pQuestion = *itrQ;
 				pItemDlg->m_lstChoices = lstChoices;
 				if (itrAns != m_pRecord->m_listUserAnswers.end())
@@ -218,6 +220,7 @@ BOOL CDlgQuestionArea::ShowQuestion()
 			{
 				pItemDlg = new CDlgQuestion4();	
 				pItemDlg->m_index = uIndex;
+				pItemDlg->m_mainIndex = m_pRecord->m_QNo;
 				pItemDlg->m_pQuestion = *itrQ;
 				pItemDlg->m_lstChoices = lstChoices;
 				if (itrAns != m_pRecord->m_listUserAnswers.end())

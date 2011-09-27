@@ -46,7 +46,7 @@ BOOL CDlgQuestion0::OnInitDialog()
 
 	CStatic* pText = (CStatic*)GetDlgItem(IDC_STATIC_NO);
 	CString strNo;
-	strNo.Format(TEXT("%d."), m_index);
+	strNo.Format(TEXT("(%d.%d) "), m_mainIndex, m_index);
 	pText->SetWindowText(strNo);
 	CRect rectText;
 	CRect rectMain;

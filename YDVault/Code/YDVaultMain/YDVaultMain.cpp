@@ -144,6 +144,7 @@ BOOL CYDVaultMainApp::InitInstance()
 	{
 		return FALSE;
 	}
+	
 	VARIANT_BOOL bRight = VARIANT_FALSE;
 	CAuthorityHelper helper;
 	hr = helper.CheckSecurity(SECURITY_LOGIN, &bRight);

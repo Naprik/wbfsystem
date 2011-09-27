@@ -82,7 +82,7 @@ BOOL CDlgQuestion4::OnInitDialog()
 	CString str;
 	m_pQuestion->GetPropVal(TEXT("title"), str);
 	CString strTilte;
-	strTilte.Format(TEXT("%d. %s"), m_index, str);
+	strTilte.Format(TEXT("(%d.%d) %s"),  m_mainIndex, m_index, str);
 	pText->SetWindowText(strTilte);
 	CButton* pRadioA = (CButton*)GetDlgItem(IDC_RADIO_A);
 	CButton* pRadioB = (CButton*)GetDlgItem(IDC_RADIO_B);

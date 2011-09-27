@@ -20,4 +20,5 @@ public:
 	CString				m_strAnswer;
 	CYDQuestionRef*		m_pQuestion;
 	int					m_index;
+	int					m_mainIndex;
 };

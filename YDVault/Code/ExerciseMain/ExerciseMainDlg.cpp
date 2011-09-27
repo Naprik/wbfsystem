@@ -420,6 +420,11 @@ BOOL CExerciseMainDlg::OnInitDialog()
 void CExerciseMainDlg::OnBnClickedBtnEmStuanswer()
 {
 	// TODO: Add your control notification handler code here
+	if (m_pActiveDlg != NULL)
+	{
+		m_pActiveDlg->PersistData();
+		m_log.Save();
+	}
 	CDlgStudentAnswer dlg;
 	dlg.m_pQuestionRecord = &m_log;
 	dlg.DoModal();
