@@ -188,7 +188,7 @@ HRESULT CDlgExsiceMark::InsertList(CQuestionRecordStruct* _pQRecordStuct,
 		{
 			pAnswerRow->GetItem(cColQuestionStudentAnswer)->SetValue(_variant_t(*itrUserAnswer));
 		}
-		if ((*itrStd).CompareNoCase(*itrUserAnswer))
+		if ((*itrStd).CompareNoCase(*itrUserAnswer) != 0)
 		{
 			pAnswerRow->GetItem(cColQuestionNo)->SetBackgroundColor(RGB(254,137,149));
 			pAnswerRow->GetItem(cColQuestionStdAnswer)->SetBackgroundColor(RGB(254,137,149));
