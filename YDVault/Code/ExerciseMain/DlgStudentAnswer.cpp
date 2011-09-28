@@ -141,3 +141,4 @@ HRESULT CDlgStudentAnswer::InsertList(CQuestionRecordStruct* _pQRecordStuct,
 	_pInsertRow->SetData(DWORD_PTR(_pQRecordStuct));
 	return S_OK;
 }
+

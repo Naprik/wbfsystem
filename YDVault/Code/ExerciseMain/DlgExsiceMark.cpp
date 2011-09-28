@@ -105,7 +105,7 @@ BOOL CDlgExsiceMark::OnInitDialog()
 			pParentRow = pInsertRow;
 		}
 	}
-	for(int i= 0; i < m_listGrid.GetRowCount();i++)
+	/*for(int i= 0; i < m_listGrid.GetRowCount();i++)
 	{
 		CBCGPGridRow* pRow = m_listGrid.GetRow(i);
 		ASSERT(pRow);
@@ -119,7 +119,7 @@ BOOL CDlgExsiceMark::OnInitDialog()
 			pRow->GetItem(cColQuestionStdAnswer)->SetBackgroundColor(RGB(110,180,200));
 			pRow->GetItem(cColQuestionStudentAnswer)->SetBackgroundColor(RGB(110,180,200));
 		}
-	}
+	}*/
 	UpdateData(FALSE);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
@@ -188,7 +188,14 @@ HRESULT CDlgExsiceMark::InsertList(CQuestionRecordStruct* _pQRecordStuct,
 		{
 			pAnswerRow->GetItem(cColQuestionStudentAnswer)->SetValue(_variant_t(*itrUserAnswer));
 		}
+		if ((*itrStd).CompareNoCase(*itrUserAnswer))
+		{
+			pAnswerRow->GetItem(cColQuestionNo)->SetBackgroundColor(RGB(254,137,149));
+			pAnswerRow->GetItem(cColQuestionStdAnswer)->SetBackgroundColor(RGB(254,137,149));
+			pAnswerRow->GetItem(cColQuestionStudentAnswer)->SetBackgroundColor(RGB(254,137,149));
+		}
 		_pInsertRow->AddSubItem(pAnswerRow);
+		
 		if(itrUserAnswer == _pQRecordStuct->m_listUserAnswers.end())
 		{
 			bUserAnswerEnd = TRUE;
