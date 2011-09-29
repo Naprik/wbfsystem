@@ -75,7 +75,7 @@ BOOL CDlgVaultLevelConfig::OnInitDialog()
 	
 	m_Grid.InsertColumn(cColSerial, L"序号", 100);
 	m_Grid.InsertColumn(cColLevelDesc, L"等级描述", 150);
-	m_Grid.InsertColumn(cColCondition, L"正确率", 100);
+	m_Grid.InsertColumn(cColCondition, L"正确率（0%～100%）", 150);
 
 	OBJID vaultID = 0;
 	HRESULT hr = E_FAIL;
