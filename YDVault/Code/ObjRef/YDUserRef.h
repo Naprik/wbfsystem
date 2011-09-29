@@ -9,4 +9,6 @@ public:
 	~CYDUserRef(void);
 public:
 	HRESULT IsSysUser(VARIANT_BOOL* _bAdmin);
+	HRESULT GetGender(CString* pStrGender);
+	HRESULT SetGender(const CString& strGender);
 };

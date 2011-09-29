@@ -35,7 +35,6 @@ private:
 	CString m_strAge;
 	CString m_strID;
 	CString m_strLevel;
-	CString m_strDepartment;
 	CString m_strPhone;
 	CString m_strQQ;
 	CString m_strEmail;

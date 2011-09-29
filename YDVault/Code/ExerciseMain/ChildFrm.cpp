@@ -461,6 +461,6 @@ void CChildFrame::ActivateFrame(int nCmdShow)
 BOOL CChildFrame::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle , const RECT& rect , CMDIFrameWnd* pParentWnd , CCreateContext* pContext)
 {
 	// TODO: Add your specialized code here and/or call the base class
-	dwStyle = (dwStyle&(~WS_SYSMENU))|WS_MAXIMIZEBOX; 
+	//dwStyle = (dwStyle&(~WS_SYSMENU))|WS_MAXIMIZEBOX; 
 	return CMDIChildWndEx::Create(lpszClassName, lpszWindowName, dwStyle, rect, pParentWnd, pContext);
 }

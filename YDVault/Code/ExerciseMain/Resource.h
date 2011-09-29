@@ -113,7 +113,6 @@
 #define IDD_DLG_EM_CFG_QUESTION_2       339
 #define IDB_BITMAP_MAINTREE             340
 #define IDD_DLG_PERSIONINFO_VIEW        341
-#define IDD_DIALOG3                     344
 #define IDD_DLG_STDANSWER_DETIAL        344
 #define IDC_TREE_EM_QUESTION            1000
 #define IDC_SCROLLBAR1                  1000
@@ -176,6 +175,7 @@
 #define IDC_LIST_STD_ANSWER_DETIAL      1038
 #define IDC_EDIT_MARK                   1039
 #define IDC_EDIT_NAME                   1040
+#define IDC_EDIT_MARK2                  1040
 #define IDC_CMB_QTYPE                   1041
 #define IDC_EDIT_QNUM                   1042
 #define IDC_LIST_CON                    1043

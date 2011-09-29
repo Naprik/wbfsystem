@@ -37,4 +37,5 @@ public:
 	int		GetAccuracy();
 public:
 	int m_accuracy;
+	CString m_strLevel;
 };

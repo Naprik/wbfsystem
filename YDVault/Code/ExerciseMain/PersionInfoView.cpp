@@ -31,7 +31,6 @@ void CPersionInfoView::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_AGE, m_strAge);
 	DDX_Text(pDX, IDC_EDIT_ID, m_strID);
 	DDX_Text(pDX, IDC_EDIT_LEVEL, m_strLevel);
-	DDX_Text(pDX, IDC_EDIT_DEP, m_strDepartment);
 	DDX_Text(pDX, IDC_EDIT_PHONE, m_strPhone);
 	DDX_Text(pDX, IDC_EDIT_QQ, m_strQQ);
 	DDX_Text(pDX, IDC_EDIT_EMAIL, m_strEmail);
@@ -85,7 +84,6 @@ void CPersionInfoView::ReadonlyPage(BOOL bReadonly)
 	GetDlgItem(IDC_EDIT_AGE)->EnableWindow(!bReadonly);
 	GetDlgItem(IDC_EDIT_ID)->EnableWindow(!bReadonly);
 	GetDlgItem(IDC_EDIT_LEVEL)->EnableWindow(!bReadonly);
-	GetDlgItem(IDC_EDIT_DEP)->EnableWindow(!bReadonly);
 	GetDlgItem(IDC_EDIT_PHONE)->EnableWindow(!bReadonly);
 	GetDlgItem(IDC_EDIT_QQ)->EnableWindow(!bReadonly);
 	GetDlgItem(IDC_EDIT_EMAIL)->EnableWindow(!bReadonly);
@@ -100,10 +98,9 @@ HRESULT CPersionInfoView::UpdateProp(BOOL bUpdate)
 		CStaticYdUser::Instance()->GetCurUser(pUser);
 		pUser->GetPropVal(FIELD_YDUSER_NAME, m_strName);
 		pUser->GetPropVal(FIELD_YDUSER_AGE, m_strAge);
-		pUser->GetPropVal(FIELD_YDUSER_GENDER, m_strGender);
+		pUser->GetGender(&m_strGender);
 		pUser->GetPropVal(FIELD_YDUSER_ID, m_strID);
 		pUser->GetPropVal(FIELD_YDUSER_LEVEL, m_strLevel);
-		pUser->GetPropVal(FIELD_YDUSER_DEPARTMENT, m_strDepartment);
 		pUser->GetPropVal(FIELD_YDUSER_MPHONE, m_strPhone);
 		pUser->GetPropVal(FIELD_YDUSER_QQ, m_strQQ);
 		pUser->GetPropVal(FIELD_YDUSER_EMAIL, m_strEmail);

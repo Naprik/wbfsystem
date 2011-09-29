@@ -764,16 +764,12 @@ void CExerciseMainDlg::OnBnClickedBtnEmClose()
 
 		if (!m_isupdateuser)
 		{
-			OBJID vaultid;
-			HRESULT hr = (*m_lstQuestions.begin())->GetVaultID(&vaultid);
-			CString level;
-			CStudentLevelUpdateUtil::Instance()->GetStudentLevel(vaultid, dlg.m_accuracy, &level);
 			CYDUserRef* puser = NULL;
 			CStaticYdUser::Instance()->GetCurUser(puser);
-			puser->SetPropVal(FIELD_YDUSER_LEVEL, &CComVariant(level));
+			puser->SetPropVal(FIELD_YDUSER_LEVEL, &CComVariant(dlg.m_strLevel));
 			AfxGetMainWnd()->SendMessage(WM_YD_UPDATE_PERSIONINFO, (WPARAM)(&TREE_NODE_USER_INFO),0);
 			CDBTransactionRef trans(theApp.m_pDatabase, TRUE);
-			hr = puser->Update();
+			HRESULT hr = puser->Update();
 			if (FAILED(hr))
 			{
 				return;

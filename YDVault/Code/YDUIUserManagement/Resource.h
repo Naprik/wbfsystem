@@ -2,6 +2,13 @@
 // Microsoft Visual C++ generated include file.
 // Used by YDUIUserManagement.rc
 //
+#define IDC_DM_STU_EMIAL                1013
+#define IDC_DM_STU_AGE                  1017
+#define IDC_DM_STU_QQ                   1018
+#define IDC_DM_STU_QQ2                  1019
+#define IDC_DM_STU_ID                   1019
+#define IDC_DM_STU_GENDER               1172
+#define IDC_DM_STU_TEL                  17049
 #define IDD_DIALOG_USERMGR              20000
 #define IDC_LIST_USER                   20001
 #define IDD_DIALOG_USERINFO             20001
@@ -22,7 +29,6 @@
 #define IDC_CHECK_BLUE_TOOTH            20009
 #define IDC_CHECK_BLUE_TOOTH2           20010
 #define IDC_CHECK_RED_OUT               20010
-#define IDC_CHECK1                      20011
 #define IDC_CHECK_LOGIN                 20011
 
 // Next default values for new objects

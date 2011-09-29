@@ -4,6 +4,7 @@
 // CDlgUserInfo dialog
 
 #include "resource.h"
+#include "afxwin.h"
 
 class CYDObjectRef;
 
@@ -25,6 +26,14 @@ protected:
 public:
 	CString m_strUserName;
 	CString m_strUserPwd;
+	CComboBox m_gender;
+	long m_iAge;
+	CString m_strPhone;
+	CString m_strMail;
+	CString m_strID;
+	CString m_strQQ;
+	CString		m_strGender;
+
 	BOOL m_bVault;
 	BOOL m_bPaper;
 	BOOL m_bOperate;
@@ -41,4 +50,5 @@ public:
 	BOOL m_bBlueTooth;
 	BOOL m_bRedOut;
 	BOOL m_bLogin;
+	
 };

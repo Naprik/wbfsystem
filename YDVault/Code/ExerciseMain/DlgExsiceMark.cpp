@@ -7,7 +7,7 @@
 #include "QuestionRecord.h"
 #include "QuestionRecordStruct.h"
 #include "../ObjRef\YDQuestionType.h"
-
+#include "StudentLevelUpdateUtil.h"
 
 // CDlgExsiceMark dialog
 
@@ -22,6 +22,7 @@ IMPLEMENT_DYNAMIC(CDlgExsiceMark, CDialog)
 CDlgExsiceMark::CDlgExsiceMark(CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgExsiceMark::IDD, pParent)
 	, m_strMark(_T(""))
+	, m_strLevel(_T(""))
 {
 	m_pQuestionRecord = NULL;
 	m_accuracy = 0;
@@ -35,6 +36,7 @@ void CDlgExsiceMark::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_EDIT_MARK, m_strMark);
+	DDX_Text(pDX, IDC_EDIT_LEVEL, m_strLevel);
 }
 
 
@@ -81,6 +83,10 @@ BOOL CDlgExsiceMark::OnInitDialog()
 		return FALSE;
 	}
 	m_strMark.Format(_T("%.2f"),dbMark);
+	OBJID vaultid;
+	hr = (*m_pQuestionRecord->m_lstQuestionStruct.begin())->m_pQuestion->GetVaultID(&vaultid);
+	CStudentLevelUpdateUtil::Instance()->GetStudentLevel(vaultid, m_accuracy, &m_strLevel);
+
 	int typeId = 0;
 	int index = 1;
 	CBCGPGridRow* pParentRow = NULL;

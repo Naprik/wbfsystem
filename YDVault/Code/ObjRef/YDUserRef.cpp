@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "YDUserRef.h"
+#include "../Base/DataHandler.h"
 
 CYDUserRef::CYDUserRef(CDatabaseEx* pDB): CYDObjectRef(pDB)
 {
@@ -33,5 +34,43 @@ HRESULT CYDUserRef::IsSysUser(VARIANT_BOOL* _bAdmin)
 		*_bAdmin = VARIANT_FALSE;
 	}
 	
+	return S_OK;
+}
+HRESULT CYDUserRef::GetGender(CString* pStrGender)
+{
+	CComVariant var;
+	GetPropVal(FIELD_YDUSER_GENDER, &var);
+	long lGender = CDataHandler::VariantToLong(var);
+	if (lGender == 0)
+	{
+		*pStrGender = L"ÄÐ";
+	}
+	else if (lGender == 1)
+	{
+		*pStrGender = L"Å®";
+	}
+	else
+	{
+		*pStrGender = L"";
+	}
+
+	return S_OK;
+}
+
+HRESULT CYDUserRef::SetGender(const CString& strGender)
+{
+	long lGender = 0;
+	if (strGender.CompareNoCase(L"ÄÐ") == 0)
+	{
+		lGender = 0;
+	}
+	else if (strGender.CompareNoCase(L"Å®") == 0)
+	{
+		lGender = 1;
+	}
+	CComVariant varGender((long)lGender);
+	SetPropVal(FIELD_YDUSER_GENDER, &varGender);
+	
+
 	return S_OK;
 }

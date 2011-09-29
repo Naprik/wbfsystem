@@ -24,6 +24,11 @@ CDlgUserInfo::CDlgUserInfo(CWnd* pParent /*=NULL*/)
 	, m_bBlueTooth(FALSE)
 	, m_bRedOut(FALSE)
 	, m_bLogin(FALSE)
+	, m_iAge(0)
+	, m_strPhone(_T(""))
+	, m_strMail(_T(""))
+	, m_strID(_T(""))
+	, m_strQQ(_T(""))
 {
 	m_TypeOperation = OP_NEW;
 	m_pUser = NULL;
@@ -45,6 +50,12 @@ void CDlgUserInfo::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_CHECK_BLUE_TOOTH, m_bBlueTooth);
 	DDX_Check(pDX, IDC_CHECK_RED_OUT, m_bRedOut);
 	DDX_Check(pDX, IDC_CHECK_LOGIN, m_bLogin);
+	DDX_Control(pDX, IDC_DM_STU_GENDER, m_gender);
+	DDX_Text(pDX, IDC_DM_STU_AGE, m_iAge);
+	DDX_Text(pDX, IDC_DM_STU_TEL, m_strPhone);
+	DDX_Text(pDX, IDC_DM_STU_EMIAL, m_strMail);
+	DDX_Text(pDX, IDC_DM_STU_ID, m_strID);
+	DDX_Text(pDX, IDC_DM_STU_QQ, m_strQQ);
 }
 
 
@@ -73,6 +84,9 @@ BOOL CDlgUserInfo::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	// TODO:  Add extra initialization here
+	m_gender.AddString(L"男");
+	m_gender.AddString(L"女");
+
 	HRESULT hr = E_FAIL;
 	if(m_TypeOperation == OP_NEW || m_TypeOperation == OP_EDIT)
 	{
@@ -120,12 +134,56 @@ BOOL CDlgUserInfo::OnInitDialog()
 			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
 			return FALSE;
 		}
+		//pwd
 		hr = pUserRef->GetPropVal(FIELD_YDUSER_PASSWORD,m_strUserPwd);
 		if(FAILED(hr))
 		{
 			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
 			return FALSE;
 		}
+		//id
+		hr = pUserRef->GetPropVal(FIELD_YDUSER_ID, m_strID);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+			return FALSE;
+		}
+		//性别
+		
+		pUserRef->GetGender(&m_strGender);
+		int genderIndex = m_gender.FindStringExact(0, m_strGender);
+		m_gender.SetCurSel(genderIndex);
+		//age
+		CComVariant varAge;
+		hr = pUserRef->GetPropVal(FIELD_YDUSER_AGE, &varAge);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+			return FALSE;
+		}
+		m_iAge = CDataHandler::VariantToLong(varAge);
+		//phone
+		hr = pUserRef->GetPropVal(FIELD_YDUSER_MPHONE, m_strPhone);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+			return FALSE;
+		}
+		//email
+		hr = pUserRef->GetPropVal(FIELD_YDUSER_EMAIL, m_strMail);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+			return FALSE;
+		}
+		//qq
+		hr = pUserRef->GetPropVal(FIELD_YDUSER_QQ, m_strQQ);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+			return FALSE;
+		}
+
 		CComVariant valAuthority;
 		hr = pUserRef->GetPropVal(FIELD_YDUSER_AUTHORITY,&valAuthority);
 		if(FAILED(hr))
@@ -227,6 +285,56 @@ void CDlgUserInfo::OnBnClickedOk()
 		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
 		return ;
 	}
+	CYDUserRef* pUserRef = (CYDUserRef*)m_pUser;
+	int index = m_gender.GetCurSel();
+	if(index != -1)
+		m_gender.GetLBText(index,m_strGender);
+	hr = pUserRef->SetGender(m_strGender);
+	//age
+	CComVariant varAge((long)m_iAge);
+	hr = pUserRef->SetPropVal(FIELD_YDUSER_AGE, &varAge);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+		return ;
+	}
+	//phone
+	CComVariant valID;
+	CDataHandler::StringToVariant(m_strPhone,VT_BSTR,&valID);
+	hr = m_pUser->SetPropVal(FIELD_YDUSER_ID, &valID);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+		return;
+	}
+	//phone
+	CComVariant valPhone;
+	CDataHandler::StringToVariant(m_strPhone,VT_BSTR,&valPhone);
+	hr = m_pUser->SetPropVal(FIELD_YDUSER_MPHONE, &valPhone);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+		return;
+	}
+	//email
+	CComVariant valMail;
+	CDataHandler::StringToVariant(m_strMail,VT_BSTR,&valMail);
+	hr = m_pUser->SetPropVal(FIELD_YDUSER_EMAIL, &valMail);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+		return;
+	}
+	//qq
+	CComVariant valQQ;
+	CDataHandler::StringToVariant(m_strQQ,VT_BSTR,&valQQ);
+	hr = m_pUser->SetPropVal(FIELD_YDUSER_QQ, &valQQ);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+		return;
+	}
+
 	CAuthorityHelper helper;
 	long lAuthority = 0;
 	hr = helper.CreateVal(m_bVault,m_bPaper,m_bOperate,
@@ -244,6 +352,8 @@ void CDlgUserInfo::OnBnClickedOk()
 		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
 		return ;
 	}
+	
+
 	//保存到数据库
 	CDBTransactionRef trans(pDB, TRUE);
 	if(m_TypeOperation == OP_NEW)
