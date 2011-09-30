@@ -134,6 +134,8 @@ HRESULT CQuestionRecordStruct::ComputeMark(double* _dbMark)
 {
 	HRESULT hr = E_FAIL;
 	*_dbMark = 0.0;
+	m_answercount = 0;
+	m_yescount = 0;
 	ASSERT(m_pQuestion);
 	std::list<CString> lstStdAnswer;
 	hr = m_pQuestion->GetStandardAnswer(lstStdAnswer);
