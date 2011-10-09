@@ -1,6 +1,6 @@
 #pragma once
 #include "afxcmn.h"
-
+#include "../UIBase/BCGPSortListCtrl.h"
 
 // CSelLogDlg dialog
 
@@ -20,7 +20,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	CBCGPListCtrl m_listLog;
+	CBCGPSortListCtrl m_listLog;
 	CString			m_strFilename;
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedOk();

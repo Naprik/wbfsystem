@@ -95,7 +95,7 @@ bool CHistoryInfoView::InsertExerciseLog()
 		logindex.Format(_T("%d"), m_ExerciseListCtrl.GetItemCount()+1);
 		int index = m_ExerciseListCtrl.InsertItem(m_ExerciseListCtrl.GetItemCount(), logindex);
 		m_ExerciseListCtrl.SetItemText(index,1, logname);
-			
+		m_ExerciseListCtrl.SetItemData(index, (DWORD_PTR)(index));	
 	}
 
 	return true;
@@ -116,7 +116,7 @@ bool CHistoryInfoView::InsertExamLog()
 		logindex.Format(_T("%d"), m_ExamListCtrl.GetItemCount()+1);
 		int index = m_ExamListCtrl.InsertItem(m_ExamListCtrl.GetItemCount(), logindex);
 		m_ExamListCtrl.SetItemText(index,1, logname);
-			
+		m_ExamListCtrl.SetItemData(index, (DWORD_PTR)(index));		
 	}
 	return true;
 }

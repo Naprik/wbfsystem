@@ -111,6 +111,7 @@ BOOL CSelLogDlg::OnInitDialog()
 		strIndex.Format(_T("%d"), m_listLog.GetItemCount()+1);
 		int index = m_listLog.InsertItem(m_listLog.GetItemCount(), strIndex);
 		m_listLog.SetItemText(index,1, filename);
+		m_listLog.SetItemData(index, (DWORD_PTR)(index));
 	}
 	
 	return TRUE;  // return TRUE unless you set the focus to a control

@@ -330,7 +330,7 @@ BOOL CExerciseMainDlg::OnInitDialog()
 			m_tree.SelectItem(hFocuseItem);
 			ShowSelItem(hFocuseItem);
 		}
-	
+		m_log.UpdateLogName(m_strLogName);
 	}
 	else
 	{

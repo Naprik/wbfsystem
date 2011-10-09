@@ -165,6 +165,41 @@ HRESULT CExerciseQuestionRecord::CreateLog()
 	return S_OK;
 }
 
+HRESULT CExerciseQuestionRecord::UpdateLogName(CString& _strFileName)
+{
+	HRESULT hr = E_FAIL;
+	_strFileName = _T("练习历史记录");
+	COleDateTime currentime = COleDateTime::GetCurrentTime();
+	CString strCurTime;
+	strCurTime.Format(_T("%d-%d-%d %d时%d分%d秒"),currentime.GetYear(),
+		currentime.GetMonth(),
+		currentime.GetDay(),
+		currentime.GetHour(),
+		currentime.GetMinute(),
+		currentime.GetSecond());
+	_strFileName += strCurTime;
+	_strFileName += _T(".XML");
+
+	CString strOldFile;
+	hr = GetFilePath(strOldFile);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	
+	m_strFileName = _strFileName;
+	
+	CString strNewFile;
+	hr = GetFilePath(strNewFile);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	CFile::Rename(strOldFile,strNewFile);
+	
+	return S_OK;
+}
+
 HRESULT CExerciseQuestionRecord::GetFilePath(CString &_strPath)
 {
 	HRESULT hr = E_FAIL;
