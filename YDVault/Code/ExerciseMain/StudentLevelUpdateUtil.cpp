@@ -3,6 +3,7 @@
 #include "../Base/AutoClean.h"
 #include "../ObjHelper/StaticObjHelper.h"
 #include "../ObjRef/YDObjectRef.h"
+#include "../ObjRef/YDQuestionVault.h"
 #include "ExerciseMain.h"
 CStudentLevelUpdateUtil	CStudentLevelUpdateUtil::s_instance;
 CStudentLevelUpdateUtil::CStudentLevelUpdateUtil(void)
@@ -48,11 +49,18 @@ HRESULT CStudentLevelUpdateUtil::GetStudentLevel(OBJID vaultid,
 			if (condition >= currentcondition && findcondition < currentcondition)
 			{
 				findcondition = currentcondition;
-				hr = (*itr)->GetPropVal(FIELD_VAULTLEVEL_LEVEL, *plevel);
+				CString strLevel;
+				hr = (*itr)->GetPropVal(FIELD_VAULTLEVEL_LEVEL, strLevel);
 				if (FAILED(hr))
 				{
 					return hr;
 				}
+				CString strVault;
+				CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
+				CYDQuestionVault vault(pDB);
+				vault.SetID(vaultid);
+				vault.GetPropVal(L"name", strVault);
+				*plevel = strVault + L":" + strLevel;
 			}
 				
 		}
