@@ -165,6 +165,10 @@ HRESULT CExamQuestionRecord::GetFilePath(CString &_strPath)
 	HRESULT hr = E_FAIL;
 	_strPath = g_LogPath;
 	_strPath += TEXT("\\exam\\");
+	if (!CFilePathHelper::FilePathExists(_strPath))
+	{
+		CFilePathHelper::CreateFolder(_strPath, TRUE);
+	}
 	_strPath += m_strFileName;
 	return S_OK;
 }

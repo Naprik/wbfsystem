@@ -31,6 +31,8 @@
 #include "../FtpBase\FtpRef.h"
 #include "BasicView.h"
 #include "../YDFormUIBase/ObjPropertyView.h"
+#include "../YDUIUserManagement\StaticYdUser.h"
+#include "../ObjRef/YDUserRef.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -126,6 +128,10 @@ BOOL CExerciseMainApp::InitInstance()
 	g_LogPath = strWorkspace + TEXT("\\exerciseLog");
 	CFilePathHelper::CopyFolder(strLogPath,g_LogPath,TRUE);
 
+	CString strDBPath = strModulePath + TEXT("\\DB");
+	strPath = strWorkspace + TEXT("\\db");
+	CFilePathHelper::CopyFolder(strDBPath, strPath,TRUE);
+
 	// ³õÊ¼»¯ OLE ¿â
 	if (!AfxOleInit())
 	{
@@ -173,6 +179,18 @@ BOOL CExerciseMainApp::InitInstance()
 	{
 		return FALSE;
 	}
+
+	CYDUserRef* pCurUserRef = NULL;
+	hr = CStaticYdUser::Instance()->GetCurUser(pCurUserRef);
+	if (FAILED(hr))
+	{
+		return FALSE;
+	}
+	CString strUser;
+	pCurUserRef->GetPropVal(L"name", strUser);
+	g_LogPath += L"\\";
+	g_LogPath += strUser;
+	
 
 	CMFCToolTipInfo ttParams;
 	ttParams.m_bVislManagerTheme = TRUE;

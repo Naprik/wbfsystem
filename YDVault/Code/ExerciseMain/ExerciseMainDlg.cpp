@@ -413,6 +413,7 @@ BOOL CExerciseMainDlg::OnInitDialog()
 			}
 			trans.Commit();
 			wait.StepIt();
+			AfxGetMainWnd()->SendMessage(WM_YD_UPDATE_HISTORYINFO, (WPARAM)(&TREE_NODE_HISTORY),0);
 		}
 		else
 		{

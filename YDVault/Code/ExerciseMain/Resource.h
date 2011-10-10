@@ -6,6 +6,7 @@
 #define IDP_OLE_INIT_FAILED             100
 #define IDS_STRING101                   101
 #define IDS_RIBBON_LOAD_VAULT           101
+#define IDS_RIBBON_CLEAR_HISTORY        102
 #define IDB_MAIN                        112
 #define IDB_BUTTONS                     113
 #define IDB_FILELARGE                   114
@@ -175,7 +176,6 @@
 #define IDC_LIST_STD_ANSWER_DETIAL      1038
 #define IDC_EDIT_MARK                   1039
 #define IDC_EDIT_NAME                   1040
-#define IDC_EDIT_MARK2                  1040
 #define IDC_CMB_QTYPE                   1041
 #define IDC_EDIT_QNUM                   1042
 #define IDC_LIST_CON                    1043
@@ -517,13 +517,15 @@
 #define ID_EM_SET_EXAM_CFG              32792
 #define ID_32793                        32793
 #define ID_EM_LOADVAULT                 32794
+#define ID_32795                        32795
+#define ID_EM_CLEARHISTORY              32796
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        345
-#define _APS_NEXT_COMMAND_VALUE         32795
+#define _APS_NEXT_COMMAND_VALUE         32797
 #define _APS_NEXT_CONTROL_VALUE         1051
 #define _APS_NEXT_SYMED_VALUE           314
 #endif

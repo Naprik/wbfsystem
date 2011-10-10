@@ -213,6 +213,7 @@ BEGIN
     POPUP "题库"
     BEGIN
         MENUITEM "载入题库",                        ID_EM_LOADVAULT
+        MENUITEM "清空历史记录",                      ID_EM_CLEARHISTORY
     END
 END
 
@@ -851,6 +852,7 @@ STRINGTABLE
 BEGIN
     IDP_OLE_INIT_FAILED     "OLE 初始化失败。请确保 OLE 库是正确的版本。"
     IDS_RIBBON_LOAD_VAULT   "载入题库"
+    IDS_RIBBON_CLEAR_HISTORY "清除历史记录"
 END
 
 STRINGTABLE

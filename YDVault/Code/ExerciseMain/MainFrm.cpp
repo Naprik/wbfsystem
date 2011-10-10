@@ -55,6 +55,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_EM_SET_EXERCISE_CFG, &CMainFrame::OnEmSetExerciseCfg)
 	ON_COMMAND(ID_EM_SET_EXAM_CFG, &CMainFrame::OnEmSetExamCfg)
 	ON_COMMAND(ID_EM_LOADVAULT, &CMainFrame::OnLoadVault)
+	ON_COMMAND(ID_EM_CLEARHISTORY, &CMainFrame::OnClearHistory)
 	ON_WM_CLOSE()
 	ON_MESSAGE(WM_YD_GET_DB,OnGetDB)
 	ON_MESSAGE(WM_YD_GET_FTPREF,OnGetFtpRef)
@@ -162,6 +163,10 @@ void CMainFrame::InitializeRibbon()
 	bNameValid = strTemp.LoadString(IDS_RIBBON_LOAD_VAULT);
 	ASSERT(bNameValid);
  	pMainPanel->Add(new CMFCRibbonButton(ID_EM_LOADVAULT, strTemp, 8, 8));
+
+	bNameValid = strTemp.LoadString(IDS_RIBBON_CLEAR_HISTORY);
+	ASSERT(bNameValid);
+ 	pMainPanel->Add(new CMFCRibbonButton(ID_EM_CLEARHISTORY, strTemp, 9, 9));
  	
 	bNameValid = strTemp.LoadString(IDS_RIBBON_EXIT);
 	ASSERT(bNameValid);
@@ -456,6 +461,44 @@ void CMainFrame::OnLoadVault()
 	CreateProcess(NULL, (LPWSTR)(LPCTSTR)commandline, NULL, NULL,
 		FALSE, 0, NULL, NULL, &startinfo, &processinfo);
 	
+}
+
+void CMainFrame::OnClearHistory()
+{
+	CString logindex(_T(""));
+	CFileFind find;
+	CString logpath = g_LogPath;
+	logpath += TEXT("\\exam\\*.xml");
+	BOOL hasfile = find.FindFile(logpath);
+	
+	while (hasfile)
+	{
+		hasfile = find.FindNextFile();
+		CString logname = find.GetFilePath();
+		DWORD dwAttrs = GetFileAttributes(logname); 
+		if ((dwAttrs & FILE_ATTRIBUTE_READONLY)) 
+		{ 
+			SetFileAttributes(logname, dwAttrs & ~FILE_ATTRIBUTE_READONLY); 
+		}
+		::DeleteFile(logname);
+	}
+
+	logpath = g_LogPath;
+	logpath += TEXT("\\exercise\\*.xml");
+	hasfile = find.FindFile(logpath);
+	
+	while (hasfile)
+	{
+		hasfile = find.FindNextFile();
+		CString logname = find.GetFilePath();
+		DWORD dwAttrs = GetFileAttributes(logname); 
+		if ((dwAttrs & FILE_ATTRIBUTE_READONLY)) 
+		{ 
+			SetFileAttributes(logname, dwAttrs & ~FILE_ATTRIBUTE_READONLY); 
+		}
+		::DeleteFile(logname);
+	}
+	AfxGetMainWnd()->SendMessage(WM_YD_UPDATE_HISTORYINFO, (WPARAM)(&TREE_NODE_HISTORY),0);
 }
 
 HRESULT CMainFrame::SetFirstSelect()
