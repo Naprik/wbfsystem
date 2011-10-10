@@ -331,6 +331,7 @@ BOOL CExerciseMainDlg::OnInitDialog()
 			ShowSelItem(hFocuseItem);
 		}
 		m_log.UpdateLogName(m_strLogName);
+		AfxGetMainWnd()->SendMessage(WM_YD_UPDATE_HISTORYINFO, (WPARAM)(&TREE_NODE_HISTORY),0);
 	}
 	else
 	{
@@ -346,71 +347,78 @@ BOOL CExerciseMainDlg::OnInitDialog()
 			return hr;
 		}
 		wait.StepIt();
-
-		//生成record
-		m_log.CreateLog();
-		hr = m_log.GetFileName(m_strLogName);
-		if (FAILED(hr))
+		if (m_lstQuestions.size() > 0)
 		{
-			return hr;
-		}
-		CLISTQUESTION::const_iterator itr = m_lstQuestions.begin();
-		int typeId = 0;
-		HTREEITEM hParentItem;
-		int index = 1;
-		for (; itr != m_lstQuestions.end(); ++itr)
-		{
-			CYDQuestionRef* pQuestion = *itr;
-
-			long id = 0;
-			pQuestion->GetPropVal(L"TYPEID", &id);
-			if (typeId != id)
-			{
-				typeId = id;
-				//根节点
-				CYDQuestionType qtype(theApp.m_pDatabase);
-				qtype.SetID(id);
-				CString strType;
-				qtype.GetPropVal(L"name", strType);
-				hParentItem = m_tree.InsertItem(strType, 0, 0 ,NULL, NULL);
-				m_tree.SetItemData(hParentItem, (DWORD_PTR)NULL);
-
-			}
-
-			CString strIndex;
-			strIndex.Format(L"第%d题", index);
-			CQuestionRecordStruct* pRecord;
-			m_log.AddRecord(index, pQuestion, &pRecord);
-			++index;
-			HTREEITEM hItem = m_tree.InsertItem(strIndex, 1, 1, hParentItem);
-			m_tree.SetItemData(hItem, (DWORD_PTR)pRecord);
-			m_tree.Expand(hParentItem, TVE_EXPAND);
-		}
-		m_log.Save();
-		wait.StepIt();
-
-		//更新取题数
-		itr = m_lstQuestions.begin();
-		CDBTransactionRef trans(theApp.m_pDatabase, TRUE);
-		for (; itr != m_lstQuestions.end(); ++itr)
-		{
-			CYDQuestionRef* pQuestion = *itr;
-
-			CComVariant var;
-			pQuestion->GetPropVal(L"USEDCOUNT", &var);
-			long lCount = CDataHandler::VariantToLong(var);
-			CString str;
-			lCount++;
-			
-			hr = pQuestion->UpdateUsedCount(lCount);
+			//生成record
+			m_log.CreateLog();
+			hr = m_log.GetFileName(m_strLogName);
 			if (FAILED(hr))
 			{
-				trans.Rollback();
 				return hr;
 			}
+			CLISTQUESTION::const_iterator itr = m_lstQuestions.begin();
+			int typeId = 0;
+			HTREEITEM hParentItem;
+			int index = 1;
+			for (; itr != m_lstQuestions.end(); ++itr)
+			{
+				CYDQuestionRef* pQuestion = *itr;
+
+				long id = 0;
+				pQuestion->GetPropVal(L"TYPEID", &id);
+				if (typeId != id)
+				{
+					typeId = id;
+					//根节点
+					CYDQuestionType qtype(theApp.m_pDatabase);
+					qtype.SetID(id);
+					CString strType;
+					qtype.GetPropVal(L"name", strType);
+					hParentItem = m_tree.InsertItem(strType, 0, 0 ,NULL, NULL);
+					m_tree.SetItemData(hParentItem, (DWORD_PTR)NULL);
+
+				}
+
+				CString strIndex;
+				strIndex.Format(L"第%d题", index);
+				CQuestionRecordStruct* pRecord;
+				m_log.AddRecord(index, pQuestion, &pRecord);
+				++index;
+				HTREEITEM hItem = m_tree.InsertItem(strIndex, 1, 1, hParentItem);
+				m_tree.SetItemData(hItem, (DWORD_PTR)pRecord);
+				m_tree.Expand(hParentItem, TVE_EXPAND);
+			}
+			m_log.Save();
+			wait.StepIt();
+
+			//更新取题数
+			itr = m_lstQuestions.begin();
+			CDBTransactionRef trans(theApp.m_pDatabase, TRUE);
+			for (; itr != m_lstQuestions.end(); ++itr)
+			{
+				CYDQuestionRef* pQuestion = *itr;
+
+				CComVariant var;
+				pQuestion->GetPropVal(L"USEDCOUNT", &var);
+				long lCount = CDataHandler::VariantToLong(var);
+				CString str;
+				lCount++;
+			
+				hr = pQuestion->UpdateUsedCount(lCount);
+				if (FAILED(hr))
+				{
+					trans.Rollback();
+					return hr;
+				}
+			}
+			trans.Commit();
+			wait.StepIt();
 		}
-		trans.Commit();
-		wait.StepIt();
+		else
+		{
+			wait.StepIt();
+			wait.StepIt();
+		}
 	}
 	if (m_lstQuestions.size() <= 0)
 	{

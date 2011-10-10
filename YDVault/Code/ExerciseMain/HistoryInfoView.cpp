@@ -82,6 +82,7 @@ void CHistoryInfoView::OnInitialUpdate()
 
 bool CHistoryInfoView::InsertExerciseLog()
 {
+	m_ExerciseListCtrl.DeleteAllItems();
 	CString logindex(_T(""));
 	CFileFind find;
 	CString logpath = g_LogPath;
@@ -103,6 +104,7 @@ bool CHistoryInfoView::InsertExerciseLog()
 
 bool CHistoryInfoView::InsertExamLog()
 {
+	m_ExamListCtrl.DeleteAllItems();
 	CString logindex(_T(""));
 	CFileFind find;
 	CString logpath = g_LogPath;
@@ -148,4 +150,20 @@ void CHistoryInfoView::OnNMDblclkListExercise(NMHDR *pNMHDR, LRESULT *pResult)
 	{
 	}
 	*pResult = 0;
+}
+
+HRESULT CHistoryInfoView::UpdateProp(BOOL bUpdate)
+{
+	if (bUpdate)
+	{
+		InsertExamLog();
+		InsertExerciseLog();
+		UpdateData(FALSE);
+	}
+	else
+	{
+		ASSERT(FALSE);
+	}
+
+	return S_OK;
 }

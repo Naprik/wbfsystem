@@ -53,6 +53,7 @@ public:
 
 #define WM_YD_OPEN_BASIC_VIEW	 WM_USER + 1019 //练习系统打开基本属性页
 #define WM_YD_UPDATE_PERSIONINFO	 WM_USER + 1020 //练习系统打开基本属性页
+#define WM_YD_UPDATE_HISTORYINFO	 WM_USER + 1021 //练习系统打开基本属性页
 
 
 

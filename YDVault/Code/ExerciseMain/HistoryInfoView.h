@@ -34,6 +34,7 @@ private:
 	CBCGPSortListCtrl	m_ExamListCtrl;
 public:
 	virtual void OnInitialUpdate();
+	virtual HRESULT UpdateProp(BOOL bUpdate);
 
 private:
 	bool InsertExerciseLog();
