@@ -1052,6 +1052,9 @@ HRESULT CYDStuMark::TransferAnswerByString(std::map<int, CString>* pMapAnswer)
 		else
 		{
 			ASSERT(FALSE);
+			strNO = L"";
+			strOneAnswer = L"";
+			bFinished = FALSE;
 		}
 	}
 	if (!strNO.IsEmpty() && !strOneAnswer.IsEmpty())
