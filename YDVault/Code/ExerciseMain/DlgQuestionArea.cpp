@@ -12,6 +12,7 @@
 
 #include "DlgQuestion0.h"
 #include "DlgQuestion1.h"
+#include "StdAnswerDlg.h"
 
 
 // CDlgQuestionArea dialog
@@ -144,7 +145,7 @@ BOOL CDlgQuestionArea::OnInitDialog()
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
-BOOL CDlgQuestionArea::ShowQuestion()
+BOOL CDlgQuestionArea::ShowQuestion(BOOL bShowAnswer)
 {
 	m_nCurrentHeight = 0;
 	CleanDlg();
@@ -152,6 +153,7 @@ BOOL CDlgQuestionArea::ShowQuestion()
 	CYDArticleQuestionRef* pArticle = dynamic_cast<CYDArticleQuestionRef*>(m_pRecord->m_pQuestion);
 	int nVMax = 0;
 	int nHMax = 0;
+	LONG lastTop = 0;
 	std::list<CString>::const_iterator itrAns = m_pRecord->m_listUserAnswers.begin();
 	if (m_pRecord->m_QTypeID == 8 ||
 		m_pRecord->m_QTypeID == 9 ||
@@ -175,6 +177,7 @@ BOOL CDlgQuestionArea::ShowQuestion()
 			pItemDlg->GetWindowRect(&rectSelf);
 			LONG top = m_MainRect.top + rectSelf.Height() * (i);
 			pItemDlg->MoveWindow(m_MainRect.left, top, rectSelf.Width(), rectSelf.Height());
+			lastTop = top + rectSelf.Height();
 			pItemDlg->ShowWindow(SW_SHOW);
 			m_lstDlgChoice.push_back(pItemDlg);
 		}
@@ -235,6 +238,7 @@ BOOL CDlgQuestionArea::ShowQuestion()
 			pItemDlg->GetWindowRect(&rectSelf);
 			LONG top = m_MainRect.top + rectSelf.Height() * (uIndex -1);
 			pItemDlg->MoveWindow(m_MainRect.left, top, rectSelf.Width(), rectSelf.Height());
+			lastTop = top + rectSelf.Height();
 			pItemDlg->ShowWindow(SW_SHOW);
 
 			nVMax += rectSelf.Height();
@@ -248,6 +252,18 @@ BOOL CDlgQuestionArea::ShowQuestion()
 		{
 			CListAutoClean<CYDQuestionRef> clr(lstChildren);
 		}
+	}
+	if (bShowAnswer)
+	{
+		CQuestionAreaItem* pItemDlg = new CStdAnswerDlg();	
+		pItemDlg->m_mainIndex = m_pRecord->m_QNo;
+		pItemDlg->m_pQuestion = m_pRecord->m_pQuestion;
+		pItemDlg->Create(CStdAnswerDlg::IDD, this);
+		CRect rectSelf;
+		pItemDlg->GetWindowRect(&rectSelf);
+		pItemDlg->MoveWindow(m_MainRect.left, lastTop + 15, rectSelf.Width(), rectSelf.Height());
+		pItemDlg->ShowWindow(SW_SHOW);
+		m_lstDlgChoice.push_back(pItemDlg);
 	}
 	
 	UpdateData(FALSE);

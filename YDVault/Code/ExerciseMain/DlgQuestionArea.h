@@ -27,7 +27,7 @@ public:
 
 	void CleanDlg();
 
-	BOOL ShowQuestion();
+	BOOL ShowQuestion(BOOL bShowAnswer);
 
 	HRESULT GetStuAnswers(std::list<CString>* pListAns);
 	

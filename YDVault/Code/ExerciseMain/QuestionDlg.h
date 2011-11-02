@@ -16,4 +16,5 @@ public:
 	virtual HRESULT PersistData();
 
 	CQuestionRecordStruct*		m_pRecord;
+	BOOL m_bShowStdAnswer;
 };

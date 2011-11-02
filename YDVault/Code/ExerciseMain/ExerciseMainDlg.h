@@ -40,8 +40,11 @@ public:
 	CBCGPButton m_btnStdAnswer;
 	CBCGPButton m_btnStuAnswer;
 	CBCGPButton m_btnFinish;
+	CBCGPButton m_btnRename;
 	CTreeCtrl m_tree;
 	BOOL		m_bLoadMode;
+
+	BOOL		m_bShowStdAnswer;
 
 	CString				m_strLogName;
 	virtual BOOL OnInitDialog();

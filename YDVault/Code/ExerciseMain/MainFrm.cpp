@@ -157,8 +157,8 @@ void CMainFrame::InitializeRibbon()
  	ASSERT(bNameValid);
  	pMainPanel->Add(new CMFCRibbonButton(ID_EM_LOAD_EXERCISE, strTemp, 1, 1));
  	bNameValid = strTemp.LoadString(IDS_RIBBON_NEW_EXAM);
- 	ASSERT(bNameValid);
- 	pMainPanel->Add(new CMFCRibbonButton(ID_EM_NEW_EXAM, strTemp, 2, 2));
+ 	/*ASSERT(bNameValid);
+ 	pMainPanel->Add(new CMFCRibbonButton(ID_EM_NEW_EXAM, strTemp, 2, 2));*/
 	ASSERT(bNameValid);
 	bNameValid = strTemp.LoadString(IDS_RIBBON_LOAD_VAULT);
 	ASSERT(bNameValid);
@@ -194,15 +194,15 @@ void CMainFrame::InitializeRibbon()
 	CMFCRibbonButton* pBtnLoadExercise = new CMFCRibbonButton(ID_EM_LOAD_EXERCISE, strTemp, 1, 1);
 	pPanelExercise->Add(pBtnLoadExercise);
 
-	// 创建和添加“考试”面板:
-	bNameValid = strTemp.LoadString(IDS_RIBBON_EXAM);
-	ASSERT(bNameValid);
-	CMFCRibbonPanel* pPanelExam = pCategoryOp->AddPanel(strTemp, m_PanelImages.ExtractIcon (2));
+	//// 创建和添加“考试”面板:
+	//bNameValid = strTemp.LoadString(IDS_RIBBON_EXAM);
+	//ASSERT(bNameValid);
+	//CMFCRibbonPanel* pPanelExam = pCategoryOp->AddPanel(strTemp, m_PanelImages.ExtractIcon (2));
 
-	bNameValid = strTemp.LoadString(IDS_RIBBON_NEW_EXAM);
+	/*bNameValid = strTemp.LoadString(IDS_RIBBON_NEW_EXAM);
 	ASSERT(bNameValid);
 	CMFCRibbonButton* pBtnExam = new CMFCRibbonButton(ID_EM_NEW_EXAM, strTemp, 2, 2);
-	pPanelExam->Add(pBtnExam);
+	pPanelExam->Add(pBtnExam);*/
 
 	// 为“设置”面板添加“主”类别:
 	bNameValid = strTemp.LoadString(IDS_RIBBON_OPTION);
@@ -219,20 +219,20 @@ void CMainFrame::InitializeRibbon()
 // 	CMFCRibbonButton* pBtnWorkSpace = new CMFCRibbonButton(ID_EM_SET_WORKSPACE, strTemp, 3, 3);
 // 	pPanelSetting->Add(pBtnWorkSpace);
 
-	bNameValid = strTemp.LoadString(IDS_RIBBON_SET_TIME);
+	/*bNameValid = strTemp.LoadString(IDS_RIBBON_SET_TIME);
 	ASSERT(bNameValid);
 	CMFCRibbonButton* pBtnTime = new CMFCRibbonButton(ID_EM_SET_EXAMTIME, strTemp, 4, 4);
-	pPanelSetting->Add(pBtnTime);
+	pPanelSetting->Add(pBtnTime);*/
 
 	bNameValid = strTemp.LoadString(IDS_RIBBON_SET_EXERCISECFG);
 	ASSERT(bNameValid);
 	CMFCRibbonButton* pBtnExerciseCfg = new CMFCRibbonButton(ID_EM_SET_EXERCISE_CFG, strTemp, 5, 5);
 	pPanelSetting->Add(pBtnExerciseCfg);
 
-	bNameValid = strTemp.LoadString(IDS_RIBBON_SET_EXAMCFG);
+	/*bNameValid = strTemp.LoadString(IDS_RIBBON_SET_EXAMCFG);
 	ASSERT(bNameValid);
 	CMFCRibbonButton* pBtnExamCfg = new CMFCRibbonButton(ID_EM_SET_EXAM_CFG, strTemp, 5, 5);
-	pPanelSetting->Add(pBtnExamCfg);
+	pPanelSetting->Add(pBtnExamCfg);*/
 
 	// 将元素添加到选项卡右侧:
 	bNameValid = strTemp.LoadString(IDS_RIBBON_STYLE);

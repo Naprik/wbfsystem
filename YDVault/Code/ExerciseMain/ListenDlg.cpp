@@ -73,7 +73,7 @@ void CListenDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 	{
 		m_Area.m_pRecord = m_pRecord;
 		//m_Area.ShowWindow(SW_SHOW);
-		m_Area.ShowQuestion();
+		m_Area.ShowQuestion(m_bShowStdAnswer);
 		hr = PlayMedia();
 		if(FAILED(hr))
 		{

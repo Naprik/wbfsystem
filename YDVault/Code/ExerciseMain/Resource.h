@@ -115,6 +115,7 @@
 #define IDB_BITMAP_MAINTREE             340
 #define IDD_DLG_PERSIONINFO_VIEW        341
 #define IDD_DLG_STDANSWER_DETIAL        344
+#define IDB_BITMAP_RENAME               346
 #define IDC_TREE_EM_QUESTION            1000
 #define IDC_SCROLLBAR1                  1000
 #define IDC_BTN_EM_PREV                 1001
@@ -190,6 +191,7 @@
 #define IDC_LIST_EXAM                   1050
 #define IDC_EDIT_QQ                     1051
 #define IDC_LIST_EXERCISE               1051
+#define IDC_EDIT_STDANSWER              1051
 #define IDC_EDIT_AGE                    1052
 #define IDP_AFXBARRES_IMAGE_IS_REQUIRED 16001
 #define IDP_AFXBARRES_TEXT_IS_REQUIRED  16002
@@ -489,6 +491,8 @@
 #define IDD_YDMAIN_BLEW_VIEW            30010
 #define IDD_DLG_PERSIONINFO_HISTORY     30011
 #define IDD_DLG_ARTICLE_IMAGE           30012
+#define IDD_DLG_QUESTION_5              30013
+#define IDD_DLG_QUESTION_STDANSWER      30013
 #define ID_BLEW_PROPERTY_SAVE           30155
 #define ID_BLEW_PROPERTY_UPDATE         30156
 #define ID_BLEW_PROPERTY_CANCEL         30157
@@ -524,9 +528,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        345
+#define _APS_NEXT_RESOURCE_VALUE        348
 #define _APS_NEXT_COMMAND_VALUE         32797
-#define _APS_NEXT_CONTROL_VALUE         1051
+#define _APS_NEXT_CONTROL_VALUE         1052
 #define _APS_NEXT_SYMED_VALUE           314
 #endif
 #endif

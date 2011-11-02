@@ -36,6 +36,7 @@ CExerciseMainDlg::CExerciseMainDlg(CWnd* pParent /*=NULL*/)
 	m_pArticleListenDlg = NULL;
 	m_pArticleWithImageDlg = NULL;
 	m_isupdateuser = FALSE;
+	m_bShowStdAnswer = FALSE;
 }
 
 CExerciseMainDlg::~CExerciseMainDlg()
@@ -134,6 +135,7 @@ BOOL CExerciseMainDlg::CreateDefaultDlg()
 
 BOOL CExerciseMainDlg::SwitchActiveDlg(CQuestionDlg* pDlg)
 {
+	pDlg->m_bShowStdAnswer = m_bShowStdAnswer;
 	if (NULL == m_pActiveDlg)
 	{
 		if (NULL != pDlg)
@@ -146,7 +148,6 @@ BOOL CExerciseMainDlg::SwitchActiveDlg(CQuestionDlg* pDlg)
 		m_pActiveDlg->ShowWindow(SW_HIDE);
 		pDlg->ShowWindow(SW_SHOW);
 	}
-
 	m_pActiveDlg = pDlg;
 	return TRUE;
 }
@@ -162,6 +163,7 @@ void CExerciseMainDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BTN_EM_STDANSWER, m_btnStdAnswer);
 	DDX_Control(pDX, IDC_BTN_EM_STUANSWER, m_btnStuAnswer);
 	DDX_Control(pDX, IDC_BTN_EM_CLOSE, m_btnFinish);
+	DDX_Control(pDX, IDC_BTN_EM_RENAME, m_btnRename);
 	DDX_Control(pDX, IDC_TREE_EM_QUESTION, m_tree);
 
 }
@@ -254,6 +256,7 @@ BOOL CExerciseMainDlg::OnInitDialog()
 	m_btnStdAnswer.SetImage(IDB_BITMAP_STDANS);
 	m_btnStuAnswer.SetImage(IDB_BITMAP_STUANS);
 	m_btnFinish.SetImage(IDB_BITMAP_FINISH);
+	m_btnRename.SetImage(IDB_BITMAP_RENAME);
 
 	CreateArticleDlg();
 	CreateListenDlg();
@@ -447,9 +450,58 @@ void CExerciseMainDlg::OnBnClickedBtnEmStuanswer()
 void CExerciseMainDlg::OnBnClickedBtnEmStdanswer()
 {
 	// TODO: Add your control notification handler code here
-	CDlgStdAnswer dlg;
+	/*CDlgStdAnswer dlg;
 	dlg.m_pListQuestion = &m_lstQuestions;
-	dlg.DoModal();
+	dlg.DoModal();*/
+	m_bShowStdAnswer = !m_bShowStdAnswer;
+	if (m_bShowStdAnswer)
+	{
+		m_btnStdAnswer.SetWindowText(L"关闭参考答案");
+	}
+	else
+	{
+		m_btnStdAnswer.SetWindowText(L"显示参考答案");
+	}
+	SwitchActiveDlg(m_pDefaultDlg);
+	HTREEITEM   hItem   =   m_tree.GetRootItem();
+	
+	HTREEITEM hNextItem = NULL;
+	HRESULT hr = GetNextTreeItem(hItem,hNextItem);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+		return;
+	}
+	if(hNextItem == NULL)
+	{
+		return;
+	}
+	CQuestionRecordStruct* pReocrd = (CQuestionRecordStruct*)m_tree.GetItemData(hNextItem);
+	if(pReocrd == NULL)
+	{
+		//当前不是题目，可能是题目的类型，再往前找一个
+		hItem = hNextItem;
+		hNextItem = NULL;
+		hr = GetNextTreeItem(hItem,hNextItem);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+			return;
+		}
+		if(hNextItem == NULL)
+		{
+			AfxMessageBox(_T("当前已经是最后一个节点了！"));
+			return;
+		}
+	}
+	ASSERT(hNextItem);
+	m_tree.SelectItem(hNextItem);
+	hr = ShowSelItem(hNextItem);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+		return;
+	}
 }
 
 void CExerciseMainDlg::OnNMClickTreeEmQuestion(NMHDR *pNMHDR, LRESULT *pResult)

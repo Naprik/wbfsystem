@@ -63,7 +63,7 @@ void CChoiceDlg::OnShowWindow(BOOL bShow, UINT nStatus)
  		m_Area.m_pRecord = m_pRecord;
 		m_Area.MoveWindow(m_rect, TRUE);
 		//m_Area.ShowWindow(SW_SHOW);
-		m_Area.ShowQuestion();
+		m_Area.ShowQuestion(m_bShowStdAnswer);
 		
  		UpdateData(FALSE);
  	}
