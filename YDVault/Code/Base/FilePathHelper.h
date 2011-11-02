@@ -26,4 +26,5 @@ public:
 	static void TrimFilePathToValid(CString& strPath);
 	//将文件夹下的所有文件夹和文档拷贝到文件夹_strDestFolder下
 	static void CopyFolder(CString& _sSourceFolder,CString _strDestFolder,BOOL _bFailIfExists = TRUE);
+	static void GetMainCfgPath(CString& strPath);
 };

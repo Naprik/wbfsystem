@@ -92,45 +92,39 @@ BOOL CExerciseMainApp::InitInstance()
 
 	CoInitializeEx(NULL, COINIT_APARTMENTTHREADED );
 	//初始化配置参数
-	TCHAR filename[MAX_PATH] = {0};
-	DWORD nret = GetModuleFileName(theApp.m_hInstance,filename,MAX_PATH);
-	filename[nret] = 0;
-	TCHAR* p = _tcsrchr(filename,_T('\\')); //bin/
-	if(p!=NULL) *p = 0;
-	for(int i=0;i<1;i++)
-	{
-		p = _tcsrchr(filename,_T('\\')); //bin/
-		if(p!=NULL) *p = 0;
-	}
-	CString strModulePath = filename;
-	CString strCfgPath = strModulePath + TEXT("\\exerciseCfg");
-	CString strPath = strCfgPath + TEXT("\\WorkspaceCfg.xml");
-	CWorkSpaceMgr::Instance()->Load(strPath);
 	
-	CString strWorkspace;
-	CWorkSpaceMgr::Instance()->GetWorkSpace(&strWorkspace);
+	CString strMainPath;
+	CFilePathHelper::GetMainCfgPath(strMainPath);
+
+	//CString strCfgPath = strMainPath + TEXT("\\exerciseCfg");
+	//CString strPath = strCfgPath + TEXT("\\WorkspaceCfg.xml");
+	//CWorkSpaceMgr::Instance()->Load(strPath);
+	//
+	//CString strWorkspace;
+	//CWorkSpaceMgr::Instance()->GetWorkSpace(&strWorkspace);
 	//判断是否需要拷贝log和cfg
 	
 	
 	//加载抽题配置
 	//strWorkspace = _T("C:\\YDWork");
-	g_CfgPath = strWorkspace + TEXT("\\exerciseCfg");
+	g_CfgPath = strMainPath + TEXT("\\exerciseCfg");
 
-	CFilePathHelper::CopyFolder(strCfgPath,g_CfgPath,TRUE);
-	strPath = g_CfgPath + TEXT("\\ExerciseQuestionCfg.xml");
+	//CFilePathHelper::CopyFolder(strCfgPath,g_CfgPath,TRUE);
+	CString strPath = g_CfgPath + TEXT("\\ExerciseQuestionCfg.xml");
 	CExerciseSelectQuestionCfgMgr::Instance()->m_uSelQuesitonMode = SEL_QUESTION_EXERCISE;
 	CExerciseSelectQuestionCfgMgr::Instance()->Load(strPath);
 	strPath = g_CfgPath + TEXT("\\ExamQuestionCfg.xml");
 	CExamSelectQuestionCfgMgr::Instance()->m_uSelQuesitonMode = SEL_QUESTION_EXAM;
 	CExamSelectQuestionCfgMgr::Instance()->Load(strPath);
 
-	CString strLogPath = strModulePath + TEXT("\\exerciseLog");
-	g_LogPath = strWorkspace + TEXT("\\exerciseLog");
-	CFilePathHelper::CopyFolder(strLogPath,g_LogPath,TRUE);
+	g_LogPath = strMainPath + TEXT("\\exerciseLog");
+	/*CString strLogPath = strMainPath + TEXT("\\exerciseLog");
+	
+	CFilePathHelper::CopyFolder(strLogPath,g_LogPath,TRUE);*/
 
-	CString strDBPath = strModulePath + TEXT("\\DB");
+	/*CString strDBPath = strMainPath + TEXT("\\DB");
 	strPath = strWorkspace + TEXT("\\db");
-	CFilePathHelper::CopyFolder(strDBPath, strPath,TRUE);
+	CFilePathHelper::CopyFolder(strDBPath, strPath,TRUE);*/
 
 	// 初始化 OLE 库
 	if (!AfxOleInit())

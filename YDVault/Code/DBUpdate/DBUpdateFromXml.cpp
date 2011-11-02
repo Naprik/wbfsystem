@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "DBUpdateFromXml.h"
 #include "../Base/Xml.h"
+#include "../Base/FilePathHelper.h"
 
 
 CDBUpdateFromXml::CDBUpdateFromXml(void)
@@ -55,18 +56,8 @@ HRESULT CDBUpdateFromXml::Load()
 HRESULT CDBUpdateFromXml::GetXml(CString &_strXml)
 {
 	HRESULT hr = E_FAIL;
-	TCHAR filename[MAX_PATH] = {0};
-	DWORD nret = GetModuleFileName(NULL,filename,MAX_PATH);
-	filename[nret] = 0;
-	TCHAR* p = _tcsrchr(filename,_T('\\')); //bin/
-	if(p!=NULL) *p = 0;
-	for(int i=0;i<1;i++)
-	{
-		p = _tcsrchr(filename,_T('\\')); //bin/
-		if(p!=NULL) *p = 0;
-	}
-	CString strModulePath = filename;
-	_strXml = strModulePath;
+	
+	CFilePathHelper::GetMainCfgPath(_strXml);
 	_strXml += _T("\\cfg\\UpdateDB.xml");
 	return S_OK;
 }

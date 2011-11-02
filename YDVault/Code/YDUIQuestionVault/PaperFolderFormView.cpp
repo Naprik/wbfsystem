@@ -298,8 +298,9 @@ void CPaperFolderFormView::OnBnClickedBtnOutput()
 	CString strPaperVault, strPaperAnswerVault;
 	pPaper->CreateVaultName(strPaperVault, strPaperAnswerVault);
 
-	CString strPath = _ModulePath;
-	strPath += L"/../temp/paper/";
+	CString strPath;
+	CFilePathHelper::GetMainCfgPath(strPath);
+	strPath += L"//temp//paper//";
 
 	CFilePathHelper pathHelper;
 	CString strFolderPath = strPath + strPaper;

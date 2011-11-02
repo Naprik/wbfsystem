@@ -3,6 +3,7 @@
 #include "../Base/DataHandler.h"
 #include "../Base/AutoClean.h"
 #include "../Base/Xml.h"
+#include "../Base/FilePathHelper.h"
 
 CPaperTemplate::CPaperTemplate()
 {
@@ -27,8 +28,9 @@ HRESULT CPaperTemplate::Load(const CString& strTempName)
 	
 	try
 	{
-		CString strXml = _ModulePath;
-		strXml += _T("\\..\\template\\paper\\");
+		CString strXml;
+		CFilePathHelper::GetMainCfgPath(strXml);
+		strXml += _T("\\template\\paper\\");
 		strXml += m_strTempName;
 		CXmlReader reader;
 		reader.LoadFile((BSTR)(LPCTSTR)strXml);

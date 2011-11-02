@@ -540,3 +540,11 @@ void CFilePathHelper::CopyFolder(CString& _sSourceFolder,CString _strDestFolder,
 	}
 	finder.Close();
 }
+
+void CFilePathHelper::GetMainCfgPath(CString& strPath)
+{
+	TCHAR userPath[MAX_PATH];
+	::SHGetSpecialFolderPath(NULL, userPath, CSIDL_COMMON_DOCUMENTS, FALSE);
+	strPath = userPath;
+	strPath += L"\\..\\Good Feture";
+}

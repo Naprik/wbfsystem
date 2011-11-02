@@ -20,13 +20,10 @@ CCfgTree::~CCfgTree(void)
 void CCfgTree::Init()
 {
 	HRESULT hr = E_FAIL;
-	TCHAR	 ModulePath[MAX_PATH] = {0};
-	DWORD nret = GetModuleFileName(NULL,ModulePath,MAX_PATH);
-	ModulePath[nret] = 0;
-	TCHAR* p = _tcsrchr(ModulePath,_T('\\'));
-	if(p!=NULL) *p = 0;
-	CString strXml = ModulePath;
-	strXml += _T("\\..\\cfg\\TreeLayout.xml");
+	
+	CString strXml;
+	CFilePathHelper::GetMainCfgPath(strXml);
+	strXml += _T("\\cfg\\TreeLayout.xml");
 	if(!CFilePathHelper::FilePathExists(strXml))
 	{
 		return ;

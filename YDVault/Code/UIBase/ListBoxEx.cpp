@@ -1,16 +1,10 @@
 #include "StdAfx.h"
 #include "ListBoxEx.h"
-
+#include "../Base/FilePathHelper.h"
 
 extern AFX_EXTENSION_MODULE UIBaseDLL;
 CListBoxEx::CListBoxEx(void)
 {
-	TCHAR filename[MAX_PATH] = {0};
-	DWORD nret = GetModuleFileName(NULL,filename,MAX_PATH);
-	filename[nret] = 0;
-	TCHAR* p = _tcsrchr(filename,_T('\\')); //bin/
-	if(p!=NULL) *p = 0;
-	CComBSTR MoudlePath = filename;
 	CLogHelper helper;
 	COleDateTime dtCur = COleDateTime::GetCurrentTime();
 	CString strCur;
@@ -18,7 +12,9 @@ CListBoxEx::CListBoxEx(void)
 	CString strLogPath = _T("\\log\\YD");
 	strLogPath += strCur;
 	strLogPath += _T(".log");
-	helper.SetLogPath(&m_log,MoudlePath,strLogPath);
+	CString LogMain;
+	CFilePathHelper::GetMainCfgPath(LogMain);
+	helper.SetLogPath(&m_log,LogMain,strLogPath);
 }
 
 CListBoxEx::~CListBoxEx(void)

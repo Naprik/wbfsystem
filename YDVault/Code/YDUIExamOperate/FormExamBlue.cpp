@@ -1115,7 +1115,8 @@ void CFormExamBlue::OnBnClickedTeacherChoose()
 		CString strCurTime;
 		strCurTime.Format(_T("%d-%d-%d"),date.GetHour(),date.GetMinute(),date.GetSecond());
 
-		m_strFileXml = _ModulePath;
+		m_strFileXml;
+		CFilePathHelper::GetMainCfgPath(m_strFileXml);
 		m_strFileXml += _T("\\Info\\");
 		m_strFileXml += strPaperName;
 		m_strFileXml += _T("_");

@@ -825,8 +825,9 @@ void CGeneratePaperFormView::OnBnClickedButtonExport()
 	
 	m_pPaper->SetPropVal(L"CREATEDATE",&valCreateDate);
 	
-	CString strPath = _ModulePath;
-	strPath += L"/../temp/paper/";
+	CString strPath;
+	CFilePathHelper::GetMainCfgPath(strPath);
+	strPath += L"//temp//paper//";
 	
 	CString strFolder = strPaperName + strTime;
 	CFilePathHelper pathHelper;
@@ -877,8 +878,9 @@ void CGeneratePaperFormView::OnBnClickedButtonExport()
 HRESULT CGeneratePaperFormView::InitQuestionTemplate(std::list<CString> &_lstTemplateName)
 {
 	HRESULT hr = E_FAIL;
-	CString strFindFile = _ModulePath;
-	strFindFile += _T("\\..\\template\\paper\\*.XML");
+	CString strFindFile;
+	CFilePathHelper::GetMainCfgPath(strFindFile);
+	strFindFile += _T("\\template\\paper\\*.XML");
 	CFileFind finder;
 	BOOL bWorking = finder.FindFile(strFindFile);
 

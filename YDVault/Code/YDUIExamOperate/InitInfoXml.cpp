@@ -82,7 +82,7 @@ HRESULT CInitInfoXml::SaveInitXmlInfo(CString &_strXmlFile)
 HRESULT CInitInfoXml::GetInitXmlFile(CString &_strFile)
 {
 	HRESULT hr = E_FAIL;
-	_strFile = _ModulePath;
+	CFilePathHelper::GetMainCfgPath(_strFile);
 	_strFile += _T("\\Info\\Init.Xml");
 	return S_OK;
 }

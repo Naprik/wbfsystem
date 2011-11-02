@@ -2,6 +2,7 @@
 #include "DBConfig.h"
 #include "../Base/Xml.h"
 #include "../Base/DataHandler.h"
+#include "../Base/FilePathHelper.h"
 
 CDBConfig::CDBConfig(void)
 {
@@ -125,7 +126,7 @@ HRESULT CDBConfig::Write()
 HRESULT CDBConfig::GetXml(CString &_strXml)
 {
 	HRESULT hr = E_FAIL;
-	_strXml = _ModulePath;
-	_strXml += _T("\\..\\cfg\\DBCfg.xml");
+	CFilePathHelper::GetMainCfgPath(_strXml);
+	_strXml += _T("\\cfg\\DBCfg.xml");
 	return S_OK;
 }

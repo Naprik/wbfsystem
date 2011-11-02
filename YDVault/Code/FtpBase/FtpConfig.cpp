@@ -2,6 +2,7 @@
 #include "FtpConfig.h"
 #include "../Base/Xml.h"
 #include "../base/DataHandler.h"
+#include "../Base/FilePathHelper.h"
 
 CFtpConfig::CFtpConfig(void)
 {
@@ -117,7 +118,7 @@ HRESULT CFtpConfig::Write()
 HRESULT CFtpConfig::GetXml(CString &_strXml)
 {
 	HRESULT hr = E_FAIL;
-	_strXml = _ModulePath;
-	_strXml += _T("\\..\\cfg\\FtpServerCfg.xml");
+	CFilePathHelper::GetMainCfgPath(_strXml);
+	_strXml += _T("\\cfg\\FtpServerCfg.xml");
 	return S_OK;
 }

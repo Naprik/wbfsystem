@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "AutoClean.h"
+#include "../Base/FilePathHelper.h"
 
 extern TCHAR _ModulePath[MAX_PATH];
 
@@ -74,8 +75,9 @@ BOOL CLanguageTranslator::Translate(UINT msg_code,CString& strMsg)
 	}
 	m_mapError.clear();
 
-	CString path = _ModulePath;
-	path += _T("\\..\\cfg\\msg.xml");
+	CString path;
+	CFilePathHelper::GetMainCfgPath(path);
+	path += _T("\\cfg\\msg.xml");
 
 	CFileStatus status;
 	if( !CFile::GetStatus(path,status))
