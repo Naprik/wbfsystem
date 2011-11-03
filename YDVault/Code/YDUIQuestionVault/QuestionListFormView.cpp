@@ -23,6 +23,7 @@
 #include "../UIBase\ListXlsoutput.h"
 #include "DlgYDVaultQuestionFactorInfoConfig.h"
 #include "VocabularyInputOutputQuestionHelper.h"
+#include "DlgSelInputType.h"
 // CQuestionListFormView
 
 
@@ -1096,31 +1097,74 @@ void CQuestionListFormView::OnBnClickedButtonQlInput()
 		AfxMessageBox(_T("暂不支持该类型题目导入！"));
 		return;
 	}
-	CFileDialog dlg(TRUE,NULL,NULL,OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT,_T("Rtf文件(*.rtf)|*.rtf|所有文件(*.*)|*.*||"));
-	if(dlg.DoModal() != IDOK)
+	CDlgSelInputType dlgSelType;
+	if(dlgSelType.DoModal() != IDOK)
 	{
 		return ;
 	}
-	CYDQuestionVault* pVault = NULL;
-	hr = GetQuestionVault(pVault);
-	if(FAILED(hr))
+	if(dlgSelType.m_iSelType == 0)
 	{
-		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
-		return;
+		//从文本文件导入
+		CFileDialog dlg(TRUE,NULL,NULL,OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT,_T("Txt文件(*.txt)|*.txt|所有文件(*.*)|*.*||"));
+		if(dlg.DoModal() != IDOK)
+		{
+			return ;
+		}
+		CYDQuestionVault* pVault = NULL;
+		hr = GetQuestionVault(pVault);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+			return;
+		}
+		CInputOutputQuestionHelper* pHelper = NULL;
+		if(qType == QTYPE_VOCABULARY)
+		{
+			pHelper = new CVocabularyInputOutputQuestionHelper(pVault,pType);
+		}
+		ASSERT(pHelper);
+		CPtrAutoClean<CInputOutputQuestionHelper> clr(pHelper);
+		hr = pHelper->ExeInputFileFromTxt(dlg.GetPathName());
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+			return;
+		}
 	}
-	CInputOutputQuestionHelper* pHelper = NULL;
-	if(qType == QTYPE_VOCABULARY)
+	else if(dlgSelType.m_iSelType == 1)
 	{
-		pHelper = new CVocabularyInputOutputQuestionHelper(pVault,pType);
+		//从rtf文件导入
+		CFileDialog dlg(TRUE,NULL,NULL,OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT,_T("Rtf文件(*.rtf)|*.rtf|所有文件(*.*)|*.*||"));
+		if(dlg.DoModal() != IDOK)
+		{
+			return ;
+		}
+		CYDQuestionVault* pVault = NULL;
+		hr = GetQuestionVault(pVault);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+			return;
+		}
+		CInputOutputQuestionHelper* pHelper = NULL;
+		if(qType == QTYPE_VOCABULARY)
+		{
+			pHelper = new CVocabularyInputOutputQuestionHelper(pVault,pType);
+		}
+		ASSERT(pHelper);
+		CPtrAutoClean<CInputOutputQuestionHelper> clr(pHelper);
+		hr = pHelper->ExeInputFile(dlg.GetPathName());
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+			return;
+		}
 	}
-	ASSERT(pHelper);
-	CPtrAutoClean<CInputOutputQuestionHelper> clr(pHelper);
-	hr = pHelper->ExeInputFile(dlg.GetPathName());
-	if(FAILED(hr))
+	else
 	{
-		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
-		return;
+		ASSERT(FALSE);
 	}
+	
 }
 
 

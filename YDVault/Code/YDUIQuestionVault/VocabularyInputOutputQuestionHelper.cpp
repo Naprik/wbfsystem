@@ -6,6 +6,7 @@
 #include "../ObjRef/YDObjectRef.h"
 #include "../ObjRef\YDChoiceQuestionRef.h"
 #include "../ObjHelper\FactorInfoHelper.h"
+#include "../Base\StdioFileEx.h"
 
 HRESULT CVocabularyQuestion::Load(Paragraphs &_paragraphs,long _index)
 {
@@ -45,6 +46,184 @@ CVocabularyInputOutputQuestionHelper::~CVocabularyInputOutputQuestionHelper(void
 HRESULT CVocabularyInputOutputQuestionHelper::ExeInputFile(CString _strFile)
 {
 	HRESULT hr = E_FAIL;
+	hr = CreateWord(_strFile);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	long paCounst = m_paragraphs.GetCount(); 
+	std::list<CString> lstStr;
+	// 将所有段中的每一段都存在数组里 
+	for(long lc = 1 ; lc < paCounst+1 ; lc++ ){
+
+		// 得到一段 
+		Paragraph paragraph; 
+		paragraph = m_paragraphs.Item( (long)lc );
+
+		// 得到一段的文本 
+		Range range = paragraph.GetRange(); 
+		CString strRangeText = range.GetText();
+		range.ReleaseDispatch();
+
+		//释放对象 
+		paragraph.ReleaseDispatch();
+		CString strTemp = strRangeText;
+		strTemp.Trim();
+		if(!strTemp.IsEmpty())
+		{
+			lstStr.push_back(strRangeText);
+		}
+	}
+	std::list<CVocabularyQuestion*> lstQuestion;
+	CListAutoClean<CVocabularyQuestion> clr(lstQuestion);
+	CVocabularyQuestion* pVocabularyQuestion = NULL;
+	for(std::list<CString>::const_iterator itr = lstStr.begin();
+		itr != lstStr.end();++itr)
+	{
+		CString strText = (*itr);
+		//先判断当前是否是一个新题目的开始
+		BOOL bIsNewQuestion = FALSE;
+		CString strCaption;
+		hr = IsNewQuestionCaption(strText,bIsNewQuestion,strCaption);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		if(bIsNewQuestion)
+		{
+			pVocabularyQuestion = new CVocabularyQuestion();
+			pVocabularyQuestion->m_strCaption = strCaption;
+			lstQuestion.push_back(pVocabularyQuestion);
+			continue;
+		}
+		if(pVocabularyQuestion == NULL)
+		{
+			continue;
+		}
+		ASSERT(pVocabularyQuestion);
+		BOOL bIsOption = FALSE;
+		hr = IsQuestionOption(strText,bIsOption,pVocabularyQuestion->m_lstOption);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		if(bIsOption)
+		{
+			continue;
+		}
+		BOOL bIsAnswer = FALSE;
+		hr = IsQuestionAnswer(strText,bIsAnswer,pVocabularyQuestion->m_strAnswer);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		if(bIsAnswer)
+		{
+			continue;
+		}
+		//判断是否为指标
+		BOOL bIsFactor = FALSE;
+		hr = IsQuestionFactor(strText,bIsFactor,pVocabularyQuestion->m_lstFactor);
+		if(FAILED(hr))
+		{
+			return hr;
+		}
+		if(bIsFactor)
+		{
+			continue;
+		}
+	}
+	CDlgVocabularyInputPreview dlg;
+	dlg.m_plstVocabularyQuestion = &lstQuestion;
+	dlg.m_pVault = m_pVault;
+	dlg.m_pType = m_pType;
+	dlg.DoModal();
+	return S_OK;
+}
+
+HRESULT CVocabularyInputOutputQuestionHelper::ExeInputFileFromTxt(CString _strFile) 
+{
+	HRESULT hr = E_FAIL;
+	std::list<std::pair<CString, CString>> pairSub;//前面是题目，后面是答案
+	try
+	{
+		CStdioFileEx file(_strFile,CFile::modeRead);
+		BOOL bHas = FALSE;
+		do 
+		{
+			CString strTxt;
+			bHas = file.ReadString(strTxt);
+			strTxt.TrimLeft();
+			strTxt.TrimRight();
+			if(strTxt.IsEmpty() || strTxt.GetLength() <= 1)
+			{
+				continue;
+			}
+			CStringArray arrStr;
+			CDataHandler::SplitString(strTxt,_T(' '),arrStr);
+			if(arrStr.GetSize() <=1)
+			{
+				continue;
+			}
+			//arrStr中前面的肯定是英文，后面的是中文
+			//当没有遇到中文时，将之前的所有存到strEng，中文包括之后的存到strChs中
+			CString strEng,strChs;//题目是英文，答案是中文
+			for(int i =0; i < arrStr.GetCount();i++)
+			{
+				CString str = arrStr.GetAt(i);
+				BOOL bIsChs = HasChs(str);
+				if(bIsChs)
+				{
+					strChs = str;
+					i++;
+					while(i < arrStr.GetCount())
+					{
+						strChs += _T(' ');
+						strChs += arrStr.GetAt(i);
+					}
+					break;
+				}
+				else
+				{
+					if(i != 0)
+					{
+						strEng += _T(" ");
+					}
+					strEng += strEng;
+				}
+			}
+			if(!strEng.IsEmpty() && !strChs.IsEmpty())
+			{
+				continue;
+			}
+			pairSub.push_back(std::make_pair(strEng, strChs));
+		} while (bHas);
+
+		file.Close();
+
+		return TRUE;
+	}
+	catch (CFileException* /*e*/)
+	{
+		CString strMsg;
+		strMsg.Format(_T("读取文件%s发生错误！"),_strFile);
+		AfxMessageBox(strMsg);
+
+		return S_FALSE;
+	}
+	catch (...)
+	{
+		CString strMsg;
+		strMsg.Format(_T("读取文件%s发生错误！"),_strFile);
+		AfxMessageBox(strMsg);
+
+		return S_FALSE;
+	}
+	if(pairSub.size() == 0)
+	{
+		AfxMessageBox(_T("没有读取到内容！"));
+		return S_FALSE;
+	}
 	hr = CreateWord(_strFile);
 	if(FAILED(hr))
 	{
@@ -379,3 +558,15 @@ HRESULT CVocabularyInputOutputQuestionHelper::IsQuestionFactor(CString _strText,
 	return S_OK;
 }
 
+BOOL CVocabularyInputOutputQuestionHelper::HasChs(CString _str)//判断_str中是否有中文
+{
+	CString strEng = _T("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890`=~!@#$%^&*()_+[]{}\\|/?.>,<;:'-?<>/\"");
+	for(int i = 0; i < _str.GetLength();i++)
+	{
+		if(strEng.Find(_str.GetAt(i)) != -1)
+		{
+			return TRUE;
+		}
+	}
+	return FALSE;
+}

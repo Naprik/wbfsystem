@@ -11,6 +11,7 @@ public:
 	~CInputOutputQuestionHelper(void);
 public:
 	virtual HRESULT ExeInputFile(CString _strFile) = 0;
+	virtual HRESULT ExeInputFileFromTxt(CString _strFile) = 0;
 	virtual HRESULT ExeOutputFile(CString _strFile,std::list<CYDObjectRef*> *_plstObj) = 0;
 protected:
 	CYDObjectRef*   m_pVault;

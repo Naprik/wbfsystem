@@ -25,6 +25,7 @@ public:
 	~CVocabularyInputOutputQuestionHelper(void);
 public:
 	virtual HRESULT ExeInputFile(CString _strFile);
+	virtual HRESULT ExeInputFileFromTxt(CString _strFile) ;
 	virtual HRESULT ExeOutputFile(CString _strFile,std::list<CYDObjectRef*> *_plstObj);
 private:
 	//判断_strText是选择题的标题，如果是，则_strCaption返回标题
@@ -36,5 +37,6 @@ private:
 	//是否是选择题的指标，如果是,则在_lstFactor中插入一个指标
 	HRESULT IsQuestionFactor(CString _strText,BOOL &_IsOption,std::list<std::pair<CString,CString> > &_lstFactor);
 	HRESULT ShowPrevDlg();
+	BOOL	HasChs(CString _str);//判断_str中是否有中文
 };
 
