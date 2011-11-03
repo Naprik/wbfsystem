@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="gb2312"?>
-<!-- 学生考试结果的导入 -->
-
-<Input>
-   <Student StuID="1" ExamTime ="2010-07-07 08:08:10" ExamSubjectID="1" ExamPaperID="1">
-     1A2A
-   </Student> 
-</Input>
