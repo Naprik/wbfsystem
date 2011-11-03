@@ -546,5 +546,5 @@ void CFilePathHelper::GetMainCfgPath(CString& strPath)
 	TCHAR userPath[MAX_PATH];
 	::SHGetSpecialFolderPath(NULL, userPath, CSIDL_COMMON_DOCUMENTS, FALSE);
 	strPath = userPath;
-	strPath += L"\\..\\Good Feture";
+	strPath += L"\\..\\Good Future";
 }
