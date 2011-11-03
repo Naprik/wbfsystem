@@ -180,6 +180,7 @@ HRESULT CVocabularyInputOutputQuestionHelper::ExeInputFileFromTxt(CString _strFi
 					{
 						strChs += _T(' ');
 						strChs += arrStr.GetAt(i);
+						i++;
 					}
 					break;
 				}
@@ -189,10 +190,10 @@ HRESULT CVocabularyInputOutputQuestionHelper::ExeInputFileFromTxt(CString _strFi
 					{
 						strEng += _T(" ");
 					}
-					strEng += strEng;
+					strEng += str;
 				}
 			}
-			if(!strEng.IsEmpty() && !strChs.IsEmpty())
+			if(strEng.IsEmpty() || strChs.IsEmpty())
 			{
 				continue;
 			}
@@ -201,7 +202,6 @@ HRESULT CVocabularyInputOutputQuestionHelper::ExeInputFileFromTxt(CString _strFi
 
 		file.Close();
 
-		return TRUE;
 	}
 	catch (CFileException* /*e*/)
 	{
@@ -563,7 +563,7 @@ BOOL CVocabularyInputOutputQuestionHelper::HasChs(CString _str)//ÅÐ¶Ï_strÖÐÊÇ·ñÓ
 	CString strEng = _T("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890`=~!@#$%^&*()_+[]{}\\|/?.>,<;:'-?<>/\"");
 	for(int i = 0; i < _str.GetLength();i++)
 	{
-		if(strEng.Find(_str.GetAt(i)) != -1)
+		if(strEng.Find(_str.GetAt(i)) == -1)
 		{
 			return TRUE;
 		}

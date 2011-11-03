@@ -21,4 +21,5 @@ protected:
 public:
 	int m_iSelType;//0:txt 1:rtf
 	afx_msg void OnBnClickedOk();
+	virtual BOOL OnInitDialog();
 };

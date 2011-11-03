@@ -53,3 +53,14 @@ void CDlgSelInputType::OnBnClickedOk()
 	}
 	CDialogEx::OnOK();
 }
+
+
+BOOL CDlgSelInputType::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	// TODO:  Add extra initialization here
+	((CButton*)GetDlgItem(IDC_RADIO_TXT))->SetCheck(TRUE);
+	return TRUE;  // return TRUE unless you set the focus to a control
+	// EXCEPTION: OCX Property Pages should return FALSE
+}
