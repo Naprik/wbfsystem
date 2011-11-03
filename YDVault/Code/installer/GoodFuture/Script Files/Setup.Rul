@@ -1,0 +1,174 @@
+//===========================================================================
+//
+//  File Name:    Setup.rul
+//
+//  Description:  Blank setup main script file
+//
+//  Comments:     Blank setup is an empty setup project. If you want to
+//				  create a new project via. step-by step instructions use the
+//				  Project Assistant.
+//
+//===========================================================================
+
+// Included header files ----------------------------------------------------
+#include "ifx.h"
+prototype GetAllUserPath(BYVAL STRING,BYREF STRING);    
+BOOL   bDelOld;
+STRING szInstallPath;
+
+function GetAllUserPath(szScr,szDes)
+    STRING szL,szR,szFind,szTemp;  
+    NUMBER nResult;
+begin	
+   	if(SYSINFO.nISOSL >= 0x01000000) then    //ISOSL_WINVISTA之上的系统：win7	
+		StrSub(szDes,szScr,0,StrLengthChars(szScr)-9);   		
+	else                                
+		szFind ="All Users";//windows
+		nResult = StrFindEx(szScr,szFind,0);
+		if(nResult<0) then    //FOLDER_DESKTOP获得的是当前用户时，特殊处理
+			szFind ="\\";
+			nResult = StrFindEx(szScr,szFind,4);//找到第二个“\”
+			StrSub(szL,szScr,0,nResult); 
+			szDes = szL^"All Users";		
+		else  
+			StrSub(szL,szScr,0,nResult); 
+			StrSub(szR,szScr,nResult,StrLengthChars(szScr));
+			nResult = StrFindEx(szR,"\\",0);  
+			StrSub(szTemp,szR,0,nResult);
+			szDes = szL + szTemp;                                    
+		endif;		
+	endif;    		
+end;  
+
+//---------------------------------------------------------------------------
+// OnBegin
+//
+// The OnBegin event is called directly by the framework after the setup
+// initializes.
+//---------------------------------------------------------------------------
+function OnBegin() 
+	STRING szPath,szFind,szTemp,strL,strR;
+	NUMBER nResult;
+begin
+    // TODO: Perform custom initialization steps, check requirements, etc.
+    //szPath = FOLDER_DESKTOP;      
+    szTemp = FOLDER_DESKTOP;          
+    GetAllUserPath(szTemp,szPath);
+	/*szFind ="All Users";//windows
+	nResult = StrFindEx(szPath,szFind,0);  	
+	if(nResult<0) then
+		StrSub(szPath,szPath,0,StrLengthChars(szPath)-9); //win7		
+	else                                              
+		//StrSub(szPath,szPath,0,StrLengthChars(szPath)-4); //2000/xp/2003/2008
+		//StrSub(szPath,szPath,0,nResult+10); //2000/xp/2003/2008		
+	endif;                     	*/
+	   
+	szInstallPath =  szPath^"Good Future";                                          
+    FeatureSetTarget(MEDIA, "<APPDATAPATH>", szInstallPath);
+end;   
+
+//---------------------------------------------------------------------------
+// OnMoved
+//
+// The OnMoved event is called just before the InstallShield action 
+// 'GeneratedMSIScript' is executed.
+//---------------------------------------------------------------------------
+function OnMoved()
+	STRING szTitle,szAddr,szKey,szName,szValue,szPath,svValue;
+	NUMBER nResult,nType,nSize,nvSize,nCount;    
+	STRING szCommonPath1,szSetupCmdLine1;//为string型,
+	NUMBER nResult1;
+	STRING szCommonPath2,szSetupCmdLine2;//为string型,
+	NUMBER nResult2;
+
+	STRING szMsg1,szMsg2;
+	NUMBER nOption,nReserved;   
+	STRING svTemp,szCom,szComKey,szRgs; 
+	NUMBER nvType,nDBType,i,nCountCom;
+	BOOL bReg,bFirst,bSetup;      
+	STRING szFile,szComFile,szRgsFile,szPathTemp,strModules,szVerTemp;     
+	STRING strTemplate,strTemplate_1,szTemp,szIndex;              
+	STRING  szEnv;
+  	POINTER pEnv;
+
+begin              
+	bFirst = TRUE;
+	if !MAINTENANCE then          
+	 	       
+        ///////////////////////////////        
+		GetProfInt (SUPPORTDIR^"vcredist.ini", "x86", "COUNT", nCount);    			
+		for i = 1 to nCount 
+			szKey = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\";   
+			NumToStr(szIndex,i);  
+			GetProfString (SUPPORTDIR^"vcredist.ini", "x86", szIndex, szTemp); 
+			szKey = szKey + szTemp;
+			if (RegDBKeyExist (szKey) = 1) then
+				 bSetup = FALSE;
+			endif;  			
+		endfor;                                 
+		GetProfInt (SUPPORTDIR^"vcredist.ini", "x64", "COUNT", nCount);    			
+		for i = 1 to nCount                                                  
+			szKey = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\";
+			NumToStr(szIndex,i);  
+			GetProfString (SUPPORTDIR^"vcredist.ini", "x64", szIndex, szTemp); 
+			szKey = szKey + szTemp;
+			if (RegDBKeyExist (szKey) = 1) then
+				 bSetup = FALSE;
+			endif;  			
+		endfor;
+        ///////////////////////////////
+        if (bSetup = TRUE) then                         
+        	LaunchAppAndWait(SUPPORTDIR^"vcredist_x86.exe", "", WAIT);
+        endif; 
+    endif;
+end;
+
+function OnFirstUIBefore()
+    NUMBER  nResult,nSetupType;
+    STRING  szTitle, szMsg,szVersion,szCurVer;
+    STRING  szLicenseFile, szQuestion;
+    STRING  szName, szCompany, szSerial;
+    STRING  szFile;
+    STRING  szTargetPath;
+    STRING  szDir;
+    STRING  szFolder,szVersionFile;
+    STRING  szComponents, szTargetdir;
+    NUMBER  nLevel;
+    LIST    listStartCopy;
+    LIST    list;
+    NUMBER  nvSize; 
+	STRING 	szValue; 
+	NUMBER 	nOption,nReserved,nvType;          
+	STRING 	szKey;   
+	NUMBER 	nType,nSize,nDBType;           
+	BOOL	bExistApp;
+begin	
+   
+Dlg_Start:
+    // beginning of dialogs label
+
+Dlg_SdWelcome:
+    szTitle = "";
+    szMsg   = "";
+    nResult = SdWelcome( szTitle, szMsg );
+    if (nResult = BACK) goto Dlg_Start;
+
+Dlg_SdLicense:
+    szLicenseFile = SUPPORTDIR ^ "license.txt";
+    szTitle    = "";
+    szMsg      = "";
+    szQuestion = "";
+    nResult    = SdLicense( szTitle, szMsg, szQuestion, szLicenseFile );
+    if (nResult = BACK) goto Dlg_SdWelcome;
+
+Dlg_SdShowInfoList:
+                     
+                                   
+/////////////////////////////////////////////////////////////////////////////////////////  
+    // setup default status
+    SetStatusWindow(0, "");
+    Enable(STATUSEX);
+    StatusUpdate(ON, 100);
+    
+    return 0;
+end;
