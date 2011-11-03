@@ -9,7 +9,7 @@
 		<CONNECTIONPARAM>
 			<PARAM Name="database_server" value="WYMORCL"/>
 			<PARAM Name="database_name" value=""/>
-			<PARAM Name="dbfile_name" value="C:\Users\Public\Good Feture\db\ydvault.mdb"/>
+			<PARAM Name="dbfile_name" value="C:\Users\Public\Good Future\db\ydvault.mdb"/>
 			<PARAM Name="database_user" value="ERGZBFGNJTJVFG" encrypt="TRUE"/>
 			<PARAM Name="database_user_pwd" value="BXJGHH" encrypt="TRUE"/>
 			<PARAM Name="database_provider" value="OraOLEDB.Oracle"/>
