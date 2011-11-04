@@ -9,6 +9,7 @@
 #include "../Base/DataHandler.h"
 #include "../ObjHelper/FactorInfoHelper.h"
 #include "../Base/AutoClean.h"
+#include "../UIBase\PdemWait.h"
 
 
 // CDlgVocabularyInputPreview dialog
@@ -85,32 +86,30 @@ BOOL CDlgVocabularyInputPreview::OnInitDialog()
 
 
 	ASSERT(m_plstVocabularyQuestion);
+	CPdemWait	wait(_T("请稍候，正在生成数据..."),FALSE,m_plstVocabularyQuestion->size());
+	wait.BeginWait();
+	m_Grid.LockWindowUpdate();
+	m_Grid.SetRedraw(FALSE);
+	int index = 0;
 	for(std::list<CVocabularyQuestion*>::const_iterator itr = m_plstVocabularyQuestion->begin();
-		itr != m_plstVocabularyQuestion->end();++itr)
+		itr != m_plstVocabularyQuestion->end();++itr,++index)
 	{
-		InsertRowByVocabularyQuestion(*itr);
+		InsertRowByVocabularyQuestion(*itr,index);
+		wait.StepIt();
 	}
+	wait.Close();
+	m_Grid.UnlockWindowUpdate();
+	m_Grid.SetRedraw(TRUE);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
 
-HRESULT CDlgVocabularyInputPreview::InsertRowByVocabularyQuestion(CVocabularyQuestion* _pVocabularyQuestion)
+HRESULT CDlgVocabularyInputPreview::InsertRowByVocabularyQuestion(CVocabularyQuestion* _pVocabularyQuestion,int _index)
 {
 	HRESULT hr = E_FAIL;
-	int index = 0;
-	for(int i = 0; i < m_Grid.GetRowCount();i++)
-	{
-		CBCGPGridRow* pRow = m_Grid.GetRow(i);
-		ASSERT(pRow);
-		CBCGPGridRow* pParentRow = pRow->GetParent();
-		if(pParentRow == NULL)
-		{
-			index++;
-		}
-	}
 	CString strSerial;
-	strSerial.Format(_T("%d"),index+1);
+	strSerial.Format(_T("%d"),_index+1);
 	CBCGPGridRow* pRow = m_Grid.CreateRow(m_Grid.GetColumnCount());
 	pRow->GetItem(cColSerialNo)->SetValue(CComVariant(strSerial));
 
@@ -120,7 +119,7 @@ HRESULT CDlgVocabularyInputPreview::InsertRowByVocabularyQuestion(CVocabularyQue
 	m_Grid.AddRow(pRow);
 
 	//插入选项
-	index = 0;
+	int index = 0;
 	for(std::list<std::pair<CString,CString> >::const_iterator itr = _pVocabularyQuestion->m_lstOption.begin();
 		itr != _pVocabularyQuestion->m_lstOption.end();++itr)
 	{
@@ -161,7 +160,7 @@ HRESULT CDlgVocabularyInputPreview::InsertRowByVocabularyQuestion(CVocabularyQue
 	for(std::list<std::pair<CString,CString> >::const_iterator itr = _pVocabularyQuestion->m_lstFactor.begin();
 		itr != _pVocabularyQuestion->m_lstFactor.end();++itr)
 	{
-			CBCGPGridRow* pChildRow = NULL;
+		CBCGPGridRow* pChildRow = NULL;
 		if(index == 0)
 		{
 			pChildRow = pRow;
@@ -200,6 +199,8 @@ void CDlgVocabularyInputPreview::OnBnClickedOk()
 	HRESULT hr = E_FAIL;
 	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
 	ASSERT(pDB);
+	CPdemWait	wait(_T("请稍候，正在导入数据..."),FALSE,m_plstVocabularyQuestion->size());
+	wait.BeginWait();
 	CDBTransactionRef trans(pDB, TRUE);
 	for(int i = 0; i < m_Grid.GetRowCount();i++)
 	{
@@ -215,8 +216,11 @@ void CDlgVocabularyInputPreview::OnBnClickedOk()
 				DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
 				return;
 			}
+			wait.StepIt();
 		}
+		
 	}
+	wait.Close();
 	trans.Commit();
 	CDialogEx::OnOK();
 }

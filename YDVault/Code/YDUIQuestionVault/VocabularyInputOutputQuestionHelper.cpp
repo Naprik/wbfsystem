@@ -7,6 +7,7 @@
 #include "../ObjRef\YDChoiceQuestionRef.h"
 #include "../ObjHelper\FactorInfoHelper.h"
 #include "../Base\StdioFileEx.h"
+#include <vector>
 
 HRESULT CVocabularyQuestion::Load(Paragraphs &_paragraphs,long _index)
 {
@@ -144,7 +145,7 @@ HRESULT CVocabularyInputOutputQuestionHelper::ExeInputFile(CString _strFile)
 HRESULT CVocabularyInputOutputQuestionHelper::ExeInputFileFromTxt(CString _strFile) 
 {
 	HRESULT hr = E_FAIL;
-	std::list<std::pair<CString, CString>> pairSub;//Ç°ÃæÊÇÌâÄ¿£¬ºóÃæÊÇ´ğ°¸
+	std::vector<std::pair<CString, CString>> pairSub;//Ç°ÃæÊÇÌâÄ¿£¬ºóÃæÊÇ´ğ°¸
 	try
 	{
 		CStdioFileEx file(_strFile,CFile::modeRead);
@@ -224,91 +225,41 @@ HRESULT CVocabularyInputOutputQuestionHelper::ExeInputFileFromTxt(CString _strFi
 		AfxMessageBox(_T("Ã»ÓĞ¶ÁÈ¡µ½ÄÚÈİ£¡"));
 		return S_FALSE;
 	}
-	hr = CreateWord(_strFile);
-	if(FAILED(hr))
-	{
-		return hr;
-	}
-	long paCounst = m_paragraphs.GetCount(); 
-	std::list<CString> lstStr;
-	// ½«ËùÓĞ¶ÎÖĞµÄÃ¿Ò»¶Î¶¼´æÔÚÊı×éÀï 
-	for(long lc = 1 ; lc < paCounst+1 ; lc++ ){
-
-		// µÃµ½Ò»¶Î 
-		Paragraph paragraph; 
-		paragraph = m_paragraphs.Item( (long)lc );
-
-		// µÃµ½Ò»¶ÎµÄÎÄ±¾ 
-		Range range = paragraph.GetRange(); 
-		CString strRangeText = range.GetText();
-		range.ReleaseDispatch();
-
-		//ÊÍ·Å¶ÔÏó 
-		paragraph.ReleaseDispatch();
-		CString strTemp = strRangeText;
-		strTemp.Trim();
-		if(!strTemp.IsEmpty())
-		{
-			lstStr.push_back(strRangeText);
-		}
-	}
+	srand(GetTickCount());
+	int iSize = pairSub.size();
 	std::list<CVocabularyQuestion*> lstQuestion;
 	CListAutoClean<CVocabularyQuestion> clr(lstQuestion);
 	CVocabularyQuestion* pVocabularyQuestion = NULL;
-	for(std::list<CString>::const_iterator itr = lstStr.begin();
-		itr != lstStr.end();++itr)
+	int itrIndex = 0;
+	for(auto itr = pairSub.begin();itr != pairSub.end();++itr,++itrIndex)
 	{
-		CString strText = (*itr);
-		//ÏÈÅĞ¶Ïµ±Ç°ÊÇ·ñÊÇÒ»¸öĞÂÌâÄ¿µÄ¿ªÊ¼
-		BOOL bIsNewQuestion = FALSE;
-		CString strCaption;
-		hr = IsNewQuestionCaption(strText,bIsNewQuestion,strCaption);
-		if(FAILED(hr))
+		pVocabularyQuestion = new CVocabularyQuestion();
+		lstQuestion.push_back(pVocabularyQuestion);
+		pVocabularyQuestion->m_strCaption = (*itr).first;
+		//ÓĞËÄ¸öÑ¡Ïî£¬ÆäÖĞÒ»¸öÊÇ(*itr).first£¬ÆäËûÈı¸öÊÇ´ÓpairSubËæ»ú³éÈ¡
+		
+		UINT iRandOption = RandOption();
+		ASSERT(iRandOption < 4);
+		std::list<UINT> lstOtherOption;
+		RandOtherOption(iSize,itrIndex,lstOtherOption);
+		ASSERT(lstOtherOption.size() == 3);
+		std::list<UINT>::const_iterator itrOtherOpton = lstOtherOption.begin();
+		for(UINT i = 0; i < 4;i++)
 		{
-			return hr;
-		}
-		if(bIsNewQuestion)
-		{
-			pVocabularyQuestion = new CVocabularyQuestion();
-			pVocabularyQuestion->m_strCaption = strCaption;
-			lstQuestion.push_back(pVocabularyQuestion);
-			continue;
-		}
-		if(pVocabularyQuestion == NULL)
-		{
-			continue;
-		}
-		ASSERT(pVocabularyQuestion);
-		BOOL bIsOption = FALSE;
-		hr = IsQuestionOption(strText,bIsOption,pVocabularyQuestion->m_lstOption);
-		if(FAILED(hr))
-		{
-			return hr;
-		}
-		if(bIsOption)
-		{
-			continue;
-		}
-		BOOL bIsAnswer = FALSE;
-		hr = IsQuestionAnswer(strText,bIsAnswer,pVocabularyQuestion->m_strAnswer);
-		if(FAILED(hr))
-		{
-			return hr;
-		}
-		if(bIsAnswer)
-		{
-			continue;
-		}
-		//ÅĞ¶ÏÊÇ·ñÎªÖ¸±ê
-		BOOL bIsFactor = FALSE;
-		hr = IsQuestionFactor(strText,bIsFactor,pVocabularyQuestion->m_lstFactor);
-		if(FAILED(hr))
-		{
-			return hr;
-		}
-		if(bIsFactor)
-		{
-			continue;
+			CString strOptionFirst,strOptionSecond;
+			strOptionFirst.Format(_T("%c"),_T('A')+i);
+			if(i == iRandOption)
+			{
+				strOptionSecond = (*itr).second;
+				pVocabularyQuestion->m_strAnswer = strOptionFirst;
+			}
+			else
+			{
+				UINT index = *itrOtherOpton;
+				itrOtherOpton++;
+				strOptionSecond = pairSub[index].second;
+			}
+			pVocabularyQuestion->m_lstOption.push_back(std::make_pair(strOptionFirst,strOptionSecond));
 		}
 	}
 	CDlgVocabularyInputPreview dlg;
@@ -569,4 +520,37 @@ BOOL CVocabularyInputOutputQuestionHelper::HasChs(CString _str)//ÅĞ¶Ï_strÖĞÊÇ·ñÓ
 		}
 	}
 	return FALSE;
+}
+
+UINT	CVocabularyInputOutputQuestionHelper::RandOption()
+{
+	
+	return rand() % 4;
+}
+
+
+//ÁíÍâÈı¸ö²»ÄÜÓëµ±Ç°µÄÏàÍ¬£¬ËûÃÇÏà»¥Ö®¼äÒ²²»ÄÜÏàÍ¬
+BOOL CVocabularyInputOutputQuestionHelper::RandOtherOption(UINT iSize,UINT iCurItr,std::list<UINT> &_lstOther)
+{
+	UINT iIndex1 = rand() % iSize;
+	while(iIndex1 == iCurItr)
+	{
+		iIndex1 = rand() % iSize;
+	}
+	int iIndex2 = rand() % iSize;
+	while(iIndex2 == iCurItr || iIndex2 == iIndex1)
+	{
+		iIndex2 = rand() % iSize;
+	}
+	int iIndex3 = rand() % iSize;
+	while(iIndex3 == iCurItr ||
+		  iIndex3 == iIndex1 ||
+		  iIndex3 == iIndex2 )
+	{
+		iIndex3 = rand() % iSize;
+	}
+	_lstOther.push_back(iIndex1);
+	_lstOther.push_back(iIndex2);
+	_lstOther.push_back(iIndex3);
+	return TRUE;
 }

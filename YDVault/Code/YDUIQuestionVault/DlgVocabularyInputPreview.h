@@ -29,7 +29,7 @@ public:
 	CYDObjectRef*		m_pType;
 private:
 	CBCGPKeyGridCtrl						m_Grid;
-	HRESULT InsertRowByVocabularyQuestion(CVocabularyQuestion* _pVocabularyQuestion);
+	HRESULT InsertRowByVocabularyQuestion(CVocabularyQuestion* _pVocabularyQuestion,int _index);
 	//根据一条根记录插入一个选择题
 	HRESULT InsertQuestionByRow(CBCGPGridRow* _pRootRow);
 	//得到_pRow的选项名和选项值

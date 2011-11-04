@@ -38,5 +38,7 @@ private:
 	HRESULT IsQuestionFactor(CString _strText,BOOL &_IsOption,std::list<std::pair<CString,CString> > &_lstFactor);
 	HRESULT ShowPrevDlg();
 	BOOL	HasChs(CString _str);//判断_str中是否有中文
+	UINT	RandOption();//返回随机的选项，0---3
+	BOOL    RandOtherOption(UINT iSize,UINT iCurItr,std::list<UINT> &_lstOther);//另外三个选项的位置
 };
 
