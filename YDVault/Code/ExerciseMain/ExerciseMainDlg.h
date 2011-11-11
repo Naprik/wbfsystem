@@ -87,7 +87,7 @@ private:
 	HRESULT GetPrevTreeItem(HTREEITEM _hItem,HTREEITEM &_hPrevItem);
 	HRESULT GetNextTreeItem(HTREEITEM _hItem,HTREEITEM &_hNextItem);
 	//当在树上点击节点时，在右边上显示对应题目
-	HRESULT ShowSelItem(HTREEITEM _hItem);
+	HRESULT ShowSelItem(HTREEITEM _hItem, BOOL bShowAns = FALSE);
 public:
 	afx_msg void OnBnClickedBtnEmPrev();
 	afx_msg void OnBnClickedBtnEmNext();

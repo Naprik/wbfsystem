@@ -453,6 +453,18 @@ void CExerciseMainDlg::OnBnClickedBtnEmStdanswer()
 	/*CDlgStdAnswer dlg;
 	dlg.m_pListQuestion = &m_lstQuestions;
 	dlg.DoModal();*/
+	HTREEITEM   hItem   =   m_tree.GetSelectedItem();
+	HRESULT hr = E_FAIL;
+	if(hItem == NULL)
+	{
+		return;
+	}
+	CQuestionRecordStruct* pReocrd = (CQuestionRecordStruct*)m_tree.GetItemData(hItem);
+	if(pReocrd == NULL)
+	{
+		//当前不是题目，可能是题目的类型，再往前找一个
+		return;
+	}
 	m_bShowStdAnswer = !m_bShowStdAnswer;
 	if (m_bShowStdAnswer)
 	{
@@ -462,41 +474,11 @@ void CExerciseMainDlg::OnBnClickedBtnEmStdanswer()
 	{
 		m_btnStdAnswer.SetWindowText(L"显示参考答案");
 	}
-	SwitchActiveDlg(m_pDefaultDlg);
-	HTREEITEM   hItem   =   m_tree.GetRootItem();
 	
-	HTREEITEM hNextItem = NULL;
-	HRESULT hr = GetNextTreeItem(hItem,hNextItem);
-	if(FAILED(hr))
-	{
-		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
-		return;
-	}
-	if(hNextItem == NULL)
-	{
-		return;
-	}
-	CQuestionRecordStruct* pReocrd = (CQuestionRecordStruct*)m_tree.GetItemData(hNextItem);
-	if(pReocrd == NULL)
-	{
-		//当前不是题目，可能是题目的类型，再往前找一个
-		hItem = hNextItem;
-		hNextItem = NULL;
-		hr = GetNextTreeItem(hItem,hNextItem);
-		if(FAILED(hr))
-		{
-			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
-			return;
-		}
-		if(hNextItem == NULL)
-		{
-			AfxMessageBox(_T("当前已经是最后一个节点了！"));
-			return;
-		}
-	}
-	ASSERT(hNextItem);
-	m_tree.SelectItem(hNextItem);
-	hr = ShowSelItem(hNextItem);
+	ASSERT(hItem);
+	m_tree.SelectItem(hItem);
+	SwitchActiveDlg(m_pDefaultDlg);
+	hr = ShowSelItem(hItem, TRUE);
 	if(FAILED(hr))
 	{
 		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
@@ -620,6 +602,7 @@ void CExerciseMainDlg::OnBnClickedBtnEmNext()
 		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
 		return;
 	}
+	
 }
 
 
@@ -701,7 +684,7 @@ HRESULT CExerciseMainDlg::GetNextTreeItem(HTREEITEM _hItem,HTREEITEM &_hNextItem
 	return S_OK;
 }
 
-HRESULT CExerciseMainDlg::ShowSelItem(HTREEITEM _hItem)
+HRESULT CExerciseMainDlg::ShowSelItem(HTREEITEM _hItem, BOOL bShowAns)
 {
 	HRESULT hr = E_FAIL;
 	if (_hItem)
@@ -797,12 +780,24 @@ HRESULT CExerciseMainDlg::ShowSelItem(HTREEITEM _hItem)
 					ASSERT(FALSE);
 				}
 				pSwitchDlg->m_pRecord = pReocrd;
+				if (!bShowAns)
+				{
+					m_bShowStdAnswer = FALSE;
+					m_btnStdAnswer.SetWindowText(L"显示参考答案");
+				}
 				SwitchActiveDlg(pSwitchDlg);
+				
 			}
 		}
 		else
 		{
+			if (!bShowAns)
+			{
+				m_bShowStdAnswer = FALSE;
+				m_btnStdAnswer.SetWindowText(L"显示参考答案");
+			}
 			SwitchActiveDlg(m_pDefaultDlg);
+			
 		}
 		UpdateData(FALSE);
 	}
