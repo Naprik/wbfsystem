@@ -94,7 +94,8 @@ function OnMoved()
 begin              
 	bFirst = TRUE;
 	if !MAINTENANCE then          
-	 	       
+	 	bSetup = TRUE;      
+	 	RegDBSetDefaultRoot(HKEY_LOCAL_MACHINE); 
         ///////////////////////////////        
 		GetProfInt (SUPPORTDIR^"vcredist.ini", "x86", "COUNT", nCount);    			
 		for i = 1 to nCount 

@@ -245,6 +245,7 @@
 		<row><td>cxstyle2007silver.dll</td><td>bin</td><td>CxStyle2007Silver.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\CxStyle2007Silver.dll</td><td>1</td><td/></row>
 		<row><td>dbbase.dll</td><td>bin</td><td>DBBase.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\DBBase.dll</td><td>1</td><td/></row>
 		<row><td>dbcfg.xml</td><td>cfg</td><td>DBCfg.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CFG_FILES1&gt;\DBCfg.xml</td><td>1</td><td/></row>
+		<row><td>dbupdate.exe</td><td>bin</td><td>DBUpdate.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\DBUpdate.exe</td><td>1</td><td/></row>
 		<row><td>examquestioncfg.xml</td><td>exerciseCfg</td><td>ExamQuestionCfg.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_EXERCISECFG_FILES1&gt;\ExamQuestionCfg.xml</td><td>1</td><td/></row>
 		<row><td>exercisemain.exe</td><td>bin</td><td>ExerciseMain.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\ExerciseMain.exe</td><td>1</td><td/></row>
 		<row><td>exercisequestioncfg.xml</td><td>exerciseCfg</td><td>ExerciseQuestionCfg.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_EXERCISECFG_FILES1&gt;\ExerciseQuestionCfg.xml</td><td>1</td><td/></row>
@@ -261,8 +262,15 @@
 		<row><td>uibase.dll</td><td>bin</td><td>UIBase.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\UIBase.dll</td><td>1</td><td/></row>
 		<row><td>updatedb.xml</td><td>cfg</td><td>UpdateDB.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CFG_FILES1&gt;\UpdateDB.xml</td><td>1</td><td/></row>
 		<row><td>wordbase.dll</td><td>bin</td><td>WordBase.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\WordBase.dll</td><td>1</td><td/></row>
+		<row><td>ydcom.dll</td><td>bin</td><td>YdCom.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\YdCom.dll</td><td>1</td><td/></row>
+		<row><td>ydconfig.exe</td><td>bin</td><td>YdConfig.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\YdConfig.exe</td><td>1</td><td/></row>
 		<row><td>ydexamobjref.dll</td><td>bin</td><td>YDExamObjRef.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\YDExamObjRef.dll</td><td>1</td><td/></row>
 		<row><td>ydformuibase.dll</td><td>bin</td><td>YDFormUIBase.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\YDFormUIBase.dll</td><td>1</td><td/></row>
+		<row><td>yduiexam.dll</td><td>bin</td><td>YDUIExam.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\YDUIExam.dll</td><td>1</td><td/></row>
+		<row><td>yduiexamdatamaintain.dll</td><td>bin</td><td>YDUIExamDataMaintain.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\YDUIExamDataMaintain.dll</td><td>1</td><td/></row>
+		<row><td>yduiexaminfoquery.dll</td><td>bin</td><td>YDUIExamInfoQuery.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\YDUIExamInfoQuery.dll</td><td>1</td><td/></row>
+		<row><td>yduiexamoperate.dll</td><td>bin</td><td>YDUIExamOperate.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\YDUIExamOperate.dll</td><td>1</td><td/></row>
+		<row><td>yduiquestionvault.dll</td><td>bin</td><td>YDUIQuestionVault.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\YDUIQuestionVault.dll</td><td>1</td><td/></row>
 		<row><td>yduiusermanagement.dll</td><td>bin</td><td>YDUIUserManagement.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\YDUIUserManagement.dll</td><td>1</td><td/></row>
 		<row><td>ydvault.mdb</td><td>db</td><td>ydvault.mdb</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_DB_FILES1&gt;\ydvault.mdb</td><td>1</td><td/></row>
 	</table>
@@ -790,6 +798,7 @@
 		<col def="S0">Path</col>
 		<row><td>SetupFile1</td><td>vcredist_x86.exe</td><td/><td>0</td><td>0</td><td>&lt;ISProjectFolder&gt;\vcredist\vcredist_x86.exe</td></row>
 		<row><td>SetupFile2</td><td>license.txt</td><td/><td>0</td><td>0</td><td>&lt;ISProjectFolder&gt;\license.txt</td></row>
+		<row><td>SetupFile3</td><td>vcredist.ini</td><td/><td>0</td><td>0</td><td>&lt;ISProjectFolder&gt;\vcredist\vcredist.ini</td></row>
 	</table>
 
 	<table name="ISSetupPrerequisites">
