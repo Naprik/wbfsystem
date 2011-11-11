@@ -27,6 +27,7 @@
 #include "PersionInfoView.h"
 #include "HistoryInfoView.h"
 #include "ChildFrm.h"
+#include "UserInfoDlg.h"
 #include "../YDFormUIBase/ObjPropertyView.h"
 #include "../YDFormUIBase/ObjPropShow.h"
 #include "../Base/AutoClean.h"
@@ -51,6 +52,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_EM_NEW_EXERCISE, &CMainFrame::OnEmNewExercise)
 	ON_COMMAND(ID_EM_SET_EXAMTIME, &CMainFrame::OnEmSetExamtime)
 	ON_COMMAND(ID_EM_SET_WORKSPACE, &CMainFrame::OnEmSetWorkspace)
+	ON_COMMAND(ID_SET_PERSON_INFO, &CMainFrame::OnUpdateUserInfo)
 	ON_COMMAND(ID_EM_LOAD_EXERCISE, &CMainFrame::OnEmLoadExercise)
 	ON_COMMAND(ID_EM_SET_EXERCISE_CFG, &CMainFrame::OnEmSetExerciseCfg)
 	ON_COMMAND(ID_EM_SET_EXAM_CFG, &CMainFrame::OnEmSetExamCfg)
@@ -224,10 +226,17 @@ void CMainFrame::InitializeRibbon()
 	CMFCRibbonButton* pBtnTime = new CMFCRibbonButton(ID_EM_SET_EXAMTIME, strTemp, 4, 4);
 	pPanelSetting->Add(pBtnTime);*/
 
+	
+
 	bNameValid = strTemp.LoadString(IDS_RIBBON_SET_EXERCISECFG);
 	ASSERT(bNameValid);
 	CMFCRibbonButton* pBtnExerciseCfg = new CMFCRibbonButton(ID_EM_SET_EXERCISE_CFG, strTemp, 5, 5);
 	pPanelSetting->Add(pBtnExerciseCfg);
+
+	bNameValid = strTemp.LoadString(IDS_RIBBON_SET_PERSONINFO);
+	ASSERT(bNameValid);
+	CMFCRibbonButton* pBtnTime = new CMFCRibbonButton(ID_SET_PERSON_INFO, strTemp, 4, 4);
+	pPanelSetting->Add(pBtnTime);
 
 	/*bNameValid = strTemp.LoadString(IDS_RIBBON_SET_EXAMCFG);
 	ASSERT(bNameValid);
@@ -375,6 +384,12 @@ void CMainFrame::OnEmSetExamtime()
 void CMainFrame::OnEmSetWorkspace()
 {
 	AfxMessageBox(L"弹出设置工作目录对话框");
+}
+
+void CMainFrame::OnUpdateUserInfo()
+{
+	CUserInfoDlg dlg;
+	dlg.DoModal();
 }
 
 void CMainFrame::OnEmLoadExercise()

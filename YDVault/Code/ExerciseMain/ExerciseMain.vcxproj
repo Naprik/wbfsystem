@@ -169,6 +169,7 @@
     <ClCompile Include="StdAnswerDetialDlg.cpp" />
     <ClCompile Include="StdAnswerDlg.cpp" />
     <ClCompile Include="StudentLevelUpdateUtil.cpp" />
+    <ClCompile Include="UserInfoDlg.cpp" />
     <ClCompile Include="wmpcdrom.cpp" />
     <ClCompile Include="wmpcdromcollection.cpp" />
     <ClCompile Include="wmpclosedcaption.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="StdAnswerDlg.h" />
     <ClInclude Include="StudentLevelUpdateUtil.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="UserInfoDlg.h" />
     <ClInclude Include="wmpcdrom.h" />
     <ClInclude Include="wmpcdromcollection.h" />
     <ClInclude Include="wmpclosedcaption.h" />

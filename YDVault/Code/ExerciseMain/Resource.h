@@ -75,6 +75,7 @@
 #define IDS_RIBBON_SET_EXERCISECFG      301
 #define IDS_RIBBON_SET_EXERCISECFG2     302
 #define IDS_RIBBON_SET_EXAMCFG          302
+#define IDS_RIBBON_SET_PERSONINFO       303
 #define IDS_EDIT_MENU                   306
 #define IDB_PNG1                        310
 #define IDB_BITMAP1                     311
@@ -116,6 +117,7 @@
 #define IDD_DLG_PERSIONINFO_VIEW        341
 #define IDD_DLG_STDANSWER_DETIAL        344
 #define IDB_BITMAP_RENAME               346
+#define IDD_DIALOG_USERINFO             348
 #define IDC_TREE_EM_QUESTION            1000
 #define IDC_SCROLLBAR1                  1000
 #define IDC_BTN_EM_PREV                 1001
@@ -142,12 +144,16 @@
 #define IDC_CMB_QVAULT                  1012
 #define IDC_CMB_GENDER                  1012
 #define IDC_BTN_EM_EXAM_PREV            1013
+#define IDC_DM_STU_EMIAL                1013
 #define IDC_BTN_EM_EXAM_BEGIN           1014
 #define IDC_BTN_EM_EXAM_NEXT            1015
 #define IDC_BTN_EM_EXAM_STOP            1016
 #define IDC_BTN_EM_EXAM_ABORT           1017
+#define IDC_DM_STU_AGE                  1017
 #define IDC_BTN_EM_EXAM_STUANSWER       1018
+#define IDC_DM_STU_QQ                   1018
 #define IDC_BTN_EM_EXAM_STDANSWER       1019
+#define IDC_DM_STU_ID                   1019
 #define IDC_BTN_EM_EXAM_CLOSE           1020
 #define IDC_EXAM_RICHEDIT_ANSWER        1021
 #define IDC_EXAM_RICHEDIT_QUESTION      1022
@@ -193,6 +199,7 @@
 #define IDC_LIST_EXERCISE               1051
 #define IDC_EDIT_STDANSWER              1051
 #define IDC_EDIT_AGE                    1052
+#define IDC_DM_STU_GENDER               1172
 #define IDP_AFXBARRES_IMAGE_IS_REQUIRED 16001
 #define IDP_AFXBARRES_TEXT_IS_REQUIRED  16002
 #define IDC_AFXBARRES_CLEAR             16003
@@ -444,6 +451,7 @@
 #define IDC_AFXBARRES_MOVE_TAB          17047
 #define IDC_AFXBARRES_NO_MOVE_TAB       17048
 #define IDB_AFXBARRES_BROWSE32          17049
+#define IDC_DM_STU_TEL                  17049
 #define IDB_AFXBARRES_PRINT32           17050
 #define IDB_AFXBARRES_COPY32            17051
 #define IDB_AFXBARRES_TASKPANE32        17052
@@ -488,6 +496,8 @@
 #define IDS_AFXBARRES_MORE              17107
 #define IDS_AFXBARRES_GALLERY_ROW1_FMT  17108
 #define IDS_AFXBARRES_GALLERY_ROW2_FMT  17109
+#define IDC_EDIT_USERNAME               20003
+#define IDC_EDIT_USERPWD                20004
 #define IDD_YDMAIN_BLEW_VIEW            30010
 #define IDD_DLG_PERSIONINFO_HISTORY     30011
 #define IDD_DLG_ARTICLE_IMAGE           30012
@@ -523,13 +533,16 @@
 #define ID_EM_LOADVAULT                 32794
 #define ID_32795                        32795
 #define ID_EM_CLEARHISTORY              32796
+#define ID_32797                        32797
+#define ID_PERSON_INFO                  32798
+#define ID_SET_PERSON_INFO              32799
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        348
-#define _APS_NEXT_COMMAND_VALUE         32797
+#define _APS_NEXT_RESOURCE_VALUE        349
+#define _APS_NEXT_COMMAND_VALUE         32800
 #define _APS_NEXT_CONTROL_VALUE         1052
 #define _APS_NEXT_SYMED_VALUE           314
 #endif

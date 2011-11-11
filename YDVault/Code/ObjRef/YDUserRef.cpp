@@ -71,6 +71,5 @@ HRESULT CYDUserRef::SetGender(const CString& strGender)
 	CComVariant varGender((long)lGender);
 	SetPropVal(FIELD_YDUSER_GENDER, &varGender);
 	
-
 	return S_OK;
 }

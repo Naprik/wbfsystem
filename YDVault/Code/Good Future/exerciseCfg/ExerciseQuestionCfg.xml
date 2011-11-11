@@ -1,5 +1,1 @@
-<CFG>
-	<PAPER>
-		<QUESTION vault="4" type="6" number="10" mark="10.00"/>
-	</PAPER>
-</CFG>
+<CFG><PAPER><QUESTION vault="3" type="6" number="10" mark="100.00"/></PAPER></CFG>

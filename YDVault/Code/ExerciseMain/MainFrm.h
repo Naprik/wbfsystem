@@ -76,7 +76,9 @@ public:
 	afx_msg void OnEmSetExamCfg();
 	afx_msg void OnLoadVault();
 	afx_msg void OnClearHistory();
+	
 	afx_msg void OnClose();
+	afx_msg void OnUpdateUserInfo();
 	afx_msg HRESULT OnGetLastSheet(WPARAM wParam,LPARAM lParam);
 	
 public:
