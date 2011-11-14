@@ -279,37 +279,29 @@ HRESULT CDlgVocabularyInputPreview::InsertQuestionByRow(CBCGPGridRow* _pRootRow)
 	{
 		return hr;
 	}
-	/*	CComVariant valCreator;
-		hr = CDataHandler::StringToVariant(m_strCreator,VT_BSTR,&valCreator);
-		if(FAILED(hr))
-		{
-			return hr;
-		}
-		hr = _pRef->SetPropVal(L"CREATOR",&valCreator);
-		if(FAILED(hr))
-		{
-			return hr;
-		}
-		CComVariant valCrateDate;
-		hr = CDataHandler::StringToVariant(m_strCreateDate,VT_DATE,&valCrateDate);
-		if(FAILED(hr))
-		{
-			return hr;
-		}
-		hr = _pRef->SetPropVal(L"CREATEDATE",&valCrateDate);
-		if(FAILED(hr))
-		{
-			return hr;
-		}
-	}
-	CComVariant valHardLevel;
-	valHardLevel.vt = VT_I4;
-	valHardLevel.lVal = m_iHardLevel == 0 ? EASY : HARD;
-	hr = _pRef->SetPropVal(L"HARDLEVEL",&valHardLevel);
+	CComVariant valCreator = DEFAULT_CREATOR;
+	hr = pRef->SetPropVal(FIELD_CHOICEQUESTION_CREATOR,&valCreator);
 	if(FAILED(hr))
 	{
 		return hr;
-	}*/
+	}
+	COleDateTime dt = COleDateTime::GetCurrentTime();
+	CComVariant valCrateDate;
+	valCrateDate.vt = VT_DATE;
+	valCrateDate.date = dt;
+	hr = pRef->SetPropVal(FIELD_CHOICEQUESTION_CREATEDATE,&valCrateDate);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+// 	CComVariant valHardLevel;
+// 	valHardLevel.vt = VT_I4;
+// 	valHardLevel.lVal = m_iHardLevel == 0 ? EASY : HARD;
+// 	hr = _pRef->SetPropVal(L"HARDLEVEL",&valHardLevel);
+// 	if(FAILED(hr))
+// 	{
+// 		return hr;
+// 	}
 	//…Ë÷√÷∏±Í
 	CFactorInfoHelper helper;
 	std::list<CYDObjectRef*> lstFactorInfo;
