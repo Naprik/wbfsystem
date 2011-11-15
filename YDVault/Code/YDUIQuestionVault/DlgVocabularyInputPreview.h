@@ -30,14 +30,19 @@ public:
 private:
 	CBCGPKeyGridCtrl						m_Grid;
 	HRESULT InsertRowByVocabularyQuestion(CVocabularyQuestion* _pVocabularyQuestion,int _index);
+	
+	HRESULT UpdateQuestionByRow(CBCGPGridRow* _pRootRow);
 	//根据一条根记录插入一个选择题
-	HRESULT InsertQuestionByRow(CBCGPGridRow* _pRootRow);
+	HRESULT InsertQuertionByVocabularyQuestion(CVocabularyQuestion* _pVocabularyQuestion);
 	//得到_pRow的选项名和选项值
 	void    GetOption(CBCGPGridRow* _pRow,CString &_strOptionName,CString &_strOption);
 	void    GetFactor(CBCGPGridRow* _pRow,CString &_strFactorName,CString &_strFactor);
 	HRESULT SetFactorProp(std::list<CYDObjectRef*> *_plstFactorInfo,
 							CString _strFactorName,CString _strFactor,
 							CYDObjectRef* _pQRef,CFactorInfoHelper* _phelper);
+	std::list<CVocabularyQuestion*>::const_iterator	m_ItrCur;
+	int											    m_iIndex;
 public:
 	afx_msg void OnBnClickedOk();
+	afx_msg void OnBnClickedButtonMore();
 };

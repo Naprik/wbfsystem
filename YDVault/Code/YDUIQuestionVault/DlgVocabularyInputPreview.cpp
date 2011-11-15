@@ -22,6 +22,8 @@ const int cColAnswer = 4;//答案
 const int cColFactorName = 5;//指标名
 const int cColFactor = 6;//指标值
 
+const int cPageNum = 100;//每页显示的行数
+
 IMPLEMENT_DYNAMIC(CDlgVocabularyInputPreview, CDialogEx)
 
 CDlgVocabularyInputPreview::CDlgVocabularyInputPreview(CWnd* pParent /*=NULL*/)
@@ -45,6 +47,7 @@ void CDlgVocabularyInputPreview::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CDlgVocabularyInputPreview, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CDlgVocabularyInputPreview::OnBnClickedOk)
+	ON_BN_CLICKED(IDC_BUTTON_MORE, &CDlgVocabularyInputPreview::OnBnClickedButtonMore)
 END_MESSAGE_MAP()
 
 
@@ -85,21 +88,11 @@ BOOL CDlgVocabularyInputPreview::OnInitDialog()
 	m_Grid.InsertColumn(cColFactor, L"指标值", 80);
 
 
+	m_ItrCur = m_plstVocabularyQuestion->begin();
 	ASSERT(m_plstVocabularyQuestion);
-	CPdemWait	wait(_T("请稍候，正在生成数据..."),FALSE,m_plstVocabularyQuestion->size());
-	wait.BeginWait();
-	m_Grid.LockWindowUpdate();
-	m_Grid.SetRedraw(FALSE);
-	int index = 0;
-	for(std::list<CVocabularyQuestion*>::const_iterator itr = m_plstVocabularyQuestion->begin();
-		itr != m_plstVocabularyQuestion->end();++itr,++index)
-	{
-		InsertRowByVocabularyQuestion(*itr,index);
-		wait.StepIt();
-	}
-	wait.Close();
-	m_Grid.UnlockWindowUpdate();
-	m_Grid.SetRedraw(TRUE);
+	m_iIndex = 0;
+	OnBnClickedButtonMore();
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -112,7 +105,7 @@ HRESULT CDlgVocabularyInputPreview::InsertRowByVocabularyQuestion(CVocabularyQue
 	strSerial.Format(_T("%d"),_index+1);
 	CBCGPGridRow* pRow = m_Grid.CreateRow(m_Grid.GetColumnCount());
 	pRow->GetItem(cColSerialNo)->SetValue(CComVariant(strSerial));
-
+	pRow->SetData((DWORD_PTR)_pVocabularyQuestion);
 	//插入题目
 	pRow->GetItem(cColCaption)->SetValue(CComVariant(_pVocabularyQuestion->m_strCaption));
 	pRow->AllowSubItems();
@@ -197,11 +190,6 @@ void CDlgVocabularyInputPreview::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
 	HRESULT hr = E_FAIL;
-	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
-	ASSERT(pDB);
-	CPdemWait	wait(_T("请稍候，正在导入数据..."),FALSE,m_plstVocabularyQuestion->size());
-	wait.BeginWait();
-	CDBTransactionRef trans(pDB, TRUE);
 	for(int i = 0; i < m_Grid.GetRowCount();i++)
 	{
 		CBCGPGridRow* pRow = m_Grid.GetRow(i);
@@ -210,44 +198,56 @@ void CDlgVocabularyInputPreview::OnBnClickedOk()
 		if(pParentRow == NULL)
 		{
 			//当前是根节点，是一条选择题
-			hr = InsertQuestionByRow(pRow);
+			hr = UpdateQuestionByRow(pRow);
 			if(FAILED(hr))
 			{
 				DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
 				return;
 			}
-			wait.StepIt();
 		}
-		
+
 	}
+	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
+	ASSERT(pDB);
+	CPdemWait	wait(_T("请稍候，正在导入数据..."),FALSE,m_plstVocabularyQuestion->size());
+	wait.BeginWait();
+	CDBTransactionRef trans(pDB, TRUE);
+	for(auto itr = m_plstVocabularyQuestion->begin();itr != m_plstVocabularyQuestion->end();++itr)
+	{
+		hr = InsertQuertionByVocabularyQuestion(*itr);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+			return;
+		}
+		wait.StepIt();
+	}
+	
 	wait.Close();
 	trans.Commit();
 	CDialogEx::OnOK();
 }
 
-HRESULT CDlgVocabularyInputPreview::InsertQuestionByRow(CBCGPGridRow* _pRootRow)
+HRESULT CDlgVocabularyInputPreview::UpdateQuestionByRow(CBCGPGridRow* _pRootRow)
 {
 	HRESULT hr = E_FAIL;
 	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
 	ASSERT(pDB);
 	ASSERT(_pRootRow);
-	CYDChoiceQuestionRef* pRef = new CYDChoiceQuestionRef(pDB);
-	CPtrAutoClean<CYDChoiceQuestionRef> clr(pRef);
+	CVocabularyQuestion* pVocabularyQuestion = (CVocabularyQuestion*)(_pRootRow->GetData());
+	ASSERT(pVocabularyQuestion);
+
 	//提干
 	CComVariant valTitle = _pRootRow->GetItem(cColCaption)->GetValue();
-	hr = pRef->SetPropVal(FIELD_CHOICEQUESTION_TITLE,&valTitle);
-	if(FAILED(hr))
-	{
-		return hr;
-	}
-	std::list<CString> lstChoices;
+	pVocabularyQuestion->m_strCaption = CDataHandler::VariantToString(valTitle);
+	pVocabularyQuestion->m_lstOption.clear();
 	//选项
 	{
 		CString strOptionName,strOptionVal;
 		GetOption(_pRootRow,strOptionName,strOptionVal);
 		if(!strOptionVal.IsEmpty())
 		{
-			lstChoices.push_back(strOptionVal);
+			pVocabularyQuestion->m_lstOption.push_back(std::make_pair(strOptionName,strOptionVal));
 		}
 		for(int i = 0; i < _pRootRow->GetSubItemsCount();i++)
 		{
@@ -257,8 +257,57 @@ HRESULT CDlgVocabularyInputPreview::InsertQuestionByRow(CBCGPGridRow* _pRootRow)
 			GetOption(pChildRow,strSubOptionName,strSubOptionVal);
 			if(!strSubOptionVal.IsEmpty())
 			{
-				lstChoices.push_back(strSubOptionVal);
+				pVocabularyQuestion->m_lstOption.push_back(std::make_pair(strOptionName,strOptionVal));
 			}
+		}
+	}
+	CComVariant valAnswer = _pRootRow->GetItem(cColAnswer)->GetValue();
+	pVocabularyQuestion->m_strAnswer = CDataHandler::VariantToString(valAnswer);
+	//设置指标
+	pVocabularyQuestion->m_lstFactor.clear();
+	{
+		CString strFactorName,strFactorVal;
+		GetFactor(_pRootRow,strFactorName,strFactorVal);
+		if(!strFactorName.IsEmpty())
+		{
+			pVocabularyQuestion->m_lstFactor.push_back(std::make_pair(strFactorName,strFactorVal));
+		}
+		for(int i = 0; i < _pRootRow->GetSubItemsCount();i++)
+		{
+			CBCGPGridRow* pChildRow = _pRootRow->GetSubItem(i);
+			ASSERT(pChildRow);
+			CString strSubFactorName,strSubFactorVal;
+			GetFactor(pChildRow,strSubFactorName,strSubFactorVal);
+			if(!strSubFactorName.IsEmpty())
+			{
+				pVocabularyQuestion->m_lstFactor.push_back(std::make_pair(strFactorName,strFactorVal));
+			}
+		}
+	}
+	return S_OK;
+}
+
+HRESULT CDlgVocabularyInputPreview::InsertQuertionByVocabularyQuestion(CVocabularyQuestion* _pVocabularyQuestion)
+{
+	HRESULT hr = E_FAIL;
+	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
+	ASSERT(pDB);
+	ASSERT(_pVocabularyQuestion);
+	CYDChoiceQuestionRef* pRef = new CYDChoiceQuestionRef(pDB);
+	CPtrAutoClean<CYDChoiceQuestionRef> clr(pRef);
+	//提干
+	CComVariant valTitle = _pVocabularyQuestion->m_strCaption;
+	hr = pRef->SetPropVal(FIELD_CHOICEQUESTION_TITLE,&valTitle);
+	if(FAILED(hr))
+	{
+		return hr;
+	}
+	std::list<CString> lstChoices;
+	//选项
+	{
+		for(auto itr = _pVocabularyQuestion->m_lstOption.begin();itr != _pVocabularyQuestion->m_lstOption.end();++itr)
+		{
+			lstChoices.push_back((*itr).second);
 		}
 	}
 	hr = pRef->SetOptionList(&lstChoices);
@@ -266,7 +315,7 @@ HRESULT CDlgVocabularyInputPreview::InsertQuestionByRow(CBCGPGridRow* _pRootRow)
 	{
 		return hr;
 	}
-	CComVariant valAnswer = _pRootRow->GetItem(cColAnswer)->GetValue();
+	CComVariant valAnswer = _pVocabularyQuestion->m_strAnswer;
 	hr = pRef->SetPropVal(FIELD_CHOICEQUESTION_ANSWER,&valAnswer);
 	if(FAILED(hr))
 	{
@@ -294,14 +343,14 @@ HRESULT CDlgVocabularyInputPreview::InsertQuestionByRow(CBCGPGridRow* _pRootRow)
 	{
 		return hr;
 	}
-// 	CComVariant valHardLevel;
-// 	valHardLevel.vt = VT_I4;
-// 	valHardLevel.lVal = m_iHardLevel == 0 ? EASY : HARD;
-// 	hr = _pRef->SetPropVal(L"HARDLEVEL",&valHardLevel);
-// 	if(FAILED(hr))
-// 	{
-// 		return hr;
-// 	}
+	// 	CComVariant valHardLevel;
+	// 	valHardLevel.vt = VT_I4;
+	// 	valHardLevel.lVal = m_iHardLevel == 0 ? EASY : HARD;
+	// 	hr = _pRef->SetPropVal(L"HARDLEVEL",&valHardLevel);
+	// 	if(FAILED(hr))
+	// 	{
+	// 		return hr;
+	// 	}
 	//设置指标
 	CFactorInfoHelper helper;
 	std::list<CYDObjectRef*> lstFactorInfo;
@@ -312,29 +361,18 @@ HRESULT CDlgVocabularyInputPreview::InsertQuestionByRow(CBCGPGridRow* _pRootRow)
 	}
 	CListAutoClean<CYDObjectRef> clr2(lstFactorInfo);
 	{
-		CString strFactorName,strFactorVal;
-		GetFactor(_pRootRow,strFactorName,strFactorVal);
-		if(!strFactorName.IsEmpty())
+		for(auto itr = _pVocabularyQuestion->m_lstFactor.begin();itr != _pVocabularyQuestion->m_lstFactor.end();++itr)
 		{
-			hr = SetFactorProp(&lstFactorInfo,strFactorName,strFactorVal,pRef,&helper);
-			if(FAILED(hr))
+			CString strFactorName,strFactorVal;
+			strFactorName = (*itr).first;
+			strFactorVal = (*itr).second;
+			if(!strFactorName.IsEmpty())
 			{
-				return hr;
-			}
-		}
-		for(int i = 0; i < _pRootRow->GetSubItemsCount();i++)
-		{
-			CBCGPGridRow* pChildRow = _pRootRow->GetSubItem(i);
-			ASSERT(pChildRow);
-			CString strSubFactorName,strSubFactorVal;
-			GetFactor(pChildRow,strSubFactorName,strSubFactorVal);
-			if(!strSubFactorName.IsEmpty())
-			{
-				hr = SetFactorProp(&lstFactorInfo,strSubFactorName,strSubFactorVal,pRef,&helper);
+				hr = SetFactorProp(&lstFactorInfo,strFactorName,strFactorVal,pRef,&helper);
 				if(FAILED(hr))
 				{
 					return hr;
-				}	
+				}
 			}
 		}
 	}
@@ -430,4 +468,26 @@ void CDlgVocabularyInputPreview::GetFactor(CBCGPGridRow* _pRow,CString &_strFact
 	_strFactorName = CDataHandler::VariantToString(valFactorName);
 	CComVariant valFactor = _pRow->GetItem(cColFactor)->GetValue();
 	_strFactor = CDataHandler::VariantToString(valFactor);
+}
+
+void CDlgVocabularyInputPreview::OnBnClickedButtonMore()
+{
+	// TODO: Add your control notification handler code here
+	CPdemWait	wait(_T("请稍候，正在生成数据..."),FALSE,cPageNum);
+	wait.BeginWait();
+	m_Grid.LockWindowUpdate();
+	m_Grid.SetRedraw(FALSE);
+	int index = 0;
+	for(;m_ItrCur != m_plstVocabularyQuestion->end() && index < cPageNum;++m_ItrCur,++m_iIndex,++index)
+	{
+		InsertRowByVocabularyQuestion(*m_ItrCur,m_iIndex);
+		wait.StepIt();
+	}
+	wait.Close();
+	m_Grid.UnlockWindowUpdate();
+	m_Grid.SetRedraw(TRUE);
+	if(m_ItrCur == m_plstVocabularyQuestion->end())
+	{
+		GetDlgItem(IDC_BUTTON_MORE)->EnableWindow(FALSE);
+	}
 }
