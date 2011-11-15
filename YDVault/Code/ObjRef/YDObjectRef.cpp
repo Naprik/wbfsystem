@@ -1576,6 +1576,7 @@ HRESULT CYDObjectRef::AddNewRecordByBlobOject()
 	valID.lVal = m_uObjID;
 	CString strSQL = _T("Select * From ");
 	strSQL += m_strDBName;
+	strSQL += _T(" Where 1 = 2 ");
 	_RecordsetPtr pRecordset = NULL;
 	pRecordset.CreateInstance("ADODB.Recordset");
 	CComVariant valConnection;
