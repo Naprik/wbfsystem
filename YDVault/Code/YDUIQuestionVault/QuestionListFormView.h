@@ -86,6 +86,7 @@ public:
 	afx_msg void OnBnClickedButtonQlConfigFactorinfo();
 	afx_msg void OnBnClickedButtonQlInput();
 	afx_msg void OnBnClickedButtonQlOutputRtf();
+	afx_msg void OnBnClickedButtonQlQueryMore();
 };
 
 

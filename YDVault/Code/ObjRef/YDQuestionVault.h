@@ -67,6 +67,8 @@ public:
 	HRESULT GetQuestionByTypeIDConditionCount(UINT _idQuestionType,
 											std::list<CPropQueryContidition*> *_lstCondition,
 											long* _lCount);
+	//当前题库下查询到的题目是否为最后一个
+	HRESULT CurQuestionIsEof(BOOL &_bIsEof);
 private:
 	//_idQuestionType是试题类型的OBJID,_idType是返回值，0：代表是选题等 
 	//1代表是阅读题
@@ -100,4 +102,6 @@ private:
 	HRESULT CreateConditionSQL(CString _strDBName,
 		std::list<CPropQueryContidition*> *_lstCondition,
 		CString &_strSQL);
+private:
+	_RecordsetPtr		m_pQuestionRecord;//当前题库中查询到的题目的记录集
 };

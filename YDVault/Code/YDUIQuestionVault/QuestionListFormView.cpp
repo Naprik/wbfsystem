@@ -71,6 +71,7 @@ BEGIN_MESSAGE_MAP(CQuestionListFormView, CYdFormView)
 	ON_BN_CLICKED(IDC_BUTTON_QL_CONFIG_FACTORINFO, &CQuestionListFormView::OnBnClickedButtonQlConfigFactorinfo)
 	ON_BN_CLICKED(IDC_BUTTON_QL_INPUT, &CQuestionListFormView::OnBnClickedButtonQlInput)
 	ON_BN_CLICKED(IDC_BUTTON_QL_OUTPUT_RTF, &CQuestionListFormView::OnBnClickedButtonQlOutputRtf)
+	ON_BN_CLICKED(IDC_BUTTON_QL_QUERY_MORE, &CQuestionListFormView::OnBnClickedButtonQlQueryMore)
 END_MESSAGE_MAP()
 
 
@@ -594,12 +595,13 @@ void CQuestionListFormView::OnBnClickedButtonQlQueryQuery()
 	}
 
 	m_uPage = 0;
-	hr = ExeQuery(TRUE);
+	hr = m_plstOperate->RemoveAllItem();
 	if(FAILED(hr))
 	{
 		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
 		return;
 	}
+	OnBnClickedButtonQlQueryMore();
 }
 
 HRESULT CQuestionListFormView::CreatePropQueryContidion()
@@ -1220,4 +1222,71 @@ void CQuestionListFormView::OnBnClickedButtonQlOutputRtf()
 		return;
 	}
 	AfxMessageBox(_T("导出成功！"));
+}
+
+
+void CQuestionListFormView::OnBnClickedButtonQlQueryMore()
+{
+	// TODO: Add your control notification handler code here
+	HRESULT hr = E_FAIL;
+	OBJID uQTypeID = 0;
+	hr = GetQuestionTypeID(&uQTypeID);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+		return;
+	}
+	CYDQuestionVault* pVault = NULL;
+	hr = GetQuestionVault(pVault);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+		return;
+	}
+	ASSERT(pVault);
+	if(m_uPage == 0)
+	{
+		//第一次查询，要计算总数
+		long lCount = 0;
+		hr = pVault->GetQuestionByTypeIDConditionCount(uQTypeID,
+			&m_lstPropQuery,
+			&lCount);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+			return;
+		}
+		m_uTotalCount = (UINT)lCount;
+		m_uTotalPages = m_uTotalCount/QUESTION_PAGE_COUNT;
+		UpdateData(FALSE);
+	}
+	std::list<CYDQuestionRef*> lstQRef;
+	std::list<CYDLinkRef*>     lstLinkRef;
+
+	hr = pVault->GetQuestionByTypeIDCondition(uQTypeID,
+		m_uPage++,
+		&m_lstPropQuery,
+		&lstQRef,
+		&lstLinkRef);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+		return;
+	}
+	ASSERT(lstQRef.size() == lstLinkRef.size());
+	
+	hr = InsertlstToListCtrl(lstQRef,lstLinkRef);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+		return;
+	}
+	BOOL bIsEof = FALSE;
+	hr = pVault->CurQuestionIsEof(bIsEof);
+	if(FAILED(hr))
+	{
+		DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+		return;
+	}
+	GetDlgItem(IDC_BUTTON_QL_QUERY_MORE)->EnableWindow(!bIsEof);
 }

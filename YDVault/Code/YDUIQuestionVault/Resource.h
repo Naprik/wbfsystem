@@ -95,6 +95,8 @@
 #define IDC_EDIT_QL_QUERY_PAGENUM       1078
 #define IDC_BUTTON_QL_QUERY_BEGIN       1079
 #define IDC_BUTTON_CQ_ADD               1080
+#define IDC_BUTTON_QL_QUERY_QUERY2      1080
+#define IDC_BUTTON_QL_QUERY_MORE        1080
 #define IDC_BUTTON_CQ_MODIFY            1081
 #define IDC_BUTTON_CQ_CLOSE             1082
 #define IDC_LIST_CHOICE_QUESTION        1082

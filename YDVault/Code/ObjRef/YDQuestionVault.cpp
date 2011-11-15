@@ -21,10 +21,12 @@ CYDQuestionVault::CYDQuestionVault(CDatabaseEx* pdb) : CYDObjectRef(pdb)
 	m_lstPropDef.push_back(pPropDef);
 	pPropDef = new CYDPropDef(_T("DESCRIPTION"),VT_BSTR);
 	m_lstPropDef.push_back(pPropDef);
+	m_pQuestionRecord = NULL;
 }
 
 CYDQuestionVault::~CYDQuestionVault(void)
 {
+	m_pQuestionRecord = NULL;
 }
 
 HRESULT CYDQuestionVault::GetAllKnowledgePoint(std::list<CYdKnowledge*>* sub_knowledge,
@@ -586,10 +588,14 @@ HRESULT CYDQuestionVault::GetChoiceQuestionByTypeIDCondition(UINT _idQuestionTyp
 										   std::list<CYDLinkRef*>* _sub_link /*= NULL*/)
 {
 	HRESULT hr = E_FAIL;
-	hr = ExeConditionDB(_idQuestionType,DB_CHOICEQUESTION,_lstCondition);
-	if (FAILED(hr))
+	if(_iPage == 0)
 	{
-		return hr;
+		//说明是第一次
+		hr = ExeConditionDB(_idQuestionType,DB_CHOICEQUESTION,_lstCondition);
+		if (FAILED(hr))
+		{
+			return hr;
+		}
 	}
 	hr = ExeDBCreateQuestion(QUESTION_CHOICE,
 		_sub_question,
@@ -607,10 +613,14 @@ HRESULT CYDQuestionVault::GetArticleQuestionByTypeIDCondition(UINT _idQuestionTy
 											std::list<CYDLinkRef*>* _sub_link /*= NULL*/)
 {
 	HRESULT hr = E_FAIL;
-	hr = ExeConditionDB(_idQuestionType,DB_ARTICLEQUESTION,_lstCondition);
-	if (FAILED(hr))
+	if(_iPage == 0)
 	{
-		return hr;
+		//说明是第一次
+		hr = ExeConditionDB(_idQuestionType,DB_ARTICLEQUESTION,_lstCondition);
+		if (FAILED(hr))
+		{
+			return hr;
+		}
 	}
 	hr = ExeDBCreateQuestion(QUESTION_ARTICLE,
 							_sub_question,
@@ -653,6 +663,7 @@ HRESULT CYDQuestionVault::ExeConditionDB(UINT _idQuestionType,
 	{
 		return hr;
 	}
+	m_pQuestionRecord = m_pDb->GetRecordset();
 	return S_OK;
 }
 
@@ -749,15 +760,15 @@ HRESULT CYDQuestionVault::ExeDBCreateQuestion(QUESTION_TYPE _qType,
 							std::list<CYDLinkRef*>* _sub_link /*= NULL*/	)
 {
 	HRESULT hr = E_FAIL;
-	while(!m_pDb->IsEOF())
+	int index = 0;
+	ASSERT(m_pQuestionRecord);
+	while(!m_pQuestionRecord->adoEOF && index++ < QUESTION_PAGE_COUNT)
 	{
-		_variant_t valOBJID;
-		hr = m_pDb->GetField(_variant_t(_T("OBJID")),valOBJID);
-		if (FAILED(hr))
-		{
-			return hr;
-		}
-		OBJID uID = CDataHandler::VariantToLong(valOBJID);
+		CString strObjID;
+		FieldsPtr fields = m_pQuestionRecord->GetFields();
+		CComVariant valObjID = fields->GetItem(_variant_t(_T("OBJID")))->GetValue();
+
+		OBJID uID = CDataHandler::VariantToLong(valObjID);
 		if(uID != 0)
 		{
 			CYDQuestionRef* pQRef = NULL;
@@ -782,12 +793,7 @@ HRESULT CYDQuestionVault::ExeDBCreateQuestion(QUESTION_TYPE _qType,
 			_sub_question->push_back(pQRef);
 			if(_sub_link != NULL)
 			{
-				_variant_t valLinkID;
-				hr = m_pDb->GetField(_variant_t(_T("LINKID")),valLinkID);
-				if (FAILED(hr))
-				{
-					return hr;
-				}
+				CComVariant valLinkID = fields->GetItem(_variant_t(_T("LINKID")))->GetValue();
 				OBJID uLinkID = CDataHandler::VariantToLong(valLinkID);
 				CYDLinkRef* pLinkRef = new CYDLinkRef(m_pDb,DB_VAULTQUESTION);
 				hr = pLinkRef->SetID(uLinkID);
@@ -798,11 +804,20 @@ HRESULT CYDQuestionVault::ExeDBCreateQuestion(QUESTION_TYPE _qType,
 				_sub_link->push_back(pLinkRef);
 			}
 		}
-		hr = m_pDb->MoveNext();
-		if (FAILED(hr))
-		{
-			return hr;
-		}
+		m_pQuestionRecord->MoveNext();
 	}
+	return S_OK;
+}
+
+HRESULT CYDQuestionVault::CurQuestionIsEof(BOOL &_bIsEof)
+{
+	HRESULT hr = E_FAIL;
+	if(m_pQuestionRecord == NULL ||
+		m_pQuestionRecord->State != adStateOpen)
+	{
+		_bIsEof = TRUE;
+		return S_FALSE;
+	}
+	_bIsEof = m_pQuestionRecord->adoEOF;
 	return S_OK;
 }

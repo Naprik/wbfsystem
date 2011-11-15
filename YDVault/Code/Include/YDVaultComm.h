@@ -265,7 +265,7 @@ const OBJID ID_EMPTY = 0;
 
 const CString DEFAULT_CREATOR            =          _T("南京我佰分");
 
-const UINT QUESTION_PAGE_COUNT = 1000;   //试题每页显示个数
+const UINT QUESTION_PAGE_COUNT = 100;   //试题每页显示个数
 const WORD CRYPT_KEY           = 0x10 ;//加解密的Key值
 
 enum SECURITY_TYPE
