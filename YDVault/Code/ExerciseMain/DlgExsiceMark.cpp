@@ -86,7 +86,6 @@ BOOL CDlgExsiceMark::OnInitDialog()
 	OBJID vaultid;
 	hr = (*m_pQuestionRecord->m_lstQuestionStruct.begin())->m_pQuestion->GetVaultID(&vaultid);
 	CStudentLevelUpdateUtil::Instance()->GetStudentLevel(vaultid, m_accuracy, &m_strLevel);
-
 	int typeId = 0;
 	int index = 1;
 	CBCGPGridRow* pParentRow = NULL;

@@ -159,14 +159,13 @@ HRESULT CQuestionRecordStruct::ComputeMark(double* _dbMark)
 	for(;itrStd != lstStdAnswer.end() && itrUser != m_listUserAnswers.end();
 		++itrStd,++itrUser)
 	{
-		++m_answercount;
 		if((*itrStd).CompareNoCase(*itrUser) == 0)
 		{
 			++m_yescount;
 			*_dbMark += submark;
 		}
 	}
-	
+	m_answercount = lstStdAnswer.size();
 	return S_OK;
 }
 

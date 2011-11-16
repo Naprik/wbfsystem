@@ -477,6 +477,7 @@ void CExerciseMainDlg::OnBnClickedBtnEmStdanswer()
 	
 	ASSERT(hItem);
 	m_tree.SelectItem(hItem);
+	m_pActiveDlg->PersistData();
 	SwitchActiveDlg(m_pDefaultDlg);
 	hr = ShowSelItem(hItem, TRUE);
 	if(FAILED(hr))
@@ -818,8 +819,8 @@ void CExerciseMainDlg::OnBnClickedBtnEmClose()
 		dlg.m_pQuestionRecord = &m_log;
 		dlg.DoModal();
 
-		if (!m_isupdateuser)
-		{
+		/*if (!m_isupdateuser)
+		{*/
 			CYDUserRef* puser = NULL;
 			CStaticYdUser::Instance()->GetCurUser(puser);
 			puser->SetPropVal(FIELD_YDUSER_LEVEL, &CComVariant(dlg.m_strLevel));
@@ -831,9 +832,9 @@ void CExerciseMainDlg::OnBnClickedBtnEmClose()
 				return;
 			}
 			trans.Commit();
-			m_isupdateuser = TRUE;
-		}
-		}
+		/*	m_isupdateuser = TRUE;
+		}*/
+	}
 }
 
 void CExerciseMainDlg::OnBnClickedBtnEmRename()
