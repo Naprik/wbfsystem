@@ -21,12 +21,12 @@ CYDQuestionVault::CYDQuestionVault(CDatabaseEx* pdb) : CYDObjectRef(pdb)
 	m_lstPropDef.push_back(pPropDef);
 	pPropDef = new CYDPropDef(_T("DESCRIPTION"),VT_BSTR);
 	m_lstPropDef.push_back(pPropDef);
-	m_pQuestionRecord = NULL;
+	m_pQueryQuestionDb = NULL;
 }
 
 CYDQuestionVault::~CYDQuestionVault(void)
 {
-	m_pQuestionRecord = NULL;
+	CPtrAutoClean<CDatabaseEx> clr(m_pQueryQuestionDb);
 }
 
 HRESULT CYDQuestionVault::GetAllKnowledgePoint(std::list<CYdKnowledge*>* sub_knowledge,
@@ -548,27 +548,33 @@ HRESULT CYDQuestionVault::GetQuestionCount(
 	{
 		return hr;
 	}
+	{
+		CPtrAutoClean<CDatabaseEx> clr(m_pQueryQuestionDb);
+	}
+	ASSERT(m_pDb);
+	m_pQueryQuestionDb = new CDatabaseEx(*m_pDb);
 	strSQL = _T("Select Count(*) As IDCOUNT From ( ") + strSQL;
 	strSQL += _T(" ) ");
-	hr = m_pDb->InitializeSQL(_bstr_t(strSQL));
+	ASSERT(m_pQueryQuestionDb);
+	hr = m_pQueryQuestionDb->InitializeSQL(_bstr_t(strSQL));
 	if (FAILED(hr))
 	{
 		return hr;
 	}
 
-	hr = CreateParamter(_idQuestionType,_lstCondition);
+	hr = CreateParamter(m_pQueryQuestionDb,_idQuestionType,_lstCondition);
 	if (FAILED(hr))
 	{
 		return hr;
 	}
 
-	hr = m_pDb->ExecuteSQL();
+	hr = m_pQueryQuestionDb->ExecuteSQL();
 	if(FAILED(hr))
 	{
 		return hr;
 	}
 	_variant_t valCount;
-	hr = m_pDb->GetField(_variant_t(_T("IDCOUNT")),valCount);
+	hr = m_pQueryQuestionDb->GetField(_variant_t(_T("IDCOUNT")),valCount);
 	if(FAILED(hr))
 	{
 		return hr;
@@ -645,38 +651,40 @@ HRESULT CYDQuestionVault::ExeConditionDB(UINT _idQuestionType,
 	{
 		return hr;
 	}
-	ASSERT(m_pDb != NULL);
-	hr = m_pDb->InitializeSQL(_bstr_t(strSQL));
+	
+	ASSERT(m_pQueryQuestionDb != NULL);
+	hr = m_pQueryQuestionDb->InitializeSQL(_bstr_t(strSQL));
 	if (FAILED(hr))
 	{
 		return hr;
 	}
 
-	hr = CreateParamter(_idQuestionType,_lstCondition);
+	hr = CreateParamter(m_pQueryQuestionDb,_idQuestionType,_lstCondition);
 	if (FAILED(hr))
 	{
 		return hr;
 	}
 	
-	hr = m_pDb->ExecuteSQL();
+	hr = m_pQueryQuestionDb->ExecuteSQL();
 	if(FAILED(hr))
 	{
 		return hr;
 	}
-	m_pQuestionRecord = m_pDb->GetRecordset();
 	return S_OK;
 }
 
-HRESULT CYDQuestionVault::CreateParamter(UINT _idQuestionType,
+HRESULT CYDQuestionVault::CreateParamter(CDatabaseEx* _pDB,
+											UINT _idQuestionType,
 										 std::list<CPropQueryContidition*> *_lstCondition)
 {
 	HRESULT hr = E_FAIL;
+	ASSERT(_pDB);
 	if(_lstCondition != NULL)
 	{
 		for(std::list<CPropQueryContidition*>::const_iterator itr = _lstCondition->begin();
 			itr != _lstCondition->end();++itr)
 		{
-			hr = (*itr)->CreateParamter(m_pDb);
+			hr = (*itr)->CreateParamter(_pDB);
 			if (FAILED(hr))
 			{
 				return hr;
@@ -685,7 +693,7 @@ HRESULT CYDQuestionVault::CreateParamter(UINT _idQuestionType,
 
 	}
 	_variant_t vtParamIDType((long)_idQuestionType);
-	hr = m_pDb->AddParameter(L"ID_TYPE", 
+	hr = _pDB->AddParameter(L"ID_TYPE", 
 		adUnsignedInt, 
 		adParamInput, 
 		sizeof(long),&vtParamIDType);
@@ -695,7 +703,7 @@ HRESULT CYDQuestionVault::CreateParamter(UINT _idQuestionType,
 	}
 
 	_variant_t vtParam((long)m_uObjID);
-	hr = m_pDb->AddParameter(L"ID_A", 
+	hr = _pDB->AddParameter(L"ID_A", 
 		adUnsignedInt, 
 		adParamInput, 
 		sizeof(m_uObjID),&vtParam);
@@ -761,12 +769,14 @@ HRESULT CYDQuestionVault::ExeDBCreateQuestion(QUESTION_TYPE _qType,
 {
 	HRESULT hr = E_FAIL;
 	int index = 0;
-	ASSERT(m_pQuestionRecord);
-	while(!m_pQuestionRecord->adoEOF && index++ < QUESTION_PAGE_COUNT)
+	ASSERT(m_pQueryQuestionDb);
+	while(!m_pQueryQuestionDb->IsEOF()&& index++ < QUESTION_PAGE_COUNT)
 	{
 		CString strObjID;
-		FieldsPtr fields = m_pQuestionRecord->GetFields();
-		CComVariant valObjID = fields->GetItem(_variant_t(_T("OBJID")))->GetValue();
+	
+		_variant_t valObjID;
+		m_pQueryQuestionDb->GetField(_variant_t(_T("OBJID")),valObjID);
+		
 
 		OBJID uID = CDataHandler::VariantToLong(valObjID);
 		if(uID != 0)
@@ -793,7 +803,8 @@ HRESULT CYDQuestionVault::ExeDBCreateQuestion(QUESTION_TYPE _qType,
 			_sub_question->push_back(pQRef);
 			if(_sub_link != NULL)
 			{
-				CComVariant valLinkID = fields->GetItem(_variant_t(_T("LINKID")))->GetValue();
+				_variant_t valLinkID;
+				m_pQueryQuestionDb->GetField(_variant_t(_T("LINKID")),valLinkID);
 				OBJID uLinkID = CDataHandler::VariantToLong(valLinkID);
 				CYDLinkRef* pLinkRef = new CYDLinkRef(m_pDb,DB_VAULTQUESTION);
 				hr = pLinkRef->SetID(uLinkID);
@@ -804,7 +815,7 @@ HRESULT CYDQuestionVault::ExeDBCreateQuestion(QUESTION_TYPE _qType,
 				_sub_link->push_back(pLinkRef);
 			}
 		}
-		m_pQuestionRecord->MoveNext();
+		m_pQueryQuestionDb->MoveNext();
 	}
 	return S_OK;
 }
@@ -812,12 +823,11 @@ HRESULT CYDQuestionVault::ExeDBCreateQuestion(QUESTION_TYPE _qType,
 HRESULT CYDQuestionVault::CurQuestionIsEof(BOOL &_bIsEof)
 {
 	HRESULT hr = E_FAIL;
-	if(m_pQuestionRecord == NULL ||
-		m_pQuestionRecord->State != adStateOpen)
+	if(m_pQueryQuestionDb == NULL )
 	{
 		_bIsEof = TRUE;
 		return S_FALSE;
 	}
-	_bIsEof = m_pQuestionRecord->adoEOF;
+	_bIsEof = m_pQueryQuestionDb->IsEOF();
 	return S_OK;
 }

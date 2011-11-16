@@ -89,7 +89,8 @@ private:
 		CString  _strDBName,
 		std::list<CPropQueryContidition*> *_lstCondition,
 		long* _lCount);
-	HRESULT CreateParamter(UINT _idQuestionType,
+	HRESULT CreateParamter(CDatabaseEx* _pDB,
+							UINT _idQuestionType,
 							std::list<CPropQueryContidition*> *_lstCondition);
 	HRESULT ExeConditionDB(UINT _idQuestionType,
 							CString _strDBName,
@@ -103,5 +104,5 @@ private:
 		std::list<CPropQueryContidition*> *_lstCondition,
 		CString &_strSQL);
 private:
-	_RecordsetPtr		m_pQuestionRecord;//当前题库中查询到的题目的记录集
+	CDatabaseEx*						m_pQueryQuestionDb; //当前题库中查询到的题目的记录集,因为要做分页查询，必须用一个新的数据库连接
 };
