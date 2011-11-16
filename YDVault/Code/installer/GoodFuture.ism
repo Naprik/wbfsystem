@@ -513,13 +513,14 @@
 		<row><td>ISProductFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
-		<row><td>PATH_TO_BIN_FILES</td><td>M:\code\ydvault\release\bin</td><td/><td>2</td></row>
-		<row><td>PATH_TO_CFG_FILES</td><td>M:\code\ydvault\Good Feture\cfg</td><td/><td>2</td></row>
-		<row><td>PATH_TO_CFG_FILES1</td><td>M:\code\ydvault\Good Future\cfg</td><td/><td>2</td></row>
-		<row><td>PATH_TO_DB_FILES</td><td>M:\code\ydvault\Good Feture\DB</td><td/><td>2</td></row>
-		<row><td>PATH_TO_DB_FILES1</td><td>M:\code\ydvault\Good Future\DB</td><td/><td>2</td></row>
-		<row><td>PATH_TO_EXERCISECFG_FILES</td><td>M:\code\ydvault\Good Feture\exerciseCfg</td><td/><td>2</td></row>
-		<row><td>PATH_TO_EXERCISECFG_FILES1</td><td>M:\code\ydvault\Good Future\exerciseCfg</td><td/><td>2</td></row>
+		<row><td>PATH_TO_BIN_FILES</td><td>&lt;PATH_TO_ROOT&gt;\release\bin</td><td/><td>2</td></row>
+		<row><td>PATH_TO_CFG_FILES</td><td>&lt;PATH_TO_ROOT&gt;\Good Feture\cfg</td><td/><td>2</td></row>
+		<row><td>PATH_TO_CFG_FILES1</td><td>&lt;PATH_TO_ROOT&gt;\Good Future\cfg</td><td/><td>2</td></row>
+		<row><td>PATH_TO_DB_FILES</td><td>&lt;PATH_TO_ROOT&gt;\Good Feture\DB</td><td/><td>2</td></row>
+		<row><td>PATH_TO_DB_FILES1</td><td>&lt;PATH_TO_ROOT&gt;\Good Future\DB</td><td/><td>2</td></row>
+		<row><td>PATH_TO_EXERCISECFG_FILES</td><td>&lt;PATH_TO_ROOT&gt;\Good Feture\exerciseCfg</td><td/><td>2</td></row>
+		<row><td>PATH_TO_EXERCISECFG_FILES1</td><td>&lt;PATH_TO_ROOT&gt;\Good Future\exerciseCfg</td><td/><td>2</td></row>
+		<row><td>PATH_TO_ROOT</td><td>&lt;ISProjectFolder&gt;..</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
