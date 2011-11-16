@@ -312,7 +312,7 @@ HRESULT CSelectorEngine::GetQuestionByCfgItemFromAccess(CQuestionCfgStruct* pcfg
 	strSQL += strTypeID;
 	strSQL += L" ) ";
 
-	strSQL += L" ORDER BY USEDCOUNT ASC,OBJID desc ";
+	strSQL += L" Order BY Rnd(Len(objid))";
 
 
 	theApp.m_pDatabase->InitializeSQL(_bstr_t(strSQL));
