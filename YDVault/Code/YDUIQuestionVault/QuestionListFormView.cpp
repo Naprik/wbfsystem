@@ -481,20 +481,31 @@ void CQuestionListFormView::OnBnClickedButtonQlDel()
 	{
 		return;
 	}
-	int nItem = m_lstQuestion.GetNextSelectedItem(pos);
-	CYdObjWrapper* pObjWrapper = (CYdObjWrapper*)m_lstQuestion.GetItemData(nItem);
-	ASSERT(pObjWrapper);
 	CDatabaseEx* pDB = (CDatabaseEx*)AfxGetMainWnd()->SendMessage(WM_YD_GET_DB);
 	ASSERT(pDB);
 	CDBTransactionRef trans(pDB,TRUE);
 	HRESULT hr = E_FAIL;
-	hr = pObjWrapper->Remove();
-	if(FAILED(hr))
+	while (pos)
 	{
-		trans.Rollback();
-		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
-		return;
+		int nItem = m_lstQuestion.GetNextSelectedItem(pos);
+		CYdObjWrapper* pObjWrapper = (CYdObjWrapper*)m_lstQuestion.GetItemData(nItem);
+		ASSERT(pObjWrapper);
+		hr = pObjWrapper->Remove();
+		if(FAILED(hr))
+		{
+			trans.Rollback();
+			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+			return;
+		}
+		hr = m_plstOperate->DeleteItem(nItem);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
+			return;
+		}
+		pos = m_lstQuestion.GetFirstSelectedItemPosition();
 	}
+	
 	hr = trans.Commit();
 	if(FAILED(hr))
 	{
@@ -502,12 +513,7 @@ void CQuestionListFormView::OnBnClickedButtonQlDel()
 		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
 		return;
 	}
-	hr = m_plstOperate->DeleteItem(nItem);
-	if(FAILED(hr))
-	{
-		DISPLAY_YDERROR(hr,MB_ICONINFORMATION|MB_OK);
-		return;
-	}
+	
 }
 // CBCGPGridRow* CQuestionListFormView::AddSingGCLRow(const CYDQuestionRef& question, BOOL bNeedAdjustLayOut)
 // {
