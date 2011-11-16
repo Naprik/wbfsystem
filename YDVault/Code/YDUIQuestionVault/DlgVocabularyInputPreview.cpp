@@ -257,7 +257,7 @@ HRESULT CDlgVocabularyInputPreview::UpdateQuestionByRow(CBCGPGridRow* _pRootRow)
 			GetOption(pChildRow,strSubOptionName,strSubOptionVal);
 			if(!strSubOptionVal.IsEmpty())
 			{
-				pVocabularyQuestion->m_lstOption.push_back(std::make_pair(strOptionName,strOptionVal));
+				pVocabularyQuestion->m_lstOption.push_back(std::make_pair(strSubOptionName,strSubOptionVal));
 			}
 		}
 	}
