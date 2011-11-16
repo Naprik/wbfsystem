@@ -310,11 +310,16 @@ HRESULT CSelectorEngine::GetQuestionByCfgItemFromAccess(CQuestionCfgStruct* pcfg
 	CString strTypeID;
 	strTypeID.Format(L"%d", pcfg->m_QTypeID);
 	strSQL += strTypeID;
-	strSQL += L" ) ";
-
-	strSQL += L" Order BY Rnd(Len(objid))";
-
-
+	strSQL += L") ";
+	
+	if (theApp.m_pDatabase->GetDBType() == ACCESS)
+	{
+		strSQL += L" Order BY Rnd(time() - objid -USEDCOUNT) ";
+	}
+	else if (theApp.m_pDatabase->GetDBType() == SQLSERVER)
+	{
+		strSQL += L" Order BY  NewID()";
+	}
 	theApp.m_pDatabase->InitializeSQL(_bstr_t(strSQL));
 	hr = theApp.m_pDatabase->ExecuteSQL();
 	if (FAILED(hr))
