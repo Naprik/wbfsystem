@@ -28,6 +28,7 @@ IMPLEMENT_DYNAMIC(CDlgVocabularyInputPreview, CDialogEx)
 
 CDlgVocabularyInputPreview::CDlgVocabularyInputPreview(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CDlgVocabularyInputPreview::IDD, pParent)
+	, m_strQNum(_T(""))
 {
 	m_plstVocabularyQuestion = NULL;
 	m_pVault = NULL;
@@ -42,6 +43,7 @@ CDlgVocabularyInputPreview::~CDlgVocabularyInputPreview()
 void CDlgVocabularyInputPreview::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_EDIT_QNUM, m_strQNum);
 }
 
 
@@ -87,12 +89,15 @@ BOOL CDlgVocabularyInputPreview::OnInitDialog()
 	m_Grid.InsertColumn(cColFactorName, L"指标名", 50);
 	m_Grid.InsertColumn(cColFactor, L"指标值", 80);
 
-
+	ASSERT(m_plstVocabularyQuestion);
+	UpdateData();
+	m_strQNum.Format(_T("共%d题"),m_plstVocabularyQuestion->size());
+	UpdateData(FALSE);
 	m_ItrCur = m_plstVocabularyQuestion->begin();
 	ASSERT(m_plstVocabularyQuestion);
 	m_iIndex = 0;
 	OnBnClickedButtonMore();
-
+	SetForegroundWindow();
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }

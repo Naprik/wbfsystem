@@ -45,4 +45,5 @@ private:
 public:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedButtonMore();
+	CString m_strQNum;
 };
