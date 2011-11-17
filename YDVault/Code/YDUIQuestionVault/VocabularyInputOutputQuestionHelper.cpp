@@ -8,6 +8,7 @@
 #include "../ObjHelper\FactorInfoHelper.h"
 #include "../Base\StdioFileEx.h"
 #include <vector>
+#include "../UIBase\PdemWait.h"
 
 HRESULT CVocabularyQuestion::Load(Paragraphs &_paragraphs,long _index)
 {
@@ -278,6 +279,8 @@ HRESULT CVocabularyInputOutputQuestionHelper::ExeOutputFile(CString _strFile,std
 	{
 		return hr;
 	}
+	
+
 //	Paragraph   paragraph;//用来表示文档中某一段
 	//paragraph=m_paragraphs.GetFirst();//得到第一段 
 	//Range   rg=paragraph.GetRange(); 
@@ -302,16 +305,22 @@ HRESULT CVocabularyInputOutputQuestionHelper::ExeOutputFile(CString _strFile,std
 	{
 		return hr;
 	}
-	Selection oSel = m_oWordApp.GetSelection();
+	//Selection oSel = m_oWordApp.GetSelection();
 	int index = 1;
+	CPdemWait	wait(_T("请稍候，正在导出数据..."),FALSE,_plstObj->size());
+	wait.BeginWait();
 	for(auto itr = _plstObj->begin();itr != _plstObj->end();++itr)
 	{
+		Paragraph paragraph = m_paragraphs.GetLast();
+		Range rg = paragraph.GetRange();
+		CString strText = rg.GetText();
 		CString strChoiceTitle;
 		hr = (*itr)->GetPropVal(FIELD_CHOICEQUESTION_TITLE,strChoiceTitle);
 		CString strIndexTitle;
-		strIndexTitle.Format(_T("%d.%s"),index,strChoiceTitle);
-		oSel.TypeText(strIndexTitle);
-		oSel.TypeParagraph();
+		strIndexTitle.Format(_T("%d.%s\r\n"),index,strChoiceTitle);
+		strText += strIndexTitle;
+	//	oSel.TypeText(strIndexTitle);
+	//	oSel.TypeParagraph();
 		std::list<CString> lstChoices;
 		CYDChoiceQuestionRef* pRef = (CYDChoiceQuestionRef*)(*itr);
 		hr = pRef->GetOptionList(&lstChoices);
@@ -324,15 +333,20 @@ HRESULT CVocabularyInputOutputQuestionHelper::ExeOutputFile(CString _strFile,std
 		for(auto itrChoice = lstChoices.begin();itrChoice != lstChoices.end();++itrChoice)
 		{
 			CString strChoice;
-			strChoice.Format(_T("[%c]%s"),chXuhao++,(*itrChoice));
-			oSel.TypeText(strChoice);
-			oSel.TypeParagraph();
+			strChoice.Format(_T("[%c]%s\r\n"),chXuhao++,(*itrChoice));
+			strText += strChoice;
+			//oSel.TypeText(strChoice);
+			//oSel.TypeParagraph();
 		}
 		//答案
 		CString strAnswer;
 		hr = pRef->GetPropVal(FIELD_CHOICEQUESTION_ANSWER,strAnswer);
-		oSel.TypeText(_T("答案：")+strAnswer);
-		oSel.TypeParagraph();
+		CString strAnswerFormat;
+		strAnswerFormat.Format(_T("答案：%s\r\n"),strAnswer);
+		strText += strAnswerFormat;
+
+		//oSel.TypeText(_T("答案：")+strAnswer);
+		//oSel.TypeParagraph();
 
 		//指标
 		int indexFactor = 1;
@@ -361,13 +375,20 @@ HRESULT CVocabularyInputOutputQuestionHelper::ExeOutputFile(CString _strFile,std
 			{
 				//插入一个指标
 				CString strFactor;
-				strFactor.Format(_T("[%d]%s\t%s"),indexFactor++,strFactorName,strFieldVal);
-				oSel.TypeText(strFactor);
-				oSel.TypeParagraph();
+				strFactor.Format(_T("[%d]%s\t%s\r\n"),indexFactor++,strFactorName,strFieldVal);
+				strText += strFactor;
+				//oSel.TypeText(strFactor);
+				//oSel.TypeParagraph();
 			}
 		}
-		oSel.TypeParagraph();
+		//oSel.TypeParagraph();
+		strText += _T("\r\n");
+		rg.SetText(strText);
+		rg.ReleaseDispatch();
+		paragraph.ReleaseDispatch();
+	//	Sleep(10);
 		index++;
+		wait.StepIt();
 	}
 
 	hr = SaveWord(_strFile);
@@ -375,6 +396,7 @@ HRESULT CVocabularyInputOutputQuestionHelper::ExeOutputFile(CString _strFile,std
 	{
 		return hr;
 	}
+	wait.Close();
 	return S_OK;
 }
 
