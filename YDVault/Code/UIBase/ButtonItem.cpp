@@ -3,11 +3,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 // CButtonItem Class
 
-CButtonItem::CButtonItem (LPCTSTR lpszText, UINT id,CWnd* _pWnd /*= NULL*/) :
+CButtonItem::CButtonItem (LPCTSTR lpszText, UINT id,CBCGPGridCtrl* _pGridCtrl,CBCGPGridRow* _pRow,CWnd* _pWnd /*= NULL*/) :
 CBCGPGridItem (lpszText)
 {
 	m_id = id;
 	m_pSendWnd = _pWnd;
+	m_pRow = _pRow;
+	m_pGridCtrl = _pGridCtrl;
 }
 //*****************************************************************************************
 void CButtonItem::OnDrawValue (CDC* pDC, CRect rect)
@@ -44,7 +46,12 @@ BOOL CButtonItem::OnClickValue (UINT uiMsg, CPoint point)
 		CBCGPGridCtrl* pGridCtrl = GetOwnerList();
 		ASSERT_VALID (pGridCtrl);
 		m_pSendWnd = pGridCtrl;
+		
 	}
+	ASSERT(m_pSendWnd);
+	ASSERT(m_pGridCtrl);
+	ASSERT(m_pRow);
+	m_pGridCtrl->SetCurSel(m_pRow);
 	
 
 	m_pSendWnd->SendMessage (WM_COMMAND,

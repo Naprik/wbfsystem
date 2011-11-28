@@ -1,5 +1,6 @@
 #pragma once
 #include "../UIBase/BCGPKeyGridCtrl.h"
+#include "wmpplayer4.h"
 
 class CYDQuestionRef;
 // CQuestionViewDlg dialog
@@ -27,4 +28,5 @@ public:
 private:
 	std::list<CYDMediaRef*> m_lstMedia;//当前这个题目关联的所有影音图像等对象
 	CBCGPKeyGridCtrl						m_Grid;
+	CWMPPlayer4	    m_WMPlay;
 };

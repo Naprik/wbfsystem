@@ -149,6 +149,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="VocabularyInputOutputQuestionHelper.cpp" />
+    <ClCompile Include="wmpplayer4.cpp" />
     <ClCompile Include="YDChoiceQuestionDlg.cpp" />
     <ClCompile Include="YDReadQuestionDlg.cpp" />
     <ClCompile Include="YDTranslationQuestionDlg.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="VocabularyInputOutputQuestionHelper.h" />
+    <ClInclude Include="wmpplayer4.h" />
     <ClInclude Include="YDChoiceQuestionDlg.h" />
     <ClInclude Include="YDReadQuestionDlg.h" />
     <ClInclude Include="YDTranslationQuestionDlg.h" />

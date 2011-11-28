@@ -50,6 +50,11 @@ BOOL CQuestionViewDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	// TODO:  Add extra initialization here
+	CRect rectBkMediaPlay;
+	GetDlgItem(IDC_STATIC_BK_MEDIAPLAY)->GetWindowRect(&rectBkMediaPlay);
+	ScreenToClient(&rectBkMediaPlay);
+	GetDlgItem(IDC_STATIC_BK_MEDIAPLAY)->ShowWindow(SW_HIDE);
+	m_WMPlay.Create(_T(""),WS_CHILD|WS_VISIBLE,rectBkMediaPlay,this,IDC_MEDIA_CREATE);
 	CRect rectBK;
 	GetDlgItem(IDC_STATIC_BK)->GetWindowRect(&rectBK);
 	GetDlgItem(IDC_STATIC_BK)->ShowWindow(SW_HIDE);
@@ -98,7 +103,7 @@ BOOL CQuestionViewDlg::OnInitDialog()
 		ASSERT(pRow);
 		pRow->GetItem(cColSerialNo)->SetValue(CComVariant(strIndex));
 		pRow->GetItem(cColFileName)->SetValue(CComVariant(strMediaLabel));
-		pRow->ReplaceItem (cColPlay, new CButtonItem (_T("播放"), IDC_PLAY_MEDIA,this));
+		pRow->ReplaceItem (cColPlay, new CButtonItem (_T("播放"), IDC_PLAY_MEDIA,&m_Grid,pRow,this));
 		pRow->SetData(DWORD_PTR(*itr));
 		m_Grid.AddRow(pRow);
 	}
@@ -117,5 +122,50 @@ INT_PTR CQuestionViewDlg::DoModal()
 
 void CQuestionViewDlg::OnPlayMedia()
 {
-	AfxMessageBox(_T("Play"));
+	//AfxMessageBox(_T("Play"));
+	CWMPControls WMPControls = m_WMPlay.GetControls();
+	WMPControls.stop();
+	CFtpRef* pFtpRef = NULL;
+	CWnd* pWnd = AfxGetMainWnd();
+	if(pWnd != NULL && pWnd->GetSafeHwnd() != NULL)
+	{
+		pFtpRef = (CFtpRef*)pWnd->SendMessage(WM_YD_GET_FTPREF);
+	}
+	ASSERT(pFtpRef);
+	CBCGPGridRow* pRow = m_Grid.GetCurSel();
+	if(pRow == NULL)
+	{
+		return;
+	}
+	CYDMediaRef* pMediaRef = (CYDMediaRef*)pRow->GetData();
+	ASSERT(pMediaRef);
+	HRESULT hr = E_FAIL;
+	CString strVaultName;
+	hr = pMediaRef->CreateVaultName(strVaultName);
+	if(FAILED(hr))
+	{
+		return ;
+	}
+	CString strLabel;
+	hr = pMediaRef->GetLabel(&strLabel);
+	if(FAILED(hr))
+	{
+		return ;
+	}
+	TCHAR   szPath[MAX_PATH*MAX_PATH] = _T("\0"); 
+	GetTempPath(MAX_PATH*MAX_PATH,   szPath); 
+
+	CString strLocal = szPath;
+	strLocal += strLabel;
+	hr = pFtpRef->DownLoad(strLocal, strVaultName);
+	if (FAILED(hr))
+	{
+		CString strFormat = L"听力文件<%s>下载失败!";
+		CString strInfo;
+		strInfo.Format(strFormat, strLocal);
+		AfxMessageBox(strInfo);
+		return ;
+	}
+	m_WMPlay.SetUrl(strLocal);
+	WMPControls.play();
 }

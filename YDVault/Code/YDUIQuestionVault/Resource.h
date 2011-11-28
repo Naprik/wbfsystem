@@ -58,6 +58,7 @@
 #define IDC_EDIT_QT_DESC                1032
 #define IDC_LIST_QL_QUESTION            1035
 #define IDC_STATIC_GRID                 1036
+#define IDC_STATIC_BK_MEDIAPLAY         1036
 #define IDC_BTN_GP_OK                   1038
 #define IDC_BTN_GP_CANCEL               1040
 #define IDC_BTN_ADD                     1041
@@ -150,8 +151,8 @@
 #define IDC_RADIO_DOC                   15017
 #define IDC_BUTTON1                     15017
 #define IDC_BUTTON_MORE                 15017
-#define IDC_EDIT1                       15018
 #define IDC_EDIT_QNUM                   15018
+#define IDC_MEDIA_CREATE                15019
 #define IDD_YDMAIN_DIALOG_PAPERFOLDER   30011
 #define IDD_YDUIQUESTIONVAULT_FORM_PAPERFOLDER 30011
 #define IDD_YDUIQUESTIONVAULT_FORM_GENERATEPAPER 30012
@@ -164,7 +165,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        15007
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         15019
+#define _APS_NEXT_CONTROL_VALUE         15020
 #define _APS_NEXT_SYMED_VALUE           15000
 #endif
 #endif
