@@ -47,6 +47,7 @@ private:
 	HRESULT RepalceQType(CYDLinkRef* _pLinkRef,std::list<CYDQuestionType*> _lstAllQType);
 public:
 	afx_msg void OnBnClickedButtonFactorinfoConifg();
+	afx_msg void OnBnClickedButtonVaultLevelConfig();
 };
 
 

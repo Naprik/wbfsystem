@@ -35,7 +35,7 @@ public:
 	virtual HRESULT UpdateProp(BOOL bUpdate) ;
 	BOOL	ValidateData(OPERATION op);
 	CString m_strCreateDate;
-	afx_msg void OnBnClickedButtonVaultLevelConfig();
+//	afx_msg void OnBnClickedButtonVaultLevelConfig();
 };
 
 

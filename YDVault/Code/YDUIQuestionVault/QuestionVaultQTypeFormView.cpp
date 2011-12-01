@@ -13,6 +13,7 @@
 #include "../DBBase/DBTransactionRef.h"
 #include "../Base/DataHandler.h"
 #include "DlgYDVaultFactorInfoConfig.h"
+#include "DlgVaultLevelConfig.h"
 
 
 // CQuestionVaultQTypeFormView
@@ -42,6 +43,7 @@ BEGIN_MESSAGE_MAP(CQuestionVaultQTypeFormView, CYdFormView)
 	ON_BN_CLICKED(IDC_BUTTON_ADD, &CQuestionVaultQTypeFormView::OnBnClickedButtonAdd)
 	ON_BN_CLICKED(IDC_BUTTON_REMOVE, &CQuestionVaultQTypeFormView::OnBnClickedButtonRemove)
 	ON_BN_CLICKED(IDC_BUTTON_FACTORINFO_CONIFG, &CQuestionVaultQTypeFormView::OnBnClickedButtonFactorinfoConifg)
+	ON_BN_CLICKED(IDC_BUTTON_VAULT_LEVEL_CONFIG, &CQuestionVaultQTypeFormView::OnBnClickedButtonVaultLevelConfig)
 END_MESSAGE_MAP()
 
 
@@ -481,6 +483,7 @@ void CQuestionVaultQTypeFormView::ReadonlyPage(BOOL bReadonly)
 	GetDlgItem(IDC_BUTTON_ADD)->EnableWindow(!bReadonly);
 	GetDlgItem(IDC_BUTTON_REMOVE)->EnableWindow(!bReadonly);
 	GetDlgItem(IDC_BUTTON_FACTORINFO_CONIFG)->EnableWindow(!bReadonly);
+	GetDlgItem(IDC_BUTTON_VAULT_LEVEL_CONFIG)->EnableWindow(!bReadonly);
 }
 
 BOOL CQuestionVaultQTypeFormView::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName,
@@ -508,5 +511,18 @@ void CQuestionVaultQTypeFormView::OnBnClickedButtonFactorinfoConifg()
 
 	CDlgYDVaultFactorInfoConfig dlg;
 	dlg.m_pVault = pQV;
+	dlg.DoModal();
+}
+
+
+void CQuestionVaultQTypeFormView::OnBnClickedButtonVaultLevelConfig()
+{
+	// TODO: Add your control notification handler code here
+	CYdObjWrapper* pObjWrapper = m_pSheet->GetCurObjWrapper();
+	ASSERT(pObjWrapper);
+	CYDObjectRef* pObjRef = pObjWrapper->m_pObjRef;
+	ASSERT(pObjRef);
+	CDlgVaultLevelConfig dlg;
+	dlg.m_pVault = pObjRef;
 	dlg.DoModal();
 }
