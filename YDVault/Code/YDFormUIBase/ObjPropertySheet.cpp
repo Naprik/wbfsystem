@@ -116,6 +116,7 @@ HRESULT CObjPropertySheet::Show(CYdObjWrapper* _pObjWrapper,OPERATION nOp)
 	ObjPropShow.m_type = SHOW_OBJECT;
 	ObjPropShow.m_pObjWrapper = _pObjWrapper;
 	ObjPropShow.m_pSheet = this;
+	ObjPropShow.m_nOp = nOp;
 	AfxGetMainWnd()->SendMessage(WM_YD_ADD_PAGE,WPARAM(&ObjPropShow));
 
 
