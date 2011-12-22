@@ -91,6 +91,13 @@ BOOL CDlgQuestion4::OnInitDialog()
 	CButton* pRadioE = (CButton*)GetDlgItem(IDC_RADIO_E);
 	CButton* pRadioF = (CButton*)GetDlgItem(IDC_RADIO_F);
 
+	CEdit* pEditA = (CEdit*)GetDlgItem(IDC_EDIT_A);
+	CEdit* pEditB = (CEdit*)GetDlgItem(IDC_EDIT_B);
+	CEdit* pEditC = (CEdit*)GetDlgItem(IDC_EDIT_C);
+	CEdit* pEditD = (CEdit*)GetDlgItem(IDC_EDIT_D);
+	CEdit* pEditE = (CEdit*)GetDlgItem(IDC_EDIT_E);
+	CEdit* pEditF = (CEdit*)GetDlgItem(IDC_EDIT_F);
+
 	ASSERT(m_lstChoices.size() > 2);
 	
 	CRect rectMain;
@@ -99,23 +106,25 @@ BOOL CDlgQuestion4::OnInitDialog()
 	if (m_lstChoices.size() == 1)
 	{
 		CRect rectRadio;
-		pRadioA->GetWindowRect(rectRadio);
+		pEditA->GetWindowRect(rectRadio);
 		CRect rect(rectMain.left, rectMain.top, rectMain.right, rectRadio.bottom);
 		MoveWindow(rect);
-		CString strChoice = TEXT("A) ") + *itrC;
-		pRadioA->SetWindowText(strChoice);
+		CString strChoice = *itrC;
+		pEditA->SetWindowText(strChoice);
 	}
 	else if (m_lstChoices.size() == 2)
 	{
 		CRect rectRadio;
-		pRadioB->GetWindowRect(rectRadio);
+		pEditB->GetWindowRect(rectRadio);
 		CRect rect(rectMain.left, rectMain.top, rectMain.right, rectRadio.bottom);
 		MoveWindow(rect);
-		CString strChoice = TEXT("A) ") + *itrC;
-		pRadioA->SetWindowText(strChoice);
+		CString strChoice = *itrC;
+		
+		pEditA->SetWindowText(strChoice);
 		++itrC;
-		strChoice = TEXT("B) ") + *itrC;
-		pRadioB->SetWindowText(strChoice);
+		strChoice = *itrC;
+		
+		pEditB->SetWindowText(strChoice);
 	}
 	else if (m_lstChoices.size() == 3)
 	{
@@ -123,32 +132,39 @@ BOOL CDlgQuestion4::OnInitDialog()
 		pRadioC->GetWindowRect(rectRadio);
 		CRect rect(rectMain.left, rectMain.top, rectMain.right, rectRadio.bottom);
 		MoveWindow(rect);
-		CString strChoice = TEXT("A) ") + *itrC;
-		pRadioA->SetWindowText(strChoice);
+		CString strChoice = *itrC;
+		
+		pEditA->SetWindowText(strChoice);
 		++itrC;
-		strChoice = TEXT("B) ") + *itrC;
-		pRadioB->SetWindowText(strChoice);
+		strChoice = *itrC;
+		
+		pEditB->SetWindowText(strChoice);
 		++itrC;
-		strChoice = TEXT("C) ") + *itrC;
-		pRadioC->SetWindowText(strChoice);
+		strChoice = *itrC;
+		
+		pEditC->SetWindowText(strChoice);
 	}
 	else if (m_lstChoices.size() == 4)
 	{
 		CRect rectRadio;
-		pRadioD->GetWindowRect(rectRadio);
+		pEditD->GetWindowRect(rectRadio);
 		CRect rect(rectMain.left, rectMain.top, rectMain.right, rectRadio.bottom);
 		MoveWindow(rect);
-		CString strChoice = TEXT("A) ") + *itrC;
-		pRadioA->SetWindowText(strChoice);
+		CString strChoice = *itrC;
+		
+		pEditA->SetWindowText(strChoice);
 		++itrC;
-		strChoice = TEXT("B) ") + *itrC;
-		pRadioB->SetWindowText(strChoice);
+		strChoice = *itrC;
+		
+		pEditB->SetWindowText(strChoice);
 		++itrC;
-		strChoice = TEXT("C) ") + *itrC;
-		pRadioC->SetWindowText(strChoice);
+		strChoice = *itrC;
+		
+		pEditC->SetWindowText(strChoice);
 		++itrC;
-		strChoice = TEXT("D) ") + *itrC;
-		pRadioD->SetWindowText(strChoice);
+		strChoice = *itrC;
+		
+		pEditD->SetWindowText(strChoice);
 	}
 	else if (m_lstChoices.size() == 5)
 	{
@@ -156,20 +172,23 @@ BOOL CDlgQuestion4::OnInitDialog()
 		pRadioE->GetWindowRect(rectRadio);
 		CRect rect(rectMain.left, rectMain.top, rectMain.right, rectRadio.bottom);
 		MoveWindow(rect);
-		CString strChoice = TEXT("A) ") + *itrC;
-		pRadioA->SetWindowText(strChoice);
+		CString strChoice = *itrC;
+		
+		pEditA->SetWindowText(strChoice);
 		++itrC;
-		strChoice = TEXT("B) ") + *itrC;
-		pRadioB->SetWindowText(strChoice);
+		strChoice = *itrC;
+		
+		pEditB->SetWindowText(strChoice);
 		++itrC;
-		strChoice = TEXT("C) ") + *itrC;
-		pRadioC->SetWindowText(strChoice);
+		strChoice = *itrC;
+		
+		pEditC->SetWindowText(strChoice);
 		++itrC;
-		strChoice = TEXT("D) ") + *itrC;
-		pRadioD->SetWindowText(strChoice);
+		
+		pEditD->SetWindowText(strChoice);
 		++itrC;
-		strChoice = TEXT("E) ") + *itrC;
-		pRadioE->SetWindowText(strChoice);
+		
+		pEditE->SetWindowText(strChoice);
 	}
 	else if (m_lstChoices.size() == 6)
 	{
@@ -177,23 +196,23 @@ BOOL CDlgQuestion4::OnInitDialog()
 		pRadioF->GetWindowRect(rectRadio);
 		CRect rect(rectMain.left, rectMain.top, rectMain.right, rectRadio.bottom);
 		MoveWindow(rect);
-		CString strChoice = TEXT("A) ") + *itrC;
-		pRadioA->SetWindowText(strChoice);
+		CString strChoice = *itrC;
+		pEditA->SetWindowText(strChoice);
 		++itrC;
-		strChoice = TEXT("B) ") + *itrC;
-		pRadioB->SetWindowText(strChoice);
+		strChoice = *itrC;
+		pEditB->SetWindowText(strChoice);
 		++itrC;
-		strChoice = TEXT("C) ") + *itrC;
-		pRadioC->SetWindowText(strChoice);
+		strChoice = *itrC;
+		pEditC->SetWindowText(strChoice);
 		++itrC;
-		strChoice = TEXT("D) ") + *itrC;
-		pRadioD->SetWindowText(strChoice);
+		strChoice = *itrC;
+		pEditD->SetWindowText(strChoice);
 		++itrC;
-		strChoice = TEXT("E) ") + *itrC;
-		pRadioE->SetWindowText(strChoice);
+		strChoice = *itrC;
+		pEditE->SetWindowText(strChoice);
 		++itrC;
-		strChoice = TEXT("F) ") + *itrC;
-		pRadioF->SetWindowText(strChoice);
+		strChoice = *itrC;
+		pEditF->SetWindowText(strChoice);
 	}
 	
 	m_strAnswer.Trim();
