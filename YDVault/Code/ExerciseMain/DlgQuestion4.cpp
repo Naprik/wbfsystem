@@ -78,7 +78,7 @@ BOOL CDlgQuestion4::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	CStatic* pText = (CStatic*)GetDlgItem(IDC_STATIC_TEXT);
+	CEdit* pText = (CEdit*)GetDlgItem(IDC_EDIT_TEXT);
 	CString str;
 	m_pQuestion->GetPropVal(TEXT("title"), str);
 	CString strTilte;
