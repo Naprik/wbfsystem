@@ -185,6 +185,7 @@ ULONG RollingThreadByTeachcom(LPVOID pParam)
 			itrDev != pTeachComParam->m_pAppCom->m_lstStuDev.end();++itrDev)
 		{
 			int iRolling = -1;
+			//判断当前学生机是否已经交卷
 			hr = (*itrDev)->GetRolling(iRolling);
 			if(FAILED(hr))
 			{
@@ -207,10 +208,12 @@ ULONG RollingThreadByTeachcom(LPVOID pParam)
 			}
 			if(bFind)
 			{
+				//当前学生机已经交卷了，不要再交卷了
 				continue;
 			}
 			Sleep(500);
 			CString strAnswer;
+			//当前学生还未交卷，相当前学生机发送交卷指令
 			hr = pTeachComParam->m_pAppCom->GetAnswerByStudev(
 													*itrDev,
 													pTeachComParam->m_iStart,
@@ -226,6 +229,7 @@ ULONG RollingThreadByTeachcom(LPVOID pParam)
 				continue;
 			}
 			//AfxMessageBox(strAnswer);
+			//当前学生成功收卷，更新列表上的学生信息
 			hr = ThreadFunHelper.UpdateListRollingByStudev(*itrDev,pTeachComParam->m_pForm,FALSE);
 			if(FAILED(hr))
 			{
