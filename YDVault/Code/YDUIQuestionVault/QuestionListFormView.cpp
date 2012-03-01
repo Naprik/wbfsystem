@@ -24,6 +24,7 @@
 #include "DlgYDVaultQuestionFactorInfoConfig.h"
 #include "VocabularyInputOutputQuestionHelper.h"
 #include "DlgSelInputType.h"
+#include "../UIBase\PdemWait.h"
 // CQuestionListFormView
 
 

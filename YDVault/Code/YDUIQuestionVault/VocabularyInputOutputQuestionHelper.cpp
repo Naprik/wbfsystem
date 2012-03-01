@@ -54,6 +54,8 @@ HRESULT CVocabularyInputOutputQuestionHelper::ExeInputFile(CString _strFile)
 		return hr;
 	}
 	long paCounst = m_paragraphs.GetCount(); 
+	CPdemWait wait1(L"正在读取Word文件内容请稍候...",FALSE,paCounst);
+	wait1.BeginWait();
 	std::list<CString> lstStr;
 	// 将所有段中的每一段都存在数组里 
 	for(long lc = 1 ; lc < paCounst+1 ; lc++ ){
@@ -75,7 +77,11 @@ HRESULT CVocabularyInputOutputQuestionHelper::ExeInputFile(CString _strFile)
 		{
 			lstStr.push_back(strRangeText);
 		}
+		wait1.StepIt();
 	}
+	wait1.Close();
+	CPdemWait wait2(L"正在解析Word文件内容请稍候...",FALSE,lstStr.size());
+	wait2.BeginWait();
 	std::list<CVocabularyQuestion*> lstQuestion;
 	CListAutoClean<CVocabularyQuestion> clr(lstQuestion);
 	CVocabularyQuestion* pVocabularyQuestion = NULL;
@@ -134,7 +140,9 @@ HRESULT CVocabularyInputOutputQuestionHelper::ExeInputFile(CString _strFile)
 		{
 			continue;
 		}
+		wait2.StepIt();
 	}
+	wait2.Close();
 	CDlgVocabularyInputPreview dlg;
 	dlg.m_plstVocabularyQuestion = &lstQuestion;
 	dlg.m_pVault = m_pVault;
@@ -447,7 +455,7 @@ HRESULT CVocabularyInputOutputQuestionHelper::IsQuestionOption(CString _strText,
 				CString strOptionName;//A B C D等
 				strOptionName.Format(_T("%c"),strOption.GetAt(1));
 				CDataHandler::TrimString(strOptionName);
-				CString strOptionVal = strOption.Right(strOption.GetLength() - 4);//选项值
+				CString strOptionVal = strOption.Right(strOption.GetLength() - strTemp.GetLength());//选项值
 				CDataHandler::TrimString(strOptionVal);
 				//要按照选项名进行排序
 				BOOL bInsert = FALSE;

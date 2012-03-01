@@ -88,7 +88,7 @@ bool CHistoryInfoView::InsertExerciseLog()
 	CString logpath = g_LogPath;
 	logpath += TEXT("\\exercise\\*.xml");
 	BOOL hasfile = find.FindFile(logpath);
-	
+
 	while (hasfile)
 	{
 		hasfile = find.FindNextFile();
