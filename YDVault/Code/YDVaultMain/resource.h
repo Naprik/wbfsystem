@@ -190,6 +190,7 @@
 #define ID_32817                        32817
 #define ID_SYS_USER_MODIFY_PWD          32818
 #define ID_SYS_RELOGIN                  32819
+#define ID_SYS_LOAD_CFG                 32820
 #define IDS_YDVAULTMAIN_QUESTION_MANAGEMENT 61447
 
 // Next default values for new objects
@@ -197,7 +198,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        345
-#define _APS_NEXT_COMMAND_VALUE         32820
+#define _APS_NEXT_COMMAND_VALUE         32821
 #define _APS_NEXT_CONTROL_VALUE         1106
 #define _APS_NEXT_SYMED_VALUE           328
 #endif

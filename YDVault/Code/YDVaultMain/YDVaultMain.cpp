@@ -39,6 +39,7 @@ BEGIN_MESSAGE_MAP(CYDVaultMainApp, CWinAppEx)
 	ON_COMMAND(ID_SYS_USERMRG, &CYDVaultMainApp::OnSysUsermrg)
 	ON_COMMAND(ID_SYS_USER_MODIFY_PWD, &CYDVaultMainApp::OnSysUserModifyPwd)
 	ON_COMMAND(ID_SYS_RELOGIN, &CYDVaultMainApp::OnSysRelogin)
+	ON_COMMAND(ID_SYS_LOAD_CFG, &CYDVaultMainApp::OnSysLoadCfg)
 END_MESSAGE_MAP()
 
 
@@ -331,4 +332,15 @@ void CYDVaultMainApp::OnSysRelogin()
 	CDlgLoginEX dlg;
 	dlg.m_pDatabase = m_pDatabase;
 	dlg.DoModal();
+}
+
+
+void CYDVaultMainApp::OnSysLoadCfg()
+{
+	// TODO: Add your command handler code here
+	CString commandline = L"YdConfig.exe ";
+	STARTUPINFO startinfo = {sizeof(startinfo)};
+	PROCESS_INFORMATION processinfo;
+	CreateProcess(NULL, (LPWSTR)(LPCTSTR)commandline, NULL, NULL,
+		FALSE, 0, NULL, NULL, &startinfo, &processinfo);
 }

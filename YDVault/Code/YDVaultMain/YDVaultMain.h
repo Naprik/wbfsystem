@@ -44,6 +44,7 @@ public:
 	CDatabaseEx* m_pDatabase;
 	CFtpRef*	 m_pFtpRef;
 	virtual int ExitInstance();
+	afx_msg void OnSysLoadCfg();
 };
 
 extern CYDVaultMainApp theApp;

@@ -223,6 +223,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	lstBasicCommands.AddTail(ID_SORTING_SORTBYACCESS);
 	lstBasicCommands.AddTail(ID_SORTING_GROUPBYTYPE);
 	lstBasicCommands.AddTail(ID_SYS_RELOGIN);
+	lstBasicCommands.AddTail(ID_SYS_LOAD_CFG);
 	lstBasicCommands.AddTail(ID_SYS_USERMRG);
 	lstBasicCommands.AddTail(ID_SYS_USER_MODIFY_PWD);
 
