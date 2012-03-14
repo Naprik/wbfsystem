@@ -448,7 +448,7 @@
 447  OnFirstUIBefore                                    Setup.obs
 448  OnHelp                                             ifx.obl(EventsSetup.obs)
 449  OnIISAppPoolUninstalling                           ifx.obl(EventsPriv.obs)
-450  OnIISCheckRequirements                             ifx.obl(EventsPriv.obs)
+450  OnIISCheckRequirements                             Setup.obs
 451  OnIISComponentInstalled                            ifx.obl(EventsPriv.obs)
 452  OnIISInitialize                                    ifx.obl(EventsPriv.obs)
 453  OnIISUninitialize                                  ifx.obl(EventsPriv.obs)

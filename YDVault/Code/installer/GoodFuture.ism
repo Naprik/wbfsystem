@@ -273,6 +273,7 @@
 		<row><td>yduiquestionvault.dll</td><td>bin</td><td>YDUIQuestionVault.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\YDUIQuestionVault.dll</td><td>1</td><td/></row>
 		<row><td>yduiusermanagement.dll</td><td>bin</td><td>YDUIUserManagement.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\YDUIUserManagement.dll</td><td>1</td><td/></row>
 		<row><td>ydvault.mdb</td><td>db</td><td>ydvault.mdb</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_DB_FILES1&gt;\ydvault.mdb</td><td>1</td><td/></row>
+		<row><td>ydvaultmain.exe</td><td>bin</td><td>YDVaultMain.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\YDVaultMain.exe</td><td>1</td><td/></row>
 	</table>
 
 	<table name="Font">
@@ -800,6 +801,8 @@
 		<row><td>SetupFile1</td><td>vcredist_x86.exe</td><td/><td>0</td><td>0</td><td>&lt;ISProjectFolder&gt;\vcredist\vcredist_x86.exe</td></row>
 		<row><td>SetupFile2</td><td>license.txt</td><td/><td>0</td><td>0</td><td>&lt;ISProjectFolder&gt;\license.txt</td></row>
 		<row><td>SetupFile3</td><td>vcredist.ini</td><td/><td>0</td><td>0</td><td>&lt;ISProjectFolder&gt;\vcredist\vcredist.ini</td></row>
+		<row><td>SetupFile4</td><td>MSCHART.exe</td><td/><td>0</td><td>0</td><td>&lt;ISProjectFolder&gt;\component\MSCHART.exe</td></row>
+		<row><td>SetupFile5</td><td>Y-105Driver.exe</td><td/><td>0</td><td>0</td><td>&lt;ISProjectFolder&gt;\component\Y-105Driver.exe</td></row>
 	</table>
 
 	<table name="ISSetupPrerequisites">

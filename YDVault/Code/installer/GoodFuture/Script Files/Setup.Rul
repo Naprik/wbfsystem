@@ -85,7 +85,7 @@ function OnMoved()
 	NUMBER nOption,nReserved;   
 	STRING svTemp,szCom,szComKey,szRgs; 
 	NUMBER nvType,nDBType,i,nCountCom;
-	BOOL bReg,bFirst,bSetup;      
+	BOOL bReg,bFirst,bSetup,bSetupChart,bSetupDriver;      
 	STRING szFile,szComFile,szRgsFile,szPathTemp,strModules,szVerTemp;     
 	STRING strTemplate,strTemplate_1,szTemp,szIndex;              
 	STRING  szEnv;
@@ -120,6 +120,17 @@ begin
         ///////////////////////////////
         if (bSetup = TRUE) then                         
         	LaunchAppAndWait(SUPPORTDIR^"vcredist_x86.exe", "", WAIT);
+        endif;  
+        
+        bSetupChart = TRUE;      
+	 	///////////////////////////////
+        if (bSetupChart = TRUE) then                         
+        	LaunchAppAndWait(SUPPORTDIR^"MSCHART.exe", "", WAIT);
+        endif; 
+         bSetupDriver = TRUE;      
+	 	///////////////////////////////
+        if (bSetupChart = TRUE) then                         
+        	LaunchAppAndWait(SUPPORTDIR^"Y-105Driver.exe", "", WAIT);
         endif; 
     endif;
 end;
@@ -172,4 +183,19 @@ Dlg_SdShowInfoList:
     StatusUpdate(ON, 100);
     
     return 0;
+end;
+//---------------------------------------------------------------------------
+// OnIISCheckRequirements
+//
+// The OnIISCheckRequirements event is called by Preprogram to make sure
+// that the requirements for IIS runtime are met
+//---------------------------------------------------------------------------
+function OnIISCheckRequirements()
+begin
+// obsolete function...moved to after the U.I. to determine user feature selection
+	// remove comments below to check for IIS at the very beginning of the install, similar to legacy behavior
+	//OnIISInitialize();
+
+	// Pass in a component name in your project that contains IIS configuration
+	//IISRTCheckForContinue("VirtualDirComponent", FALSE);
 end;
