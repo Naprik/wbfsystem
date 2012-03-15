@@ -37,6 +37,9 @@
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
 #include <comdef.h>
+
+
+extern TCHAR _ModulePath[MAX_PATH];
 #include "../Include/YdVaultConst.h"
 
 #import "../lib/msado15.dll" rename("EOF","adoEOF")

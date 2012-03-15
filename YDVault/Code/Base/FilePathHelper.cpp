@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "FilePathHelper.h"
 #include <shlwapi.h>
-
+extern TCHAR _ModulePath[MAX_PATH];
 CFilePathHelper::CFilePathHelper(void)
 {
 }
@@ -543,8 +543,20 @@ void CFilePathHelper::CopyFolder(CString& _sSourceFolder,CString _strDestFolder,
 
 void CFilePathHelper::GetMainCfgPath(CString& strPath)
 {
-	TCHAR userPath[MAX_PATH];
-	::SHGetSpecialFolderPath(NULL, userPath, CSIDL_COMMON_DOCUMENTS, FALSE);
-	strPath = userPath;
+	
+	CString strCfgPath = _ModulePath;
+	strCfgPath += L"\\..\\Good Future\\cfg\\DBCfg.xml";
+
+	if (FilePathExists(strCfgPath))
+	{
+		strPath = _ModulePath;
+	}
+	else
+	{
+		TCHAR userPath[MAX_PATH];
+		::SHGetSpecialFolderPath(NULL, userPath, CSIDL_COMMON_DOCUMENTS, FALSE);
+		strPath = userPath;
+	}
+
 	strPath += L"\\..\\Good Future";
 }
