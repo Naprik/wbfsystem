@@ -2296,5 +2296,46 @@ void CFormExamBlue::OnBnClickedButtonNewPaper()
 {
 	// TODO: Add your control notification handler code here
 	CDlgPaper dlg;
-	dlg.DoModal();
+	if (dlg.DoModal() == IDOK)
+	{
+
+		int iSel = m_cmbExamSubject.GetCurSel();
+		if(iSel == -1)
+		{
+			return ;
+		}
+		UpdateData();
+		HRESULT hr = E_FAIL;
+		CYDSubjectRef* pSubRef = (CYDSubjectRef*)m_cmbExamSubject.GetItemData(iSel);
+		ASSERT(pSubRef);
+		std::list<CYDObjectRef*> lstPaper;
+		hr = pSubRef->GetPapers(&lstPaper);
+		if(FAILED(hr))
+		{
+			DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+			return;
+		}
+		m_cmbExamPaper.ResetContent();
+		for(std::list<CYDObjectRef*>::const_iterator itr = lstPaper.begin();
+			itr != lstPaper.end();++itr)
+		{
+			m_lstClear.push_back(*itr);
+			CComVariant valPaperName;
+			hr = (*itr)->GetPropVal(FIELD_YDPAPER_NAME,&valPaperName);
+			if(FAILED(hr))
+			{
+				DISPLAY_YDERROR(hr,MB_OK|MB_ICONINFORMATION);
+				return;
+			}
+			CString strPaperName = CDataHandler::VariantToString(valPaperName);
+			int index = m_cmbExamPaper.AddString(strPaperName);
+			m_cmbExamPaper.SetItemData(index,(DWORD_PTR)(*itr));
+		}
+		if(lstPaper.size() > 0)
+		{
+			//默认将第一个考卷选择
+			m_cmbExamPaper.SetCurSel(0);
+			OnCbnSelchangeComboExamPaper();
+		}
+	}
 }
