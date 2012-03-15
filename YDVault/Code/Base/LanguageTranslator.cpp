@@ -9,7 +9,7 @@
 #include "AutoClean.h"
 #include "../Base/FilePathHelper.h"
 
-
+extern TCHAR	 _ModulePath[MAX_PATH] ;
 
 std::map<UINT,CString> CLanguageTranslator::m_mapError;
 //////////////////////////////////////////////////////////////////////
